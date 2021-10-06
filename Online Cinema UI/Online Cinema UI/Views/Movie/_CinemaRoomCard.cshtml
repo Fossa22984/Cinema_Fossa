@@ -1,0 +1,25 @@
+﻿@model IEnumerable<Online_Cinema_Domain.Models.CinemaRoom>
+
+@foreach (var cinemaRoom in Model)
+{
+    <form asp-action="CinemaRoom" asp-controller="Movie" method="get">
+        <div class="card card2" data-toggle="tooltip" data-placement="top" onclick="MySubmit(this)">
+            <input type="hidden" name="id" value="@cinemaRoom.Id"  />
+            <div class="myCardContainer">
+                <img src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(cinemaRoom.CinemaRoomImage))" alt="las vegas">
+            </div>
+            <div class="details">
+                <h3>@cinemaRoom.CinemaRoomName</h3>
+                <p class="truncate-text">@cinemaRoom.Description</p>
+            </div>
+        </div>
+
+    </form>
+}
+<script>
+    function MySubmit(e) {
+        //var id = ($(e).children()[0]).value;
+        //$(e).parent()[0].append(id);
+        $(e).parent()[0].submit();
+    }
+</script>

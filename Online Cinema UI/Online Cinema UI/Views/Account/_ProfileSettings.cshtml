@@ -1,0 +1,35 @@
+﻿@model Online_Cinema_Domain.Models.IdentityModels.User
+
+<div class="mb-5" style="padding:30px; z-index:1; height: 25vh; min-width:300px; background-color: #18181b;">
+    <h3 class="mb-3 text-white">Изображение профиля</h3>
+    <img src=@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(Model.Photo)) style=" width: 96px; height: 96px; object-fit: cover; border-radius: 50%; float:left; margin-right:35px;">
+    <div class="form-group">
+        <label class="form-control mb-4" style="background-color:transparent; border:none">
+            <input id="test" class="form-control" type="file" placeholder="Прикрепите файл" style="display:none; ">
+            <button type="button" class="btn btn-outline-secondary clickOnButton" onclick=" $('#test').trigger('click'); ">Обновить изображение профиля</button>
+
+        </label>
+        <h6 style="color:#dedee3">Поддерживаемые форматы: JPEG, PNG или GIF.</h6>
+    </div>
+</div>
+
+<div class="mb-5" style="padding:30px; height: 40vh; z-index:1; min-width:300px; background-color: #18181b;">
+    <form asp-action="" enctype="multipart/form-data" style="padding:10px">
+        <h3 class="mb-3 text-white">Настройки профиля</h3>
+
+        <div class="form-group" style="width: 25vw">
+            <label class="control-label text-white">Имя пользователя</label>
+            <input class="form-control text-white" style="background-color: #464649; border: none" required />
+        </div>
+
+        <div class="form-group" style="width: 25vw">
+            <label class="control-label text-white">Дата рождения</label>
+            <input type="date" class="form-control text-white" style="background-color: #464649; border: none" required />
+
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="btn btn-outline-secondary clickOnButton" value="Сохранить изменения" />
+        </div>
+    </form>
+</div>

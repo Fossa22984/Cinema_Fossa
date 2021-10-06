@@ -1,0 +1,25 @@
+﻿@model IList<Online_Cinema_Domain.Models.Session>
+@if (Model != null)
+{
+    <div class="d-flex flex-row bd-highlight mb-3 flex-wrap" id="flux">
+        <table class="table table-bordered text-white">
+            <thead>
+                <tr>
+                    <th style="text-align: center; vertical-align:middle" scope="col">Movie Title</th>
+                    <th style="text-align: center; vertical-align:middle" scope="col">Start</th>
+                    <th style="text-align: center; vertical-align:middle" scope="col">End</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td style=" text-align: center; vertical-align:middle">@item.Movie.MovieTitle</td>
+                        <td style=" text-align: center; vertical-align:middle">@item.Start.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td style=" text-align: center; vertical-align:middle">@item.End.ToString("dd.MM.yyyy HH:mm")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

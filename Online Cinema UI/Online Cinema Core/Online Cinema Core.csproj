@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>Online_Cinema_Core</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Online Cinema Domain\Online Cinema Domain.csproj" />
+  </ItemGroup>
+
+</Project>

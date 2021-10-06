@@ -1,0 +1,77 @@
+﻿<div class="col mycontent pt-3">
+    <div class="pt-4 pl-2 pr-2" style="height:100vh; ">
+        <div style=" z-index:1; min-width:300px; top:-1em; margin-top:-1em; position: sticky; padding-bottom:0px; background-color: #0e0e10;   ">
+            <h1 style="color:#3eaaaf">Редактор</h1>
+            <div class="btn-group pb-3" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-outline-secondary clickOnButton" onclick="SFilms(this)">Редактор материалов</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="SCinemaRoom(this)">Редактор кинозалов</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="SSession(this)">Редактор сеансов</button>
+            </div>
+
+
+        </div>
+        <div id="mainDiv" style=" height:100vh; ">
+            @*@{await Html.RenderPartialAsync("_AddFilm");}*@
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function SFilms(e) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("/Admin/_MovieSettings")',
+            success: function (result) {
+                $("#mainDiv").html(result);
+            }
+        });
+
+        $(e).addClass("clickOnButton");
+        $(e).parent().children().eq(1).removeClass("clickOnButton");
+        $(e).parent().children().eq(2).removeClass("clickOnButton");
+    }
+
+    function SCinemaRoom(e) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("/Admin/_CinemaRoomSettings")',
+            success: function (result) {
+                $("#mainDiv").html(result);
+            }
+        });
+
+        $(e).addClass("clickOnButton");
+        $(e).parent().children().eq(0).removeClass("clickOnButton");
+        $(e).parent().children().eq(2).removeClass("clickOnButton");
+    }
+
+    function SSession(e) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("/Admin/_SessionSettings")',
+            success: function (result) {
+                $("#mainDiv").html(result);
+            }
+        });
+
+        $(e).addClass("clickOnButton");
+        $(e).parent().children().eq(0).removeClass("clickOnButton");
+        $(e).parent().children().eq(1).removeClass("clickOnButton");
+    }
+</script>
+
+
+@section Scripts{
+    <script>
+        $(function () {
+              $.ajax({
+                type: 'GET',
+                url: '@Url.Content("/Admin/_MovieSettings")',
+                success: function (result) {
+                    $("#mainDiv").html(result);
+                }
+            });
+        });
+    </script>
+}

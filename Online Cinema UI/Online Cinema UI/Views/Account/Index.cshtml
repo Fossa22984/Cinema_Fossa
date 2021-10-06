@@ -1,0 +1,53 @@
+﻿@if (!User.Identity.IsAuthenticated)
+{
+    <div class="col mycontent pt-3">
+        <div class="row justify-content-center align-items-center" style="height:100vh; ">
+            <div class="col-lg-3 align-self-center" style="padding:30px; background-color: #18181b; min-width:300px">
+                <div class="btn-group pb-3" role="group" aria-label="Basic example">
+                    <button type="button" class="btn btn-outline-secondary clickOnButton" onclick="LoginIn(this)">Login In</button>
+                    <button type="button" class="btn btn-outline-secondary" onclick="SignUp(this)">Sign Up</button>
+                </div>
+
+                <div id="mainDiv">
+                    @{await Html.RenderPartialAsync("_Login");}
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<script>
+    function LoginIn(e) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("/Account/_Login")',
+            success: function (result) {
+                $("#mainDiv").html(result);
+            }
+        });
+
+        $(e).addClass("clickOnButton");
+        $(e).parent().children().eq(1).removeClass("clickOnButton");
+    }
+
+    function SignUp(e) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("/Account/_Register")',
+            success: function (result) {
+                $("#mainDiv").html(result);
+            }
+        });
+
+        $(e).addClass("clickOnButton");
+        $(e).parent().children().eq(0).removeClass("clickOnButton");
+    }
+
+</script>
+
+<style>
+    .clickOnButton {
+        border: 2px solid #3eaaaf !important;
+        box-shadow: 0 0 10px #3eaaaf;
+    }
+</style>

@@ -1,0 +1,51 @@
+﻿@model Online_Cinema_Domain.Models.IdentityModels.User
+
+<div class="mb-5" style="padding:30px; height: 40vh; z-index:1; min-width:300px; background-color: #18181b;">
+    <form asp-action="" enctype="multipart/form-data" style="padding:10px">
+        <h3 class="mb-3 text-white">Адрес электронной почты</h3>
+
+        <div class="form-group" style="width: 25vw">
+           <h4 class="text-white">@Model.Email</h4>
+            @if (@Model.EmailConfirmed)
+            {
+        <h6 class="text-white" style="font-size:12px">
+            <b>Подтвержден.</b> Благодарим за подтверждение адреса электронной почты.
+            Этот адрес электронной почты привязан к вашей учетной записи.
+        </h6>
+            }
+
+        </div>
+
+        <div class="form-group" style="width: 25vw">
+            <label class="control-label text-white">Изменить адрес электронной почты</label>
+            <input type="text" class="form-control text-white" style="background-color: #464649; border: none" required />
+
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="btn btn-outline-secondary clickOnButton" value="Сохранить изменения" />
+        </div>
+    </form>
+</div>
+
+<div class="mb-5" style="padding:30px; height: 40vh; z-index:1; min-width:300px; background-color: #18181b;">
+    <form asp-action="" enctype="multipart/form-data" style="padding:10px">
+        <h3 class="mb-3 text-white">Безопасность</h3>
+
+        <div class="form-group" style="width: 25vw">
+            <label class="control-label text-white">Изменить Пароль</label>
+            <input type="text" class="form-control text-white" style="background-color: #464649; border: none" required />
+
+        </div>
+
+        <div class="form-group" style="width: 25vw">
+            <label class="control-label text-white">Двухфакторная аутентификация</label>
+            @*<input type="checkbox" class="form-control text-white" style="background-color: #464649; border: none" required />*@
+
+        </div>
+
+        <div class="form-group">
+            <input type="submit" class="btn btn-outline-secondary clickOnButton" value="Сохранить изменения" />
+        </div>
+    </form>
+</div>

@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html>
+<html lang="en" style=" overflow: hidden;">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Online_Cinema_UI</title>
+    <link rel="shortcut icon" type="image/x-icon" href="~/movie.ico" />
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
+    <link href="https://vjs.zencdn.net/7.15.4/video-js.css" rel="stylesheet" />
+    <link href="https://unpkg.com/@@videojs/themes@1/dist/city/index.css" rel="stylesheet" />
+</head>
+@*sticky-top*@
+<body style="background-color: #0e0e10">
+    @if (User.Identity.IsAuthenticated)
+    {
+        <div class="container-fluid">
+            <div class="row mb-0">
+                <div class="col" style=" margin: 0px; padding: 0px;">
+                    <nav class="sidebar-sticky sticky-top">
+
+                        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark border-bottom box-shado " style="background-color: #18181b; border-bottom: solid 1px  #3eaaaf!important;">
+                            <div class="container-fluid">
+                                <a class="navbar-brand mr-4" asp-area="" asp-controller="Movie" asp-action="Index">
+                                    <img src="~/Images/movie.png" style="width: 40px; height: 40px; object-fit: cover;" />
+                                </a>
+                                @{
+                                    @inject Microsoft.AspNetCore.Identity.UserManager<Online_Cinema_Domain.Models.IdentityModels.User> UserManager
+                                    @*@inject Microsoft.AspNetCore.Identity.RoleManager<Online_Cinema_Domain.Models.IdentityModels.Role> RolleManager*@
+                                    var user = await UserManager.GetUserAsync(User);
+                                    var listRoles = await UserManager.GetRolesAsync(user);
+                                }
+
+                                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                                        aria-expanded="false" aria-label="Toggle navigation">
+                                    <span class="navbar-toggler-icon"></span>
+                                </button>
+                                <div class="collapse navbar-collapse collapse d-sm-inline-flex justify-content-between align-items-center" id="navbarSupportedContent">
+                                    <ul class="navbar-nav flex-grow-1 align-items-center ">
+                                        <li class="nav-item mr-4">
+                                            <a class="nav-link text-white" asp-area="" asp-controller="Movie" asp-action="Index" style="font-size:24px" disabled><b>Просмотр</b></a>
+                                        </li>
+
+                                        <li class="nav-item mr-4">
+                                            <a class="nav-link text-white" asp-area="" asp-controller="Movie" asp-action="" style="font-size:24px"><b>Комнаты</b></a>
+                                        </li>
+
+                                        @if (listRoles.Contains("Admin"))
+                                        {
+                                            <li class="nav-item mr-5">
+                                                <a class="nav-link text-white" asp-area="" asp-controller="Admin" asp-action="Index">
+                                                    <i class="fas fa-cogs mt-2" style="font-size:30px; color:white;"></i>
+                                                </a>
+                                            </li>
+                                        }
+
+                                        @*<li class="nav-item w-25" style="margin-left:15%">
+                                                <form asp-controller="Account" asp-action="ResetPassword">
+                                                <div class="input-group">
+                                                    <input onkeyup="checkSearch()" id="searchInput" type="text" name="userEmail" class="form-control text-white" placeholder="Поиск" aria-label="Поиск" aria-describedby="button-addon2" style="background-color: #464649; border: none">
+                                                    <button class="btn btn-dark btn-outline-secondary" id="searchButton" type="submit" style="background-color: #3eaaaf;" disabled><i class="fas fa-search" style="color:white;"></i></button>
+                                                </div>
+                                                </form>
+                                            </li>*@
+                                    </ul>
+
+
+                                    <div class="d-flex dropdown justify-content-center mr-4">
+                                        <a class="d-flex nav-link " href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+                                            @*<img src="~/Images/1.jpg" style=" width: 30px; height: 30px; object-fit: cover; border-radius: 50%; ">*@
+                                            <img src=@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(@user.Photo)) style=" width: 30px; height: 30px; object-fit: cover; border-radius: 50%; ">
+
+                                        </a>
+                                        <ul id="menu" class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown" style="background-color: #18181b; border: solid 1px #3eaaaf; padding: 1rem !important;  transform: translateX(10%); width:270px;">
+                                            <li>
+                                                <div style="margin-bottom:25px">
+                                                    <img src=@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(@user.Photo)) style=" width: 40px; height: 40px; object-fit: cover; border-radius: 50%; float:left; margin-right:10px;">
+                                                    <h6 class="text-white">@user.UserName</h6>
+                                                    <h6 style="color: gray; font-size:14px; opacity:0;">просмотр ...</h6>
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <a class="dropdown-item text-white" href="#">
+                                                    <i class="far fa-star" style="color:white; margin-right:10px"></i>Подписки
+                                                </a>
+                                            </li>
+                                            <li><hr class="dropdown-divider" style="border-top: 1px solid #3eaaaf63"></li>
+                                            <li>
+                                                <a class="dropdown-item text-white" asp-area="" asp-controller="Account" asp-action="Settings">
+                                                    <i class="fas fa-cog" style="color:white; margin-right:10px"></i>Настройки
+                                                </a>
+                                            </li>
+                                            <li><hr class="dropdown-divider" style="border-top: 1px solid #3eaaaf63"></li>
+                                            <li>
+                                                <a class="dropdown-item text-white" asp-area="" asp-controller="Account" asp-action="Logout">
+                                                    <i class="fas fa-sign-out-alt" style="color:white; margin-right:10px"></i>Выйти
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </nav>
+                    </nav>
+                </div>
+            </div>
+            <div class="row">
+                @RenderBody()
+            </div>
+        </div>
+
+    }
+    else
+    {
+
+        @RenderBody()
+
+
+    }
+
+    <script>
+        function checkSearch() {
+            let res = $('#searchInput').val();
+            if (res != 0) {
+                $("#searchHidden").val(res);
+                $('#searchButton').removeAttr('disabled');
+            }
+
+            else $('#searchButton').attr('disabled', 'disabled');
+
+
+        }
+    </script>
+
+    <style>
+
+        .clickOnButton {
+            border: 2px solid #3eaaaf !important;
+            box-shadow: 0 0 10px #3eaaaf;
+        }
+
+        #searchInput::placeholder {
+            font-weight: bold;
+            color: #c1c1c2;
+        }
+
+        input:focus {
+            outline: none !important;
+            border: 2px solid #3eaaaf !important;
+            box-shadow: 0 0 10px #3eaaaf;
+        }
+
+        textarea {
+            overflow: hidden !important;
+            resize: none !important;
+            background-color: #464649 !important;
+            border: none !important;
+            flex-wrap: wrap !important
+        }
+
+            textarea:focus {
+                outline: none !important;
+                border: 2px solid #3eaaaf !important;
+                box-shadow: 0 0 10px #3eaaaf;
+            }
+
+        select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none; /* Remove default arrow */
+        }
+
+            select:focus {
+                outline: none !important;
+                border: 2px solid #3eaaaf !important;
+                box-shadow: 0 0 10px #3eaaaf;
+            }
+
+        /* Chrome, Safari, Edge, Opera */
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Firefox */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+
+    <style type="text/css">
+        .mycontent {
+            overflow-y: scroll;
+            height: 95vh;
+        }
+
+        ::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+        }
+
+        input::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+        }
+
+        .mycontent::-webkit-scrollbar {
+            width: 0;
+        }
+
+        #menu li a:hover {
+            border-radius: 5px;
+            background-color: grey;
+        }
+
+        .mycontent1 {
+            overflow-y: scroll;
+        }
+
+            .mycontent1::-webkit-scrollbar-track {
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+                border-radius: 10px;
+                background-color: transparent;
+            }
+
+            .mycontent1::-webkit-scrollbar {
+                width: 12px;
+                background-color: transparent;
+            }
+
+            .mycontent1::-webkit-scrollbar-thumb {
+                border-radius: 10px;
+                -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+                background-color: #1d1d20;
+                border: solid 1px #3c3c3f;
+            }
+    </style>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    <script src="https://vjs.zencdn.net/7.15.4/video.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

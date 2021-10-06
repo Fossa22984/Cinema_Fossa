@@ -1,0 +1,80 @@
+﻿
+<div class="mb-5" style="padding:30px; z-index:1; min-width:300px; background-color: #18181b;">
+    <div class="d-flex flex-row bd-highlight mb-3 flex-wrap">
+        <div>
+            <button type="button" class="btn clickOnButton text-white" onclick="AddFilm()">Добавить</button>
+        </div>
+        <div style="width:10%">
+
+        </div>
+        <div style="width:50%;">
+            <input class="btn clickOnButton text-white" type="text" id="ajax" list="json-datalist" placeholder="Редактировать существующий" style="width:65%">
+            <datalist class="text-white" id="json-datalist" style="max-height: 50px!important;  overflow-y: auto !important; background-color: #3eaaaf!important;"></datalist>
+
+            <button type="button" class="btn clickOnButton text-white" onclick="ChangeFilm()">Поиск</button>
+        </div>
+    </div>
+
+    <div id="movieSettingsDiv"></div>
+</div>
+
+
+<script>
+    $(function () {
+        // Get the <datalist> and <input> elements.
+        var dataList = document.getElementById('json-datalist');
+        var input = document.getElementById('ajax');
+
+         $.ajax({
+            type: 'GET',
+            url: '@Url.Content("/Admin/GetListMovies")',
+            success: function (result) {
+                result.forEach(function (item) {
+
+                    // Create a new <option> element.
+                    var option = document.createElement('option');
+
+                    // Set the value using the item in the JSON array.
+                    option["data-value"] = item["key"];
+                    option.value = item["value"];
+
+                    // Add the <option> element to the <datalist>.
+                    dataList.appendChild(option);
+                });
+
+
+                input.placeholder = "Редактировать существующий";
+            },
+            error: function (e) {
+                input.placeholder = "Couldn't load datalist options :(";
+            }
+        });
+
+        // Update the placeholder text.
+        input.placeholder = "Loading options...";
+    });
+
+    function ChangeFilm(e) {
+        $.ajax({
+            type: 'GET',
+            data: { "movie": $('option[value="' + $("#ajax").val() + '"]').first().prop("data-value") },
+            url: '@Url.Content("/Admin/_ChangeMovie")',
+            success: function (result) {
+                debugger;
+                if (result != "") $("#movieSettingsDiv").html(result);
+                else $("#movieSettingsDiv").html("");
+            }
+        });
+    }
+
+    function AddFilm(e) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("/Admin/_AddMovie")',
+            success: function (result) {
+                $("#movieSettingsDiv").html(result);
+            }
+        });
+        $("#ajax").val("");
+    }
+</script>

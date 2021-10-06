@@ -1,0 +1,71 @@
+﻿@{
+    @inject Microsoft.AspNetCore.Identity.UserManager<Online_Cinema_Domain.Models.IdentityModels.User> UserManager
+    var user = await UserManager.GetUserAsync(User);
+}
+<div class="col mycontent pt-3">
+    <div class="pt-4 pl-2 pr-2" style="height:100vh; ">
+        <div style="z-index:1; min-width:300px; top:-1em; position: sticky; padding-bottom:0px; background-color: #0e0e10; margin-top:-1em">
+            <h1 style="color:#3eaaaf">Настройки</h1>
+            <div class="btn-group pb-3" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-outline-secondary clickOnButton" onclick="SProfile(this)">Профиль</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="SSecurityPrivacy(this)">Безопасность и конфиденциальность</button>
+                <button disabled type="button" class="btn btn-outline-secondary" onclick="SNotifications(this)">Уведомления</button>
+            </div>
+
+        </div>
+        <div id="mainDiv" style=" height:100vh; ">
+            @{await Html.RenderPartialAsync("_ProfileSettings", user);}
+        </div>
+    </div>
+</div>
+
+<script>
+    function SProfile(e) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("/Account/_ProfileSettings")',
+            success: function (result) {
+                $("#mainDiv").html(result);
+            }
+        });
+
+        $(e).addClass("clickOnButton");
+        $(e).parent().children().eq(1).removeClass("clickOnButton");
+        $(e).parent().children().eq(2).removeClass("clickOnButton");
+    }
+
+    function SSecurityPrivacy(e) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("/Account/_SecurityPrivacySettings")',
+            success: function (result) {
+                $("#mainDiv").html(result);
+            }
+        });
+
+        $(e).addClass("clickOnButton");
+        $(e).parent().children().eq(0).removeClass("clickOnButton");
+        $(e).parent().children().eq(2).removeClass("clickOnButton");
+    }
+
+    function SNotifications(e) {
+        $.ajax({
+            type: 'GET',
+            url: '@Url.Content("/Account/_NotificationSettings")',
+            success: function (result) {
+                $("#mainDiv").html(result);
+            }
+        });
+
+        $(e).addClass("clickOnButton");
+        $(e).parent().children().eq(0).removeClass("clickOnButton");
+        $(e).parent().children().eq(1).removeClass("clickOnButton");
+    }
+</script>
+
+<style>
+    .clickOnButton {
+        border: 2px solid #3eaaaf !important;
+        box-shadow: 0 0 10px #3eaaaf;
+    }
+</style>
