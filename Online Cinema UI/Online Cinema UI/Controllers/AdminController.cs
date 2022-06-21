@@ -152,7 +152,7 @@ namespace Online_Cinema_UI.Controllers
             }
             var res = _mapper.Map<MovieViewModel, Movie>(movie);
 
-            var inputFile = new MediaFile { Filename = @".\wwwroot" + movie.MoviePath };
+            var inputFile = new MediaFile { Filename = movie.MoviePath };
             using (var engine = new Engine())
             {
                 engine.GetMetadata(inputFile);
