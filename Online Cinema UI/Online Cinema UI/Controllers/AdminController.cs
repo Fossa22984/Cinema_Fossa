@@ -2,6 +2,7 @@
 using MediaToolkit;
 using MediaToolkit.Model;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Online_Cinema_BLL.Services;
 using Online_Cinema_Domain.Models;
@@ -122,8 +123,8 @@ namespace Online_Cinema_UI.Controllers
 
 
 
-
-        public async Task AddMovie(MovieViewModel movie, string genre)
+        [DisableRequestSizeLimit]
+        public async Task AddMovie(MovieViewModel movie, string genre, IFormFile video)
         {
             if (movie.ImageFile != null)
             {
@@ -152,14 +153,15 @@ namespace Online_Cinema_UI.Controllers
             }
             var res = _mapper.Map<MovieViewModel, Movie>(movie);
 
-            var inputFile = new MediaFile { Filename = @".\wwwroot" + movie.MoviePath };
-            using (var engine = new Engine())
-            {
-                engine.GetMetadata(inputFile);
-                res.Duration = inputFile.Metadata.Duration;
-            }
+            //var inputFile = new MediaFile { Filename = @".\wwwroot" + movie.MoviePath };
+            //using (var engine = new Engine())
+            //{
+            //    engine.GetMetadata(inputFile);
+            //    res.Duration = inputFile.Metadata.Duration;
+            //}
             //await _moviesService.AddMovieAsync(res, genre);
-            await _adminService.AddFilmAsync(res, genre);
+
+            await _adminService.AddFilmAsync(res, genre, video);
         }
         public async Task ChangeMovie(MovieViewModel movie, string genre)
         {

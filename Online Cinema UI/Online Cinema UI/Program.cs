@@ -20,7 +20,12 @@ namespace Online_Cinema_UI
             {
             }).ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                    webBuilder.UseStartup<Startup>()
+                    .ConfigureKestrel(serverOptions =>
+                                {
+                                    serverOptions.Limits.MaxRequestBodySize = 2147483648;
+                                });
+
                 });
     }
 }

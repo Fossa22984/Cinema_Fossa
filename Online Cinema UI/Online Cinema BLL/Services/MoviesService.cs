@@ -1,9 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Online_Cinema_BLL.Managers;
+using Online_Cinema_BLL.Settings;
 using Online_Cinema_Core.Context;
 using Online_Cinema_Core.UnitOfWork;
 using Online_Cinema_Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,13 +32,15 @@ namespace Online_Cinema_BLL.Services
         {
             try
             {
+
+
                 if (genre != null)
                 {
                     var res = (await _unit.Genre.GetAllGenreAsync()).Where(x => genre.Contains(x.GenreName, StringComparison.OrdinalIgnoreCase)).ToList();
                     movie.Genre = res;
                 }
-               _unit.Movie.Create(movie);
-              await _unit.SaveAsync();
+                _unit.Movie.Create(movie);
+                await _unit.SaveAsync();
             }
             catch (Exception)
             {

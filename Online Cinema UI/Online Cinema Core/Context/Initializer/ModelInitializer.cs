@@ -1,4 +1,5 @@
-﻿using Online_Cinema_Domain.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using Online_Cinema_Domain.Models;
 using Online_Cinema_Domain.Models.IdentityModels;
 using System.Linq;
 
@@ -6,7 +7,7 @@ namespace Online_Cinema_Core.Context.Initializer
 {
     public static class ModelInitializer
     {
-        public static void Initializer(OnlineCinemaContext onlineCinemaContext)
+        public static void Initializer(OnlineCinemaContext onlineCinemaContext, UserManager<User> _userManager)
         {
             onlineCinemaContext.Database.EnsureCreated();
 

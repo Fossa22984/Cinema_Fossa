@@ -34,9 +34,13 @@
     <Content Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Update="web.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="wwwroot\Images\background-fon.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+	
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Online_Cinema_Core.Context.Initializer;
 using Online_Cinema_Domain.Models;
@@ -12,7 +13,6 @@ namespace Online_Cinema_Core.Context
         public OnlineCinemaContext(DbContextOptions<OnlineCinemaContext> options) : base(options)
         {
             Database.EnsureCreated();
-            ModelInitializer.Initializer(this);
         }
 
         public DbSet<Comment> Comments { get; set; }

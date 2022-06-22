@@ -1,8 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediaToolkit;
+using MediaToolkit.Model;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Online_Cinema_BLL.Managers;
+using Online_Cinema_BLL.Settings;
 using Online_Cinema_Core.Context;
 using Online_Cinema_Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -11,7 +18,9 @@ namespace Online_Cinema_BLL.Services
     public class AdminService
     {
         private readonly OnlineCinemaContext _context;
-        public AdminService(OnlineCinemaContext context) { this._context = context; }
+
+        private UploadFileAzureManager _uploadFileAzureManager;
+        public AdminService(OnlineCinemaContext context, UploadFileAzureManager uploadFileAzureManager) { this._context = context; _uploadFileAzureManager = uploadFileAzureManager; }
 
         public IList<string> GetListStringGenreAsync()
         {
@@ -88,8 +97,33 @@ namespace Online_Cinema_BLL.Services
         }
 
         public async Task<Movie> GetMovieAsync(int movieId) => await _context.Movies.Include(x => x.Genre).Where(x => x.Id == movieId).FirstOrDefaultAsync();
-        public async Task AddFilmAsync(Movie movie, string genre)
+        public async Task AddFilmAsync(Movie movie, string genre, IFormFile file)
         {
+            ConfigWrapper config = new(new ConfigurationBuilder()
+                   .SetBasePath(@"C:\Users\omen\source\repos\Cinema_Fossa\Online Cinema UI\Online Cinema BLL\bin\Debug\net5.0\Settings")
+                   .AddJsonFile("azureSetings.json", optional: true, reloadOnChange: true)
+                   .AddEnvironmentVariables() // parses the values from the optional .env file at the solution root
+                   .Build());
+
+            var test = Directory.GetCurrentDirectory();
+
+
+            var filePath = Path.GetTempFileName();
+
+            using (var stream = System.IO.File.Create(filePath))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            var inputFile = new MediaFile(filePath);
+            using (var engine = new Engine())
+            {
+                engine.GetMetadata(inputFile);
+                var duration = inputFile.Metadata.Duration;
+            }
+
+            await _uploadFileAzureManager.RunAsync(config, filePath, movie.MovieTitle);
+
             if (genre != null)
             {
                 var res = _context.Genres.AsEnumerable().Where(x => genre.Contains(x.GenreName, StringComparison.OrdinalIgnoreCase)).ToList();
@@ -97,7 +131,6 @@ namespace Online_Cinema_BLL.Services
             }
             await _context.Movies.AddAsync(movie);
             await _context.SaveChangesAsync();
-
         }
         public async Task ChangeFilmAsync(Movie movie, string genre)
         {

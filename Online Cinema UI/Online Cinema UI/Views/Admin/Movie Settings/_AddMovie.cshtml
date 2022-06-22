@@ -35,6 +35,8 @@
                         <button type="button" class="btn btn-outline-secondary text-white w-100 clickOnButton" onclick=" $('#ImageFile').trigger('click'); ">Добавить обложку</button>
                     </label>
                     <span asp-validation-for="ImageFile" class="text-danger"></span>
+                    <input name="video" id="video" type="file" accept="video/*" enctype="multipart/form-data" />
+
                 </div>
                 <div class="form-group col-md-4">
                     <label asp-for="DateOfRelease" class="control-label text-white"></label>
@@ -177,8 +179,15 @@
             formData.append("MovieBudget", $("#MovieBudget").val());
             formData.append("IsCartoon", $('#IsCartoon').is(":checked"));
 
-
             debugger;
+
+            var videoInput = $("#video")[0];
+            var video = videoInput.files[0];
+
+            formData.append("video", video);
+
+
+
 
             $.ajax({
                 type: "POST",

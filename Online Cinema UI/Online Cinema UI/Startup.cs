@@ -1,10 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Online_Cinema_BLL.Infrastructure;
 using Online_Cinema_BLL.Infrastructure.Provider;
+using Online_Cinema_BLL.Managers;
 using Online_Cinema_BLL.Services;
 using Online_Cinema_BLL.Services.Interfaces;
 using Online_Cinema_UI.Middlewares;
@@ -36,6 +39,7 @@ namespace Online_Cinema_UI
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<MoviesService>();
             services.AddTransient<AdminService>();
+            services.AddTransient<UploadFileAzureManager>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -44,12 +48,34 @@ namespace Online_Cinema_UI
             services.Configure<EmailConfirmationProviderOption>(op => op.TokenLifespan = TimeSpan.FromDays(5));
 
             services.AddAuthentication().AddCookie(op => op.LoginPath = "/Login");
-            //services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            services.AddMvc()
+                .AddRazorPagesOptions(options =>
+                {
+                    options.Conventions
+                        .AddPageApplicationModelConvention("/FileUploadPage",
+                            model =>
+                            {
+                    // Handle requests up to 50 MB
+                    model.Filters.Add(
+                                    new RequestSizeLimitAttribute(52428800));
+                            });
+                })
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             //services.AddTransient<ObserversManagementService>();
             //services.AddTransient<SignalRObserver>();
             services.AddControllersWithViews();
             services.AddSignalR();
+
+            services.Configure<IISServerOptions>(options =>
+            {
+                options.MaxRequestBodySize = 2147483648;
+            });
+
+            services.Configure<FormOptions>(options =>
+            {
+                options.MultipartBodyLengthLimit = 2147483648;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

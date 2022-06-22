@@ -1,0 +1,12 @@
+{
+  "AadClientId": "867e9708-de9f-4a36-b559-207ff4dfd29e",
+  "AadEndpoint": "https://login.microsoftonline.com/",
+  "AadSecret": "Rsx8Q~TYtLH6vW2jtRYae0XntECqqGPsgOL7Cc.3",
+  "AadTenantId": "05b8588a-27a8-4346-9d4b-ac49c7ebd2f7",
+  "AccountName": "fossamultimedia1",
+  "ArmAadAudience": "https://management.core.windows.net/",
+  "ArmEndpoint": "https://management.azure.com/",
+  // "Location": "West US 2",
+  "ResourceGroup": "fossa_group",
+  "SubscriptionId": "1130fdfe-5a8d-48ca-81be-3b8bb570ab77"
+}
