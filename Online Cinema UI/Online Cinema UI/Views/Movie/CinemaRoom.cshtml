@@ -3,14 +3,39 @@
     @inject Microsoft.AspNetCore.Identity.UserManager<Online_Cinema_Domain.Models.IdentityModels.User> UserManager
     var user = await UserManager.GetUserAsync(User);
 }
+
+<link href="//amp.azure.net/libs/amp/latest/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet">
+<script src="//amp.azure.net/libs/amp/latest/azuremediaplayer.min.js"></script>
+
 <style>
+    .vjs-progress-holder {
+        visibility: hidden;
+    }
+
+    .amp-controlbaricons-middle {
+        visibility: hidden;
+    }
+
+    .vjs-control-bar {
+        background-color: transparent;
+    }
+
+    .amp-content-title {
+        visibility: hidden;
+    }
+
+    .amp-default-skin .vjs-controls-enabled .vjs-big-play-button {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%,-50%);
+    }
+
     .cardss {
         display: grid;
         grid-template-rows: 0.2fr 5fr 1fr;
         padding: 15px;
         grid-gap: 15px;
     }
-
     /* Change all text and icon colors in the player. */
     .vjs-matrix.video-js {
         color: #3eaaaf;
@@ -41,13 +66,48 @@
         color: transparent;
         opacity: 0;
     }
+
+    .chat-button {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        position: absolute !important;
+        right: 5px;
+    }
+
+    .amp-controlbaricons-left {
+        position: absolute !important;
+        left: 5px;
+    }
+
+    .amp-controlbaricons-right {
+        padding-right: 30px !important;
+    }
+
+    .vjs-volume-level {
+        background: #3eaaaf !important;
+    }
+    .amp-default-skin .vjs-control {
+        color: #3eaaaf !important;
+    }
 </style>
+
+
+@*<video id="vid1" class="azuremediaplayer amp-default-skin" autoplay controls width="640" height="400" poster="poster.jpg" data-setup='{"nativeControlsForTouch": false}'>
+        <source src="http://amssamples.streaming.mediaservices.windows.net/91492735-c523-432b-ba01-faba6c2206a2/AzureMediaServicesPromo.ism/manifest" type="application/vnd.ms-sstr+xml" />
+        <p class="amp-no-js">
+            To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video
+        </p>
+    </video>*@
+
+@*vjs-matrix video-js vjs-theme-city vjs-big-play-centered*@
+
 <input asp-for="Id" type="hidden" />
 <input id="sessionId" type="hidden" />
 <div class="mycontent pt-1 mb-3" id="videoDiv" style="width: 75vw;">
     <div class="row p-0 m-0" style="height: 82vh; width:100%;">
-        <video id="video" class="vjs-matrix video-js vjs-theme-city vjs-big-play-centered " controls autoplay style="width: 100%; height:100%" data-setup="{}" >
-            <source type="video/mp4" src="~/Movies/Background Video.mp4" />
+        <video id="video" class="azuremediaplayer amp-default-skin" controls autoplay style="width: 100%; height:100%" data-setup="{}">
+            <source type="video/mp4" src="https://fossamultimedia1-euwe.streaming.media.azure.net/22831a79-853d-4f6e-adbc-61cc799e2246/Overwatch 2020.09.13 - 20.38.08..ism/manifest(format=mpd-time-cmaf)" />
         </video>
     </div>
     <div class="row m-3 mb-5">
@@ -65,8 +125,8 @@
     </div>
 
     <div class="row d-flex flex-row bd-highlight m-3 mb-5 flex-wrap">
-            <input id="dateSession" type="date" class="btn clickOnButton text-white" placeholder="Поиск по дате" style="width:65%; color:white" />
-            <button type="button" class="btn clickOnButton text-white" onclick="SearchByDate()">Расписание сессий</button>
+        <input id="dateSession" type="date" class="btn clickOnButton text-white" placeholder="Поиск по дате" style="width:65%; color:white" />
+        <button type="button" class="btn clickOnButton text-white" onclick="SearchByDate()">Расписание сессий</button>
     </div>
 
     <div class="m-3" id="listSessionsDiv"></div>
@@ -101,7 +161,6 @@
                     data: { "cinemaRoomId": $("#Id").val() },
                     url: '@Url.Content("/Movie/_ListSessions")',
                     success: function (result) {
-                        debugger;
                         $("#listSessionsDiv").html(result);
                     }
                 });
@@ -125,7 +184,6 @@
 
         function ScrollChat(e) {
             shouldScroll = messages.scrollTop + messages.clientHeight === messages.scrollHeight;
-            debugger;
             if (!shouldScroll) {
                 $(e).attr("data-scroll", "false");
             }
@@ -184,18 +242,19 @@
                 newLink = document.createElement('span');
 
             newElement.id = data.id;
-            newElement.className = 'vjs-fullscreen-control vjs-control vjs-button';
+            newElement.className = 'vjs-control vjs-button chat-button';
             newElement.type = "button"
 
             newLink.innerHTML = "<i class='fa " + data.icon + " line-height' aria-hidden='true' style='color:#3eaaaf'></i>";
             newElement.appendChild(newLink);
+            rightPanel = $(".amp-controlbaricons-right");
             controlBar = document.getElementsByClassName('vjs-control-bar')[0];
-            insertBeforeNode = document.getElementsByClassName('vjs-fullscreen-control')[0];
+
             debugger;
-            controlBar.insertBefore(newElement, insertBeforeNode);
+            insertBeforeNode = document.getElementsByClassName('vjs-fullscreen-control')[0];
+            $('.vjs-control-bar').append(newElement);
 
             return newElement;
-
         }
 
         function addSourceToVideo(element, src, type) {
@@ -208,10 +267,14 @@
             element.appendChild(source);
         }
 
-        $(function () {
-            addNewButton({ player: "video", icon: "fas fa-comment-alt", id: "buttonChat"});
-            $("#buttonChat").attr("data-open","true");
+        window.onload = function () {
+            addNewButton({ player: "video", icon: "fas fa-comment-alt", id: "buttonChat" });
+            $("#buttonChat").attr("data-open", "true");
             $("#buttonChat").on("click", function () { showChat(this); })
+        };
+
+        $(function () {
+
 
             var myplayer = videojs('video');
             myplayer.controlBar.progressControl.hide();
@@ -240,12 +303,8 @@
                     data: { "sessionId": message },
                     url: '@Url.Content("/Movie/GetSession")',
                     success: function (result) {
-                        debugger;
-                        //var ress = self.player.src();
-
                         var res = new Date()
                         var time = (new Date() - Date.parse(result.start)) / 1000;
-                        debugger;
 
                         var res = $("#sessionId").val()
                         if ($("#sessionId").val() == "") {
