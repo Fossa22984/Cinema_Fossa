@@ -40,6 +40,7 @@ namespace Online_Cinema_UI
             services.AddTransient<MoviesService>();
             services.AddTransient<AdminService>();
             services.AddTransient<UploadFileAzureManager>();
+            services.AddTransient<FileManager>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -48,19 +49,19 @@ namespace Online_Cinema_UI
             services.Configure<EmailConfirmationProviderOption>(op => op.TokenLifespan = TimeSpan.FromDays(5));
 
             services.AddAuthentication().AddCookie(op => op.LoginPath = "/Login");
-            services.AddMvc()
-                .AddRazorPagesOptions(options =>
-                {
-                    options.Conventions
-                        .AddPageApplicationModelConvention("/FileUploadPage",
-                            model =>
-                            {
-                    // Handle requests up to 50 MB
-                    model.Filters.Add(
-                                    new RequestSizeLimitAttribute(52428800));
-                            });
-                })
-                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+            //services.AddMvc()
+            //    .AddRazorPagesOptions(options =>
+            //    {
+            //        options.Conventions
+            //            .AddPageApplicationModelConvention("/FileUploadPage",
+            //                model =>
+            //                {
+            //        // Handle requests up to 50 MB
+            //        model.Filters.Add(
+            //                        new RequestSizeLimitAttribute(52428800));
+            //                });
+            //    })
+            //    .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
             //services.AddTransient<ObserversManagementService>();
             //services.AddTransient<SignalRObserver>();
