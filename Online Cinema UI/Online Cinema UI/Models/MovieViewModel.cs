@@ -13,6 +13,9 @@ namespace Online_Cinema_UI.Models
         [/*Required,*/ Display(Name = "Image")]
         public IFormFile ImageFile { get; set; }
 
+        [Required, Display(Name = "Video")]
+        public IFormFile VideoFile { get; set; }
+
         [Required, Display(Name = "Movie Title")]
         public string MovieTitle { get; set; }
 

@@ -100,13 +100,12 @@ namespace Online_Cinema_BLL.Services
         public async Task AddFilmAsync(Movie movie, string genre, IFormFile file)
         {
             ConfigWrapper config = new(new ConfigurationBuilder()
-                   .SetBasePath(@"C:\Users\omen\source\repos\Cinema_Fossa\Online Cinema UI\Online Cinema BLL\bin\Debug\net5.0\Settings")
+                   .SetBasePath(@"D:\Cinema_Fossa\Online Cinema UI\Online Cinema UI\bin\Debug\net5.0\Settings")
                    .AddJsonFile("azureSetings.json", optional: true, reloadOnChange: true)
                    .AddEnvironmentVariables() // parses the values from the optional .env file at the solution root
                    .Build());
 
             var test = Directory.GetCurrentDirectory();
-
 
             var filePath = Path.GetTempFileName();
 
@@ -143,7 +142,7 @@ namespace Online_Cinema_BLL.Services
             var newMovie = await _context.Movies.Where(x => x.Id == movie.Id).Include(x => x.Genre).FirstOrDefaultAsync();
             if (movie.Image.Length != 0) newMovie.Image = movie.Image;
             newMovie.MovieTitle = movie.MovieTitle;
-            newMovie.MoviePath = movie.MoviePath;
+         //   newMovie.MoviePath = movie.MoviePath;
             newMovie.DateOfRelease = movie.DateOfRelease;
             newMovie.Duration = movie.Duration;
             newMovie.Author = movie.Author;

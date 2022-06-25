@@ -124,7 +124,7 @@ namespace Online_Cinema_UI.Controllers
 
 
         [DisableRequestSizeLimit]
-        public async Task AddMovie(MovieViewModel movie, string genre, IFormFile video)
+        public async Task AddMovie(MovieViewModel movie, string genre)
         {
             if (movie.ImageFile != null)
             {
@@ -161,7 +161,7 @@ namespace Online_Cinema_UI.Controllers
             //}
             //await _moviesService.AddMovieAsync(res, genre);
 
-            await _adminService.AddFilmAsync(res, genre, video);
+            await _adminService.AddFilmAsync(res, genre, movie.VideoFile);
         }
         public async Task ChangeMovie(MovieViewModel movie, string genre)
         {
