@@ -17,54 +17,41 @@ namespace Online_Cinema_BLL.Managers
     public class UploadFileAzureManager
     {
         private const string AdaptiveStreamingTransformName = "MyTransformWithAdaptiveStreamingPreset";
-        private string InputMP4FileName = @"C:\Users\omen\Downloads\audi_a7.mp4";
-        private const string OutputFolderName = @"Output";
 
         private string filePath;
 
         // Set this variable to true if you want to authenticate Interactively through the browser using your Azure user account
         private const bool UseInteractiveAuth = false;
 
+        public event Action<string, int> UploadProgress;
+
         /// <summary>
         /// Run the sample async.
         /// </summary>
         /// <param name="config">The parm is of type ConfigWrapper. This class reads values from local configuration file.</param>
         /// <returns></returns>
-        // <RunAsync>
-        public async Task RunAsync(ConfigWrapper config, string filePath, string name)
+        public async Task<string> RunAsync(ConfigWrapper config, string filePath, string name)
         {
             this.filePath = filePath;
             IAzureMediaServicesClient client;
             try
             {
                 client = await AuntificationAzureManager.CreateMediaServicesClientAsync(config, UseInteractiveAuth);
-
-                //var encodedAsset = await ams.Assets.GetAsync(config.ResourceGroup, config.AccountName, encodedAssetName);
-                //if (encodedAsset is null) throw new ArgumentException("An asset with that name doesn't exist.", nameof(encodedAssetName));
-                //var sas = GetSasForAssetFile("video_manifest.json", encodedAsset, DateTime.Now.AddMinutes(2));
-                //var responseMessage = await http.GetAsync(sas);
-                //var manifest = JsonConvert.DeserializeObject<Amsv3Manifest>(await responseMessage.Content.ReadAsStringAsync());
-                //var duration = manifest.AssetFile.First().Duration;
-                //return XmlConvert.ToTimeSpan(duration)
             }
             catch (Exception e)
             {
                 Console.Error.WriteLine("TIP: Make sure that you have filled out the appsettings.json file before running this sample.");
                 Console.Error.WriteLine($"{e.Message}");
-                return;
+                return null;
             }
 
-            // Set the polling interval for long running operations to 2 seconds.
-            // The default value is 30 seconds for the .NET client SDK
             client.LongRunningOperationRetryTimeout = 2;
 
-            // Creating a unique suffix so that we don't have name collisions if you run the sample
-            // multiple times without cleaning up.
             string uniqueness = Guid.NewGuid().ToString("N");
             string jobName = $"job-{uniqueness}";
             string locatorName = $"locator-{uniqueness}";
-            string outputAssetName = $"output-{uniqueness}";
-            string inputAssetName = $"input-{uniqueness}";
+            string outputAssetName = $"{name}-{uniqueness}";
+            string inputAssetName = $"{name}-{uniqueness}";
 
             // Ensure that you have the desired encoding Transform. This is really a one time setup operation.
             _ = await GetOrCreateTransformAsync(client, config.ResourceGroup, config.AccountName, AdaptiveStreamingTransformName);
@@ -79,10 +66,7 @@ namespace Online_Cinema_BLL.Managers
             Asset outputAsset = await CreateOutputAssetAsync(client, config.ResourceGroup, config.AccountName, outputAssetName);
 
             _ = await SubmitJobAsync(client, config.ResourceGroup, config.AccountName, AdaptiveStreamingTransformName, jobName, inputAssetName, outputAsset.Name);
-            // In this demo code, we will poll for Job status
-            // Polling is not a recommended best practice for production applications because of the latency it introduces.
-            // Overuse of this API may trigger throttling. Developers should instead use Event Grid.
-            Job job = await WaitForJobToFinishAsync(client, config.ResourceGroup, config.AccountName, AdaptiveStreamingTransformName, jobName);
+            Job job = await WaitForJobToFinishAsync(client, config.ResourceGroup, config.AccountName, AdaptiveStreamingTransformName, jobName, name);
 
             if (job.State == JobState.Finished)
             {
@@ -94,53 +78,19 @@ namespace Online_Cinema_BLL.Managers
 
                 StreamingLocator locator = await CreateStreamingLocatorAsync(client, config.ResourceGroup, config.AccountName, outputAsset.Name, locatorName);
 
-                // Note that the URLs returned by this method include a /manifest path followed by a (format=)
-                // parameter that controls the type of manifest that is returned. 
-                // The /manifest(format=m3u8-aapl) will provide Apple HLS v4 manifest using MPEG TS segments.
-                // The /manifest(format=mpd-time-csf) will provide MPEG DASH manifest.
-                // And using just /manifest alone will return Microsoft Smooth Streaming format.
-                // There are additional formats available that are not returned in this call, please check the documentation
-                // on the dynamic packager for additional formats - see https://docs.microsoft.com/azure/media-services/latest/dynamic-packaging-overview
                 IList<string> urls = await GetStreamingUrlsAsync(client, config.ResourceGroup, config.AccountName, locator.Name);
+
                 foreach (var url in urls)
                 {
                     Console.WriteLine(url);
                 }
+
+                return urls.FirstOrDefault();
             }
 
             Console.WriteLine("Done. Copy and paste the Streaming URL ending in '/manifest' into the Azure Media Player at 'http://aka.ms/azuremediaplayer'.");
-            Console.WriteLine("See the documentation on Dynamic Packaging for additional format support, including CMAF.");
-            Console.WriteLine("https://docs.microsoft.com/azure/media-services/latest/dynamic-packaging-overview");
-        }
-        // </RunAsync>
 
-
-
-        private string GetSasForAssetFile(string filename, Asset asset, DateTime expiry)
-        {
-            var client = GetCloudBlobClient();
-            var container = client.GetContainerReference(asset.Container);
-            var blob = container.GetBlobReference(filename);
-
-            var offset = TimeSpan.FromMinutes(10);
-            var policy = new SharedAccessBlobPolicy
-            {
-                SharedAccessStartTime = DateTime.UtcNow.Subtract(offset),
-                SharedAccessExpiryTime = expiry.Add(offset),
-                Permissions = SharedAccessBlobPermissions.Read
-            };
-            var sas = blob.GetSharedAccessSignature(policy);
-            return $"{blob.Uri.AbsoluteUri}{sas}";
-        }
-
-        private CloudBlobClient GetCloudBlobClient()
-        {
-            if (CloudStorageAccount.TryParse("DefaultEndpointsProtocol=https;AccountName=fossastorage1;AccountKey=xw5Olcrk1WRqqDnQHG5FY7VCSi7GK6ywHwJHd5wqxrH5MnBAExPy0y9VTBjCm55pSlhXlDC4Vw61+ASttXQDwA==;EndpointSuffix=core.windows.net", out var storageAccount) is false)
-            {
-                throw new ArgumentException(message: "The storage configuration has an invalid connection string.");
-            }
-
-            return storageAccount.CreateCloudBlobClient();
+            return null;
         }
 
         /// <summary>
@@ -160,21 +110,8 @@ namespace Online_Cinema_BLL.Managers
             string assetName,
             string fileToUpload)
         {
-            // In this example, we are assuming that the asset name is unique.
-            //
-            // If you already have an asset with the desired name, use the Assets.Get method
-            // to get the existing asset. In Media Services v3, the Get method on entities returns null 
-            // if the entity doesn't exist (a case-insensitive check on the name).
-
-            // Call Media Services API to create an Asset.
-            // This method creates a container in storage for the Asset.
-            // The files (blobs) associated with the asset will be stored in this container.
             Asset asset = await client.Assets.CreateOrUpdateAsync(resourceGroupName, accountName, assetName, new Asset());
 
-            // Use Media Services API to get back a response that contains
-            // SAS URL for the Asset container into which to upload blobs.
-            // That is where you would specify read-write permissions 
-            // and the exparation time for the SAS URL.
             var response = await client.Assets.ListContainerSasAsync(
                 resourceGroupName,
                 accountName,
@@ -184,17 +121,13 @@ namespace Online_Cinema_BLL.Managers
 
             var sasUri = new Uri(response.AssetContainerSasUrls.First());
 
-            // Use Storage API to get a reference to the Asset container
-            // that was created by calling Asset's CreateOrUpdate method.  
             BlobContainerClient container = new BlobContainerClient(sasUri);
             BlobClient blob = container.GetBlobClient(Path.GetFileName(fileToUpload));
 
-            // Use Strorage API to upload the file into the container in storage.
             await blob.UploadAsync(filePath);
 
             return asset;
         }
-        // </CreateInputAsset>
 
         /// <summary>
         /// Creates an ouput asset. The output from the encoding Job must be written to an Asset.
@@ -204,7 +137,6 @@ namespace Online_Cinema_BLL.Managers
         /// <param name="accountName"> The Media Services account name.</param>
         /// <param name="assetName">The output asset name.</param>
         /// <returns></returns>
-        // <CreateOutputAsset>
         private async Task<Asset> CreateOutputAssetAsync(IAzureMediaServicesClient client, string resourceGroupName, string accountName, string assetName)
         {
             bool existingAsset = true;
@@ -224,9 +156,6 @@ namespace Online_Cinema_BLL.Managers
 
             if (existingAsset)
             {
-                // Name collision! In order to get the sample to work, let's just go ahead and create a unique asset name
-                // Note that the returned Asset can have a different name than the one specified as an input parameter.
-                // You may want to update this part to throw an Exception instead, and handle name collisions differently.
                 string uniqueness = $"-{Guid.NewGuid():N}";
                 outputAssetName += uniqueness;
 
@@ -236,7 +165,6 @@ namespace Online_Cinema_BLL.Managers
 
             return await client.Assets.CreateOrUpdateAsync(resourceGroupName, accountName, outputAssetName, asset);
         }
-        // </CreateOutputAsset>
 
         /// <summary>
         /// If the specified transform exists, get that transform.
@@ -248,7 +176,6 @@ namespace Online_Cinema_BLL.Managers
         /// <param name="accountName"> The Media Services account name.</param>
         /// <param name="transformName">The name of the transform.</param>
         /// <returns></returns>
-        // <EnsureTransformExists>
         private async Task<Transform> GetOrCreateTransformAsync(
             IAzureMediaServicesClient client,
             string resourceGroupName,
@@ -259,8 +186,6 @@ namespace Online_Cinema_BLL.Managers
             Transform transform = null;
             try
             {
-                // Does a transform already exist with the desired name? Assume that an existing Transform with the desired name
-                // also uses the same recipe or Preset for processing content.
                 transform = client.Transforms.Get(resourceGroupName, accountName, transformName);
             }
             catch (ErrorResponseException ex) when (ex.Response.StatusCode == System.Net.HttpStatusCode.NotFound)
@@ -270,28 +195,22 @@ namespace Online_Cinema_BLL.Managers
 
             if (createTransform)
             {
-                // You need to specify what you want it to produce as an output
                 TransformOutput[] output = new TransformOutput[]
                 {
                     new TransformOutput
                     {
-                        // The preset for the Transform is set to one of Media Services built-in sample presets.
-                        // You can  customize the encoding settings by changing this to use "StandardEncoderPreset" class.
                         Preset = new BuiltInStandardEncoderPreset()
                         {
-                            // This sample uses the built-in encoding preset for Adaptive Bitrate Streaming.
                             PresetName = EncoderNamedPreset.AdaptiveStreaming
                         }
                     }
                 };
 
-                // Create the Transform with the output defined above
                 transform = await client.Transforms.CreateOrUpdateAsync(resourceGroupName, accountName, transformName, output);
             }
 
             return transform;
         }
-        // </EnsureTransformExists>
 
         /// <summary>
         /// Submits a request to Media Services to apply the specified Transform to a given input video.
@@ -303,7 +222,6 @@ namespace Online_Cinema_BLL.Managers
         /// <param name="jobName">The (unique) name of the job.</param>
         /// <param name="inputAssetName">The name of the input asset.</param>
         /// <param name="outputAssetName">The (unique) name of the  output asset that will store the result of the encoding job. </param>
-        // <SubmitJob>
         private async Task<Job> SubmitJobAsync(IAzureMediaServicesClient client,
             string resourceGroupName,
             string accountName,
@@ -338,7 +256,6 @@ namespace Online_Cinema_BLL.Managers
 
             return job;
         }
-        // </SubmitJob>
 
         /// <summary>
         /// Polls Media Services for the status of the Job.
@@ -349,14 +266,14 @@ namespace Online_Cinema_BLL.Managers
         /// <param name="transformName">The name of the transform.</param>
         /// <param name="jobName">The name of the job you submitted.</param>
         /// <returns></returns>
-        // <WaitForJobToFinish>
         private async Task<Job> WaitForJobToFinishAsync(IAzureMediaServicesClient client,
             string resourceGroupName,
             string accountName,
             string transformName,
-            string jobName)
+            string jobName, 
+            string filmName)
         {
-            const int SleepIntervalMs = 20 * 1000;
+            const int SleepIntervalMs = 10 * 1000;
 
             Job job;
             do
@@ -370,6 +287,7 @@ namespace Online_Cinema_BLL.Managers
                     Console.Write($"\tJobOutput[{i}] is '{output.State}'.");
                     if (output.State == JobState.Processing)
                     {
+                        UploadProgress.Invoke(filmName, output.Progress);
                         Console.Write($"  Progress (%): '{output.Progress}'.");
                     }
 
@@ -385,7 +303,6 @@ namespace Online_Cinema_BLL.Managers
 
             return job;
         }
-        // </WaitForJobToFinish>
 
         /// <summary>
         /// Creates a StreamingLocator for the specified asset and with the specified streaming policy name.
@@ -397,7 +314,6 @@ namespace Online_Cinema_BLL.Managers
         /// <param name="assetName">The name of the output asset.</param>
         /// <param name="locatorName">The StreamingLocator name (unique in this case).</param>
         /// <returns></returns>
-        // <CreateStreamingLocator>
         private async Task<StreamingLocator> CreateStreamingLocatorAsync(
             IAzureMediaServicesClient client,
             string resourceGroup,
@@ -417,7 +333,6 @@ namespace Online_Cinema_BLL.Managers
 
             return locator;
         }
-        // </CreateStreamingLocator>
 
         /// <summary>
         /// Checks if the "default" streaming endpoint is in the running state,
@@ -429,7 +344,6 @@ namespace Online_Cinema_BLL.Managers
         /// <param name="accountName"> The Media Services account name.</param>
         /// <param name="locatorName">The name of the StreamingLocator that was created.</param>
         /// <returns></returns>
-        // <GetStreamingURLs>
         private async Task<IList<string>> GetStreamingUrlsAsync(
             IAzureMediaServicesClient client,
             string resourceGroupName,
@@ -462,7 +376,6 @@ namespace Online_Cinema_BLL.Managers
             }
             return streamingUrls;
         }
-        // </GetStreamingURLs>
 
         /// <summary>
         ///  Downloads the results from the specified output asset, so you can see what you got.
@@ -472,7 +385,6 @@ namespace Online_Cinema_BLL.Managers
         /// <param name="accountName"> The Media Services account name.</param>
         /// <param name="assetName">The output asset.</param>
         /// <param name="outputFolderName">The name of the folder into which to download the results.</param>
-        // <DownloadResults>
         private async Task DownloadOutputAssetAsync(
             IAzureMediaServicesClient client,
             string resourceGroup,
@@ -531,8 +443,6 @@ namespace Online_Cinema_BLL.Managers
             Console.WriteLine("Download complete.");
         }
 
-        // </DownloadResults>
-
         /// <summary>
         /// Deletes the jobs, assets and potentially the content key policy that were created.
         /// Generally, you should clean up everything except objects 
@@ -546,7 +456,6 @@ namespace Online_Cinema_BLL.Managers
         /// <param name="assetNames"></param>
         /// <param name="contentKeyPolicyName"></param>
         /// <returns></returns>
-        // <CleanUp>
         private async Task CleanUpAsync(
            IAzureMediaServicesClient client,
            string resourceGroupName,
@@ -569,6 +478,5 @@ namespace Online_Cinema_BLL.Managers
                 client.ContentKeyPolicies.Delete(resourceGroupName, accountName, contentKeyPolicyName);
             }
         }
-        // </CleanUp>
     }
 }

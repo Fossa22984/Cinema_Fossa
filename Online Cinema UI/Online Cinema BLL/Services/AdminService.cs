@@ -20,7 +20,15 @@ namespace Online_Cinema_BLL.Services
         private readonly OnlineCinemaContext _context;
 
         private UploadFileAzureManager _uploadFileAzureManager;
-        public AdminService(OnlineCinemaContext context, UploadFileAzureManager uploadFileAzureManager) { this._context = context; _uploadFileAzureManager = uploadFileAzureManager; }
+        private FileManager _fileManager;
+        public AdminService(OnlineCinemaContext context,
+            UploadFileAzureManager uploadFileAzureManager,
+            FileManager fileManager)
+        {
+            this._context = context;
+            _uploadFileAzureManager = uploadFileAzureManager;
+            _fileManager = fileManager;
+        }
 
         public IList<string> GetListStringGenreAsync()
         {
@@ -59,7 +67,6 @@ namespace Online_Cinema_BLL.Services
 
         public async Task<Session> GetSessionAsync(int cinemaRoom)
         {
-            //var now = DateTime.Now.AddHours(3);
             var now = DateTime.Now;
             var listSession = await _context.Sessions.Include(x => x.Movie).Include(x => x.CinemaRoom)
                 .Where(x => x.CinemaRoomId == cinemaRoom)
@@ -73,7 +80,7 @@ namespace Online_Cinema_BLL.Services
                 }
             }
             return null;
-        } 
+        }
         public async Task<Session> GetSessionByIdAsync(int sessionId) => await _context.Sessions.Include(x => x.Movie).Where(x => x.Id == sessionId).FirstOrDefaultAsync();
         public async Task<IList<Session>> GetSessionsForACinemaRoomsAsync(int cinemaRoom) => await _context.Sessions.Include(x => x.Movie).Include(x => x.CinemaRoom).Where(x => x.CinemaRoomId == cinemaRoom).OrderBy(x => x.Start).ToListAsync();
         public async Task<IList<Session>> GetSessionsForACinemaRoomsAsync(int cinemaRoom, DateTime date) => await Task.Run(() =>
@@ -99,36 +106,26 @@ namespace Online_Cinema_BLL.Services
         public async Task<Movie> GetMovieAsync(int movieId) => await _context.Movies.Include(x => x.Genre).Where(x => x.Id == movieId).FirstOrDefaultAsync();
         public async Task AddFilmAsync(Movie movie, string genre, IFormFile file)
         {
+            var configPath = AppDomain.CurrentDomain.BaseDirectory;
             ConfigWrapper config = new(new ConfigurationBuilder()
-                   .SetBasePath(@"C:\Users\omen\source\repos\Cinema_Fossa\Online Cinema UI\Online Cinema BLL\bin\Debug\net5.0\Settings")
+                   .SetBasePath(Path.Combine(configPath, "Settings"))
                    .AddJsonFile("azureSetings.json", optional: true, reloadOnChange: true)
                    .AddEnvironmentVariables() // parses the values from the optional .env file at the solution root
                    .Build());
 
-            var test = Directory.GetCurrentDirectory();
+            var tempFilePath = await _fileManager.CreateTempFile(file);
+            movie.Duration = await _fileManager.ReadDurationFromMovie(tempFilePath);
 
+            _uploadFileAzureManager.UploadProgress += ChangeProgress;
+            var moviePath = await _uploadFileAzureManager.RunAsync(config, tempFilePath, movie.MovieTitle);
 
-            var filePath = Path.GetTempFileName();
-
-            using (var stream = System.IO.File.Create(filePath))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            var inputFile = new MediaFile(filePath);
-            using (var engine = new Engine())
-            {
-                engine.GetMetadata(inputFile);
-                var duration = inputFile.Metadata.Duration;
-            }
-
-            await _uploadFileAzureManager.RunAsync(config, filePath, movie.MovieTitle);
-
+            await _fileManager.DeleteFile(tempFilePath);
             if (genre != null)
             {
                 var res = _context.Genres.AsEnumerable().Where(x => genre.Contains(x.GenreName, StringComparison.OrdinalIgnoreCase)).ToList();
                 movie.Genre = res;
             }
+            movie.MoviePath = moviePath;
             await _context.Movies.AddAsync(movie);
             await _context.SaveChangesAsync();
         }
@@ -178,6 +175,10 @@ namespace Online_Cinema_BLL.Services
             await _context.SaveChangesAsync();
         }
 
+        public void ChangeProgress(string nameFilm, int progress)
+        {
+            // todo implement ChangeProgress 
+        }
 
     }
 }
