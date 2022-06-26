@@ -26,13 +26,13 @@
                 <label asp-for="MoviePath" class="control-label text-white"></label>
                 <textarea asp-for="MoviePath" class="form-control text-white" required></textarea>
                 <span asp-validation-for="MoviePath" class="text-danger"></span>
-            </div>*@
+                </div>*@
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label asp-for="ImageFile" class="control-label text-white"></label>
                     <label class="form-control m-0 p-0" style="background-color:transparent; border:none">
                         <input asp-for="ImageFile" type="file" accept="image/png,image/jpeg" class="form-control text-white" style="background-color: #464649; border: none; display:none; " placeholder="Прикрепите файл">
-                        <button type="button" class="btn btn-outline-secondary text-white w-100 clickOnButton"onclick=" $('#ImageFile').trigger('click'); ">Добавить обложку</button>
+                        <button type="button" class="btn btn-outline-secondary text-white w-100 clickOnButton" onclick=" $('#ImageFile').trigger('click'); ">Добавить обложку</button>
                     </label>
                     <span asp-validation-for="ImageFile" class="text-danger"></span>
                 </div>

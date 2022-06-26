@@ -10,6 +10,7 @@ using Online_Cinema_BLL.Infrastructure.Provider;
 using Online_Cinema_BLL.Managers;
 using Online_Cinema_BLL.Services;
 using Online_Cinema_BLL.Services.Interfaces;
+using Online_Cinema_BLL.SignalR;
 using Online_Cinema_UI.Middlewares;
 using System;
 
@@ -41,6 +42,7 @@ namespace Online_Cinema_UI
             services.AddTransient<AdminService>();
             services.AddTransient<UploadFileAzureManager>();
             services.AddTransient<FileManager>();
+            services.AddSingleton<NotificationHub>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
@@ -100,7 +102,8 @@ namespace Online_Cinema_UI
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<Chat>("/chat");
+                endpoints.MapHub<ChatHub>("/chat");
+                endpoints.MapHub<NotificationHub>("/notification");
 
                 endpoints.MapControllerRoute(
                     name: "default",

@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Online_Cinema_BLL.Managers;
 using Online_Cinema_BLL.Settings;
+using Online_Cinema_BLL.SignalR;
 using Online_Cinema_Core.Context;
 using Online_Cinema_Domain.Models;
 using System;
@@ -21,13 +22,16 @@ namespace Online_Cinema_BLL.Services
 
         private UploadFileAzureManager _uploadFileAzureManager;
         private FileManager _fileManager;
+        private NotificationHub _notificationHub;
         public AdminService(OnlineCinemaContext context,
             UploadFileAzureManager uploadFileAzureManager,
-            FileManager fileManager)
+            FileManager fileManager,
+            NotificationHub notificationHub)
         {
             this._context = context;
             _uploadFileAzureManager = uploadFileAzureManager;
             _fileManager = fileManager;
+            _notificationHub = notificationHub;
         }
 
         public IList<string> GetListStringGenreAsync()
@@ -104,7 +108,7 @@ namespace Online_Cinema_BLL.Services
         }
 
         public async Task<Movie> GetMovieAsync(int movieId) => await _context.Movies.Include(x => x.Genre).Where(x => x.Id == movieId).FirstOrDefaultAsync();
-        public async Task AddFilmAsync(Movie movie, string genre, IFormFile file)
+        public async Task AddFilmAsync(Movie movie, string genre, IFormFile file, string id)
         {
             var configPath = AppDomain.CurrentDomain.BaseDirectory;
             ConfigWrapper config = new(new ConfigurationBuilder()
@@ -117,7 +121,7 @@ namespace Online_Cinema_BLL.Services
             movie.Duration = await _fileManager.ReadDurationFromMovie(tempFilePath);
 
             _uploadFileAzureManager.UploadProgress += ChangeProgress;
-            var moviePath = await _uploadFileAzureManager.RunAsync(config, tempFilePath, movie.MovieTitle);
+            var moviePath = await _uploadFileAzureManager.RunAsync(config, tempFilePath, movie.MovieTitle, id);
 
             await _fileManager.DeleteFile(tempFilePath);
             if (genre != null)
@@ -140,7 +144,7 @@ namespace Online_Cinema_BLL.Services
             var newMovie = await _context.Movies.Where(x => x.Id == movie.Id).Include(x => x.Genre).FirstOrDefaultAsync();
             if (movie.Image.Length != 0) newMovie.Image = movie.Image;
             newMovie.MovieTitle = movie.MovieTitle;
-         //   newMovie.MoviePath = movie.MoviePath;
+            //   newMovie.MoviePath = movie.MoviePath;
             newMovie.DateOfRelease = movie.DateOfRelease;
             newMovie.Duration = movie.Duration;
             newMovie.Author = movie.Author;
@@ -175,8 +179,9 @@ namespace Online_Cinema_BLL.Services
             await _context.SaveChangesAsync();
         }
 
-        public void ChangeProgress(string nameFilm, int progress)
+        public async Task ChangeProgress(string nameFilm, int progress, string id)
         {
+            await _notificationHub.PushNotificationProgress(nameFilm, progress, id);
             // todo implement ChangeProgress 
         }
 

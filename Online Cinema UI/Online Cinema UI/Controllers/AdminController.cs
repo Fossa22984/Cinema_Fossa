@@ -3,9 +3,11 @@ using MediaToolkit;
 using MediaToolkit.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Online_Cinema_BLL.Services;
 using Online_Cinema_Domain.Models;
+using Online_Cinema_Domain.Models.IdentityModels;
 using Online_Cinema_UI.Models;
 using System;
 using System.IO;
@@ -19,13 +21,15 @@ namespace Online_Cinema_UI.Controllers
     {
         private readonly AdminService _adminService;
         private readonly MoviesService _moviesService;
+        private readonly UserManager<User> _userManager;
 
         private readonly IMapper _mapper;
-        public AdminController(AdminService adminService, MoviesService moviesService, IMapper mapper)
+        public AdminController(AdminService adminService, MoviesService moviesService, IMapper mapper, UserManager<User> userManager)
         {
             _adminService = adminService;
             _moviesService = moviesService;
             _mapper = mapper;
+            _userManager = userManager;
         }
 
         public async Task<IActionResult> Index() => await Task.Run(() => { return View(); });
@@ -161,7 +165,8 @@ namespace Online_Cinema_UI.Controllers
             //}
             //await _moviesService.AddMovieAsync(res, genre);
 
-            await _adminService.AddFilmAsync(res, genre, movie.VideoFile);
+            var id = (await _userManager.GetUserAsync(User)).UserName;
+            await _adminService.AddFilmAsync(res, genre, movie.VideoFile, id);
         }
         public async Task ChangeMovie(MovieViewModel movie, string genre)
         {

@@ -70,25 +70,32 @@
     .chat-button {
         display: flex !important;
         align-items: center;
-        justify-content: center;
-        position: absolute !important;
-        right: 5px;
+        width: 100%;
+        justify-content: end;
+        padding-right: 7px !important;
     }
 
     .amp-controlbaricons-left {
-        position: absolute !important;
-        left: 5px;
+        justify-content: flex-start;
     }
 
     .amp-controlbaricons-right {
-        padding-right: 30px !important;
+        justify-content: flex-end !important;
+        display: flex !important;
+        width: 100% !important;
     }
 
     .vjs-volume-level {
         background: #3eaaaf !important;
     }
+
     .amp-default-skin .vjs-control {
         color: #3eaaaf !important;
+    }
+
+    .vjs-control-bar {
+        display: grid !important;
+        grid-template-columns: 1fr 1fr 1fr 30px;
     }
 
     #detach-button-host {
