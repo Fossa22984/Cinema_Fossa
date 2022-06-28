@@ -12,7 +12,8 @@ namespace Online_Cinema_Core.Context
     {
         public OnlineCinemaContext(DbContextOptions<OnlineCinemaContext> options) : base(options)
         {
-            Database.EnsureCreated();
+           // Database.EnsureCreated();
+            ModelInitializer.Initializer(this);
         }
 
         public DbSet<Comment> Comments { get; set; }

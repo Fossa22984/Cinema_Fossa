@@ -22,7 +22,7 @@ namespace Online_Cinema_BLL.Managers
 
         // Set this variable to true if you want to authenticate Interactively through the browser using your Azure user account
         private const bool UseInteractiveAuth = false;
-        public delegate Task ProgressChange(string nameFilm, int progress, string id);
+        public delegate Task ProgressChange(string nameFilm, int progress, string idUser, string idFilm);
         public event ProgressChange UploadProgress;
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Online_Cinema_BLL.Managers
         /// </summary>
         /// <param name="config">The parm is of type ConfigWrapper. This class reads values from local configuration file.</param>
         /// <returns></returns>
-        public async Task<string> RunAsync(ConfigWrapper config, string filePath, string name, string id)
+        public async Task<string> RunAsync(ConfigWrapper config, string filePath, string name, string idUser, string idFilm)
         {
             this.filePath = filePath;
             IAzureMediaServicesClient client;
@@ -66,10 +66,11 @@ namespace Online_Cinema_BLL.Managers
             Asset outputAsset = await CreateOutputAssetAsync(client, config.ResourceGroup, config.AccountName, outputAssetName);
 
             _ = await SubmitJobAsync(client, config.ResourceGroup, config.AccountName, AdaptiveStreamingTransformName, jobName, inputAssetName, outputAsset.Name);
-            Job job = await WaitForJobToFinishAsync(client, config.ResourceGroup, config.AccountName, AdaptiveStreamingTransformName, jobName, name, id);
+            Job job = await WaitForJobToFinishAsync(client, config.ResourceGroup, config.AccountName, AdaptiveStreamingTransformName, jobName, name, idUser, idFilm);
 
             if (job.State == JobState.Finished)
             {
+                await UploadProgress.Invoke(name, 100, idUser, idFilm);
                 Console.WriteLine("Job finished.");
                 //if (!Directory.Exists(OutputFolderName))
                 //    Directory.CreateDirectory(OutputFolderName);
@@ -272,9 +273,10 @@ namespace Online_Cinema_BLL.Managers
             string transformName,
             string jobName,
             string filmName, 
-            string id)
+            string idUser,
+            string idFilm)
         {
-            const int SleepIntervalMs = 10 * 1000;
+            const int SleepIntervalMs = 1000;
 
             Job job;
             do
@@ -288,7 +290,7 @@ namespace Online_Cinema_BLL.Managers
                     Console.Write($"\tJobOutput[{i}] is '{output.State}'.");
                     if (output.State == JobState.Processing)
                     {
-                        UploadProgress.Invoke(filmName, output.Progress, id);
+                       await UploadProgress.Invoke(filmName, output.Progress, idUser, idFilm);
                         Console.Write($"  Progress (%): '{output.Progress}'.");
                     }
 

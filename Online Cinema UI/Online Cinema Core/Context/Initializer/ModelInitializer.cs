@@ -7,7 +7,7 @@ namespace Online_Cinema_Core.Context.Initializer
 {
     public static class ModelInitializer
     {
-        public static void Initializer(OnlineCinemaContext onlineCinemaContext, UserManager<User> _userManager)
+        public static void Initializer(OnlineCinemaContext onlineCinemaContext/*, UserManager<User> _userManager*/)
         {
             onlineCinemaContext.Database.EnsureCreated();
 

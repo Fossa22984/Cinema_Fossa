@@ -108,7 +108,7 @@ namespace Online_Cinema_BLL.Services
         }
 
         public async Task<Movie> GetMovieAsync(int movieId) => await _context.Movies.Include(x => x.Genre).Where(x => x.Id == movieId).FirstOrDefaultAsync();
-        public async Task AddFilmAsync(Movie movie, string genre, IFormFile file, string id)
+        public async Task AddFilmAsync(Movie movie, string genre, IFormFile file, string idUser)
         {
             var configPath = AppDomain.CurrentDomain.BaseDirectory;
             ConfigWrapper config = new(new ConfigurationBuilder()
@@ -120,8 +120,11 @@ namespace Online_Cinema_BLL.Services
             var tempFilePath = await _fileManager.CreateTempFile(file);
             movie.Duration = await _fileManager.ReadDurationFromMovie(tempFilePath);
 
+            var idFilm = Guid.NewGuid().ToString();
+            await ChangeProgress(movie.MovieTitle, 0, idUser, idFilm);
+
             _uploadFileAzureManager.UploadProgress += ChangeProgress;
-            var moviePath = await _uploadFileAzureManager.RunAsync(config, tempFilePath, movie.MovieTitle, id);
+            var moviePath = await _uploadFileAzureManager.RunAsync(config, tempFilePath, movie.MovieTitle, idUser, idFilm);
 
             await _fileManager.DeleteFile(tempFilePath);
             if (genre != null)
@@ -179,9 +182,9 @@ namespace Online_Cinema_BLL.Services
             await _context.SaveChangesAsync();
         }
 
-        public async Task ChangeProgress(string nameFilm, int progress, string id)
+        public async Task ChangeProgress(string nameFilm, int progress, string idUser, string idFilm)
         {
-            await _notificationHub.PushNotificationProgress(nameFilm, progress, id);
+            await _notificationHub.PushNotificationProgress(nameFilm, progress, idUser, idFilm);
             // todo implement ChangeProgress 
         }
 

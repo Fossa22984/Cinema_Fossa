@@ -13,9 +13,9 @@ namespace Online_Cinema_BLL.SignalR
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, room);
         }
-        public async Task PushNotificationProgress(string nameFilm, int progress, string id)
+        public async Task PushNotificationProgress(string nameFilm, int progress, string idUser, string idFilm)
         {
-            await Clients.All.SendAsync("SendProgress", nameFilm, progress, id).ConfigureAwait(true);
+            await Clients.Group(idUser).SendAsync("SendProgress", nameFilm, progress, idFilm).ConfigureAwait(true);
         }
     }
 }
