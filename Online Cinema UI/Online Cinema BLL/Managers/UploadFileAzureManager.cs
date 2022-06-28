@@ -276,7 +276,7 @@ namespace Online_Cinema_BLL.Managers
             string idUser,
             string idFilm)
         {
-            const int SleepIntervalMs = 1000;
+            const int SleepIntervalMs = 1000 * 10;
 
             Job job;
             do

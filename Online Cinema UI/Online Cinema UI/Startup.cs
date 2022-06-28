@@ -11,6 +11,7 @@ using Online_Cinema_BLL.Managers;
 using Online_Cinema_BLL.Services;
 using Online_Cinema_BLL.Services.Interfaces;
 using Online_Cinema_BLL.SignalR;
+using Online_Cinema_BLL.Ñache;
 using Online_Cinema_UI.Middlewares;
 using System;
 
@@ -43,6 +44,7 @@ namespace Online_Cinema_UI
             services.AddTransient<UploadFileAzureManager>();
             services.AddTransient<FileManager>();
             services.AddSingleton<NotificationHub>();
+            services.AddSingleton<NotificationCache>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

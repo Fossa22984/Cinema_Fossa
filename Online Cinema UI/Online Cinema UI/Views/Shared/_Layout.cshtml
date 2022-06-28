@@ -34,7 +34,7 @@
                                     <span id="userIdHidden" style="visibility: hidden">@user.UserName</span>
                                 }
                                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                                        aria-expanded="false" aria-label="Toggle navigation">
+                                    aria-expanded="false" aria-label="Toggle navigation">
                                     <span class="navbar-toggler-icon"></span>
                                 </button>
                                 <div class="collapse navbar-collapse collapse d-sm-inline-flex justify-content-between align-items-center" id="navbarSupportedContent">
@@ -58,22 +58,22 @@
                                             <li class="nav-item d-flex dropdown justify-content-center">
                                                 <a class="fas fa-bell nav-link text-white mt-2" href="#" id="navbarDropdownBell" role="button" data-toggle="dropdown" aria-expanded="false" style="font-size:30px; color:white;">
                                                     @*<i class="fas fa-bell mt-2" style="font-size:30px; color:white;"></i>*@
-                                                    <div id="numberOfDownloads" style="visibility:hidden" >
+                                                    <div id="numberOfDownloads" style="visibility:hidden">
                                                         <span class="fa fa-comment"></span>
                                                         <span class="num">0</span>
                                                     </div>
                                                 </a>
                                                 <ul id="download" class="dropdown-menu" aria-labelledby="navbarDropdownBell" style="background-color: #18181b; border: solid 1px #3eaaaf; padding: 1rem !important; width:450px;">
                                                     @*<li>
-                                                            <a class="dropdown-item text-white" href="#">
-                                                                <p id="VideoTitle" class="control-label text-white mb-2 pl-2 pr-2" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom:0.5rem">
-                                                                    <i class="fas fa-download text-white mr-2"></i>
-                                                                </p>
-                                                                <div class="progress mb-2">
-                                                                    <div class="progress-bar" role="progressbar" style="width: 0%; background: #3eaaaf;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
-                                                                </div>
-                                                            </a>
-                                                            <hr class="dropdown-divider " style="border-top: 1px solid #3eaaaf63">
+                                                        <a class="dropdown-item text-white" href="#">
+                                                        <p id="VideoTitle" class="control-label text-white mb-2 pl-2 pr-2" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom:0.5rem">
+                                                        <i class="fas fa-download text-white mr-2"></i>
+                                                        </p>
+                                                        <div class="progress mb-2">
+                                                        <div class="progress-bar" role="progressbar" style="width: 0%; background: #3eaaaf;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                                                        </div>
+                                                        </a>
+                                                        <hr class="dropdown-divider " style="border-top: 1px solid #3eaaaf63">
                                                         </li>*@
                                                 </ul>
                                             </li>
@@ -288,18 +288,18 @@
     <script src="~/lib/microsoft-signalr/signalr.min.js"></script>
     <script>
         $(function () {
-            //console.log("test");
-            //    debugger;
             var connection = new signalR.HubConnectionBuilder().withUrl("/notification").build();
             connection.start().then(function () {
                 room = $("#userIdHidden").text();
                 connection.invoke("Subscribe", room).catch(function (err) {
                     return console.error(err.toString());
                 });
+                 connection.invoke("GetNotifications", $("#userIdHidden").text()).catch(function (err) {
+                        return console.error(err.toString());
+                 });
             }).catch(function (err) {
                 return console.error(err.toString());
             });
-
             connection.on("SendProgress", function (nameFilm, progress, id) {
 
                 var str = 'nameFilm -> ' + nameFilm + ' progress -> ' + progress + ' id -> ' + id;
