@@ -15,16 +15,16 @@ namespace Online_Cinema_BLL.Сache
         {
             lock (_bufferLocker)
             {
-                var model = _models.FirstOrDefault(x => x.IdUser == notification.IdUser);
+                var model = _models.FirstOrDefault(x => x.IdFilm == notification.IdFilm);
                 model.Copy(notification);
             }
         }
 
-        public void Remove(string idUser)
+        public void Remove(string IdFilm)
         {
             lock (_bufferLocker)
             {
-                _models.Remove(_models.FirstOrDefault(x => x.IdUser == idUser));
+                _models.Remove(_models.FirstOrDefault(x => x.IdFilm == IdFilm));
             }
         }
     }

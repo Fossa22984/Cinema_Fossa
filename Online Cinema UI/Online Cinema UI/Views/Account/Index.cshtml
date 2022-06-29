@@ -1,14 +1,14 @@
 ﻿@if (!User.Identity.IsAuthenticated)
 {
-    <div class="col mycontent pt-3">
+    <div class="col pt-3" style=" height: 95vh;">
         <div class="row justify-content-center align-items-center" style="height:100vh; ">
-            <div class="col-lg-3 align-self-center" style="padding:30px; background-color: #18181b; min-width:300px">
+            <div class="col-sm-3 align-self-center" style="padding:30px; background-color: #18181b; min-width:300px">
                 <div class="btn-group pb-3" role="group" aria-label="Basic example">
                     <button type="button" class="btn btn-outline-secondary clickOnButton" onclick="LoginIn(this)">Login In</button>
                     <button type="button" class="btn btn-outline-secondary" onclick="SignUp(this)">Sign Up</button>
                 </div>
 
-                <div id="mainDiv">
+                <div class="container-fluid" id="mainDiv">
                     @{await Html.RenderPartialAsync("_Login");}
                 </div>
             </div>
@@ -43,11 +43,55 @@
         $(e).parent().children().eq(0).removeClass("clickOnButton");
     }
 
+    function ShowPassword(e) {
+        var input = $(e).parent().children().first();
+
+        if ($(input).attr("type") === "password") {
+            $(e).attr("class", "fas fa-eye-slash field-icon");
+            $(input).attr("type", "text");
+        } else {
+            $(e).attr("class", "fas fa-eye field-icon");
+            $(input).attr("type", "password");
+        }
+    }
+
 </script>
 
 <style>
-    .clickOnButton {
+    input[type=submit] {
+        background-color: #3eaaaf !important;
+        border: none !important;
+    }
+
+    input {
+        background-color: #464649 !important;
+        border: none !important;
+    }
+
+
+    .field-icon {
+        float: right;
+        color: white;
+        margin-right: 10px;
+        margin-top: -25px;
+        position: relative;
+        z-index: 2;
+    }
+
+    input:focus {
+        outline: none !important;
         border: 2px solid #3eaaaf !important;
         box-shadow: 0 0 10px #3eaaaf;
     }
+
+
+    input:-webkit-autofill,
+    textarea:-webkit-autofill,
+    select:-webkit-autofill {
+        border: 1px solid #464649;
+        -webkit-text-fill-color: white;
+        -webkit-box-shadow: 0 0 0px 1000px #464649 inset;
+        transition: background-color 9999s ease-in-out 0s;
+    }
+
 </style>
