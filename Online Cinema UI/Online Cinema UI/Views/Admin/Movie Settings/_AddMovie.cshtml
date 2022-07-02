@@ -1,61 +1,54 @@
 ﻿@model Online_Cinema_UI.Models.MovieViewModel
 
-<form id="addFilmForm" asp-action="AddMovie" method="post" enctype="multipart/form-data" style="padding:10px">
+<form id="addFilmForm" asp-action="AddMovie" method="post" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <h3 class="mb-3 text-white">Добавление</h3>
     <h4 class="mb-3 text-white">Обязательные поля</h4>
     <div class="form-row mb-4">
         <div class="form-group col-md-3 pr-2">
-            <img id="viewImage" style=" object-fit: cover; width: 100%; height: 550px" src="~/Images/background-fon.jpg" />
+            <img id="viewImage" src="~/Images/background-fon.jpg" />
         </div>
         <div class="form-group col-md-9">
             <div class="form-row">
                 <div class="form-group col-md-11">
                     <label asp-for="MovieTitle" class="control-label text-white"></label>
-                    <input asp-for="MovieTitle" class="form-control text-white" style="background-color: #464649; border: none" required />
+                    <input asp-for="MovieTitle" class="form-control text-white" required />
                     <span asp-validation-for="MovieTitle" class="text-danger"></span>
                 </div>
                 <div class="form-group align-self-center col-md-1">
                     <label asp-for="IsCartoon" class="control-label text-white"></label>
-                    <input asp-for="IsCartoon" class="form-control text-white" style=" background-color: #464649; border: none; border:solid 2px red" />
+                    <input asp-for="IsCartoon" class="form-control text-white" />
                     <span asp-validation-for="IsCartoon" class="text-danger"></span>
                 </div>
 
             </div>
-            @*<div class="form-group">
-                <label asp-for="MoviePath" class="control-label text-white"></label>
-                <textarea asp-for="MoviePath" class="form-control text-white" required></textarea>
-                <span asp-validation-for="MoviePath" class="text-danger"></span>
-                </div>*@
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label asp-for="ImageFile" class="control-label text-white"></label>
-                    <label class="form-control m-0 p-0" style="background-color:transparent; border:none">
-                        <input asp-for="ImageFile" type="file" accept="image/png,image/jpeg" class="form-control text-white" style="background-color: #464649; border: none; display:none; " placeholder="Прикрепите файл">
+                    <label class="form-control m-0 p-0" >
+                        <input asp-for="ImageFile" type="file" accept="image/png,image/jpeg" class="form-control text-white" placeholder="Прикрепите файл" >
                         <button type="button" class="btn btn-outline-secondary text-white w-100 clickOnButton" onclick=" $('#ImageFile').trigger('click'); ">Добавить обложку</button>
                     </label>
                     <span asp-validation-for="ImageFile" class="text-danger"></span>
                 </div>
 
                 <div class="form-group col-md-4">
-                    @*<label asp-for="VideoFile" class="control-label text-white"></label>*@
-                    <p id="VideoTitle" class="control-label text-white" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom:0.5rem">Video</p>
-                    <label class="form-control m-0 p-0" style="background-color:transparent; border:none">
-                        <input asp-for="VideoFile" type="file" accept="video/*" class="form-control text-white" style="background-color: #464649; border: none; display:none; " placeholder="Прикрепите файл">
+                    <p id="VideoTitle" class="control-label text-white text-overflow">Video</p>
+                    <label class="form-control m-0 p-0">
+                        <input asp-for="VideoFile" type="file" accept="video/*" class="form-control text-white" placeholder="Прикрепите файл">
                         <button type="button" class="btn btn-outline-secondary text-white w-100 clickOnButton" onclick=" $('#VideoFile').trigger('click'); ">Добавить файл</button>
                     </label>
                     <span asp-validation-for="VideoFile" class="text-danger"></span>
-                    @*<input name="video" id="video" type="file" accept="video/*" enctype="multipart/form-data" />*@
                 </div>
 
                 <div class="form-group col-md-2">
                     <label asp-for="DateOfRelease" class="control-label text-white"></label>
-                    <input asp-for="DateOfRelease" type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control text-white" style="background-color: #464649; border: none" required />
+                    <input asp-for="DateOfRelease" type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control text-white" required />
                     <span asp-validation-for="DateOfRelease" class="text-danger"></span>
                 </div>
                 <div class="form-group col-md-2">
                     <label asp-for="AgeLimit" class="control-label text-white"></label>
-                    <select asp-for="AgeLimit" class="form-select form-control text-white" style="background-color: #464649; border: none">
+                    <select asp-for="AgeLimit" class="form-select form-control text-white">
                         <option class="elgg-input-dropdown" selected value="0">0+</option>
                         <option class="elgg-input-dropdown" value="6">6+</option>
                         <option class="elgg-input-dropdown" value="12">12+</option>
@@ -71,12 +64,12 @@
                     <button class="btn dropdown-toggle clickOnButton text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Genre
                     </button>
-                    <ul id="menuGenre" class="dropdown-menu mycontent" aria-labelledby="navbarDropdown" style="background-color: #18181b; border: solid 1px #3eaaaf; padding-left: 1rem !important; padding-right: 1rem !important; transform: translateX(70%)!important; max-height: 200px; overflow-x: hidden; z-index:0">
+                    <ul id="menuGenre" class="dropdown-menu mycontent menuGenre" aria-labelledby="navbarDropdown">
                     </ul>
                 </div>
             </div>
 
-            <div class="d-flex flex-row bd-highlight mb-3 flex-wrap " id="fluxGenre">
+            <div class="d-flex flex-row bd-highlight mb-3 flex-wrap" id="fluxGenre">
                 @*<label class="btn clickOnButton text-white" onclick="{ $(this).detach() }"> Genre1 &nbsp;<i class="fas fa-times" style="font-size:12px"></i></label>*@
             </div>
         </div>
@@ -95,7 +88,7 @@
     </div>
     <div class="form-group">
         <label asp-for="Country" class="control-label text-white"></label>
-        <input asp-for="Country" class="form-control text-white" style="background-color: #464649; border: none" />
+        <input asp-for="Country" class="form-control text-white" />
         <span asp-validation-for="Country" class="text-danger"></span>
     </div>
     <div class="form-group">
@@ -105,127 +98,19 @@
     </div>
     <div class="form-group">
         <label asp-for="MovieBudget" class="control-label text-white"></label>
-        <input asp-for="MovieBudget" class="form-control text-white" style="background-color: #464649; border: none" />
+        <input asp-for="MovieBudget" class="form-control text-white" />
         <span asp-validation-for="MovieBudget" class="text-danger"></span>
     </div>
     <div class="form-row">
         <div class="form-group col-md-11">
-            <input type="submit" class="btn btn-dark mt-4" value="Добавить" style="background-color: #3eaaaf; width:100%" />
+            <input type="submit" class="btn btn-dark mt-4 w-100" value="Добавить" />
         </div>
         <div class="form-group col-md-1">
-            <button type="reset" class="btn btn-dark mt-4" style="background-color: #3eaaaf; width:100%" onclick="Clear()">
+            <button type="reset" class="btn btn-dark mt-4 w-100" onclick="Clear()">
                 <i class="fas fa-eraser text-white"></i>
             </button>
         </div>
     </div>
 </form>
-<style>
 
-</style>
-<script>
-    $("#ImageFile").change(function (event) {
-        let files = event.target.files;
-        $("#viewImage").attr("src", window.URL.createObjectURL(files[0]));
-    });
-
-    $("#VideoFile").change(function (event) {
-        let files = event.target.files;
-        debugger;
-        $("#VideoTitle").text("Video: «" + files[0].name +"»");
-    });
-
-
-    $("textarea").each(function () {
-        this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
-    }).on("input", function () {
-        this.style.height = "auto";
-        this.style.height = (this.scrollHeight) + "px";
-    });
-
-    function Clear() {
-        $("#viewImage").attr("src", "../Images/background-fon.jpg");
-        $("#fluxGenre").html("");
-    }
-
-    function detachGenre(elem){
-        debugger;
-        var text = elem.t;
-        collectionGenres.splice(collectionGenres.indexOf(text), 1);
-        elem.detach();
-   }
-
-
-    var collectionGenres = new Array();
-    $(function () {
-        $.ajax({
-            type: 'GET',
-            url: '@Url.Content("/Admin/GetListGenre")',
-            success: function (result) {
-
-                for (var i = 0; i < result.length; i++)
-                    $("#menuGenre").append("<li><label class='text-white'>" + result[i] + "</label></li>");
-
-                var res = $("#menuGenre li lable").val();
-                $("#menuGenre li").children().on("click", function (e) {
-                    var text = $(this).text();
-                    if(!collectionGenres.some(x=>x == text)){
-                        collectionGenres.push(text);
-                        $("#fluxGenre").append("<label class='btn clickOnButton text-white mr-3' onclick='{detachGenre($(this))}'>" + text+" &nbsp; <i class='fas fa-times' style='font-size:12px'></i></label >");
-                    }
-                });
-            },
-            error: function (e) {
-                alert(e.statusText);
-            }
-        });
-
-
-
-        $("#addFilmForm").submit(function (e) {
-            e.preventDefault();
-            var formAction = $(this).attr("action");
-
-            var formData = new FormData();
-
-            var fileInput = $("#ImageFile")[0];
-            var file = fileInput.files[0];
-            formData.append("ImageFile", file);
-
-            var videoInput = $("#VideoFile")[0];
-            var video = videoInput.files[0];
-            formData.append("VideoFile", video);
-
-            var listLable = $("#fluxGenre").children();
-            var genres = [];
-            for (var i = 0; i < listLable.length; i++)
-                genres.push($(listLable[i]).text());
-            formData.append("genre", genres);
-
-            formData.append("MovieTitle", $("#MovieTitle").val());
-            formData.append("MoviePath", $("#MoviePath").val());
-            formData.append("DateOfRelease", $("#DateOfRelease").val());
-            formData.append("Author", $("#Author").val());
-            formData.append("Actors", $("#Actors").val());
-            formData.append("Country", $("#Country").val());
-            formData.append("AgeLimit", $("#AgeLimit").val());
-            formData.append("Description", $("#Description").val());
-            formData.append("MovieBudget", $("#MovieBudget").val());
-            formData.append("IsCartoon", $('#IsCartoon').is(":checked"));
-
-            $.ajax({
-                type: "POST",
-                url: formAction,
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function () {
-                    alert("success");
-                },
-                error: function (e) {
-                    alert(e.statusText)
-                }
-            })
-
-        })
-    });
-</script>
+<script src="~/js/admin/movie-settings/add.js"></script>

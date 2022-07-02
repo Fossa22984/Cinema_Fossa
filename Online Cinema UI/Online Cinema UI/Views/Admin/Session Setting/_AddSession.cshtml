@@ -1,200 +1,44 @@
 ﻿@model Online_Cinema_UI.Models.SessionViewModel
 
-<form id="addSessionForm" asp-action="AddSession" enctype="multipart/form-data" style="padding:10px">
+<form id="addSessionForm" asp-action="AddSession" enctype="multipart/form-data">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <h3 class="mb-3 text-white">Создание сеанс</h3>
     <div class="form-row mb-4">
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-3 search">
             <label asp-for="CinemaRoomId" class="control-label text-white"></label>
             <input onchange="ChangeCinemaRoom(this)" class="form-control btn clickOnButton text-white" type="text" id="ajaxCinemaRoom" list="json-datalistCinemaRoom" placeholder="Cinema Room" required>
-            <datalist class="text-white" id="json-datalistCinemaRoom" style="max-height: 50px!important;  overflow-y: auto !important; background-color: #3eaaaf!important;"></datalist>
+            <datalist class="text-white" id="json-datalistCinemaRoom"></datalist>
             <span asp-validation-for="CinemaRoomId" class="text-danger"></span>
         </div>
 
-        <div class="form-group col-md-3">
+        <div class="form-group col-md-3 search">
             <label asp-for="MovieId" class="control-label text-white"></label>
             <input onchange="ChangeMovie(this)" class="form-control btn clickOnButton text-white" type="text" id="ajaxMovie" list="json-datalistMovie" placeholder="Movie" required>
-            <datalist class="text-white" id="json-datalistMovie" style="max-height: 50px!important;  overflow-y: auto !important; background-color: #3eaaaf!important;"></datalist>
+            <datalist class="text-white" id="json-datalistMovie"></datalist>
             <span asp-validation-for="MovieId" class="text-danger"></span>
         </div>
 
         <div class="form-group col-md-3">
             <label asp-for="Start" class="control-label text-white"></label>
-            <input asp-for="Start" onchange="ChangeStart(this)" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss")" class="form-control btn clickOnButton text-white" style="border: none" required />
+            <input asp-for="Start" onchange="ChangeStart(this)" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss")"  class="form-control btn text-white" required />
             <span asp-validation-for="Start" class="text-danger"></span>
         </div>
 
         <div class="form-group col-md-3">
             <label asp-for="End" class="control-label text-white"></label>
-            <input asp-for="End" class="form-control btn clickOnButton text-white" style="background-color: #464649; border: none" disabled required />
+            <input asp-for="End" class="form-control btn text-white" disabled required />
             <span asp-validation-for="End" class="text-danger"></span>
         </div>
     </div>
     <div id="listSessionsDiv"></div>
     <div class="form-row">
         <div class="form-group col-md-11">
-            <input type="submit" class="btn btn-dark mt-4" value="Добавить" style="background-color: #3eaaaf; width:100%" />
+            <input type="submit" class="btn btn-dark mt-4 w-100" value="Добавить" />
         </div>
         <div class="form-group col-md-1">
-            <button type="reset" class="btn btn-dark mt-4" style="background-color: #3eaaaf; width:100%">
+            <button type="reset" class="btn btn-dark mt-4 w-100">
                 <i class="fas fa-eraser text-white"></i>
             </button>
         </div>
     </div>
 </form>
-
-<style>
-    .form-control:focus {
-        background-color: transparent;
-    }
-
-</style>
-
-<script>
-    function ChangeStart(e) {
-        ChangeMovie();
-        ChangeCinemaRoom();
-    }
-
-    function ChangeMovie(e) {
-        var res = $("#End").val();
-        debugger;
-        $.ajax({
-            type: 'GET',
-            data: {
-                "movieId": $('option[value="' + $("#ajaxMovie").val() + '"]').first().prop("data-value"),
-                "start": $("#Start").val()
-            },
-            url: '@Url.Content("/Admin/GetMovieDuration")',
-            success: function (result) {
-                debugger;
-                if (result != "") $("#End").val(result);
-                else $("#End").val("");
-            }
-        });
-    }
-
-    function ChangeCinemaRoom(e) {
-        if ($('option[value="' + $("#ajaxCinemaRoom").val() + '"]').first().prop("data-value") != undefined) {
-            $.ajax({
-                type: 'GET',
-                data: {
-                    "cinemaRoomId": $('option[value="' + $("#ajaxCinemaRoom").val() + '"]').first().prop("data-value"),
-                    "dateSession": $("#Start").val()
-                },
-                url: '@Url.Content("/Admin/_ListSessions")',
-                success: function (result) {
-                    debugger;
-                    if (result != "") $("#listSessionsDiv").html(result);
-                    else $("#listSessionsDiv").html("");
-                }
-            });
-        }
-        else $("#listSessionsDiv").html("");
-        
-    }
-
-   
-
-    $(function () {
-
-        debugger;
-        // Get the <datalist> and <input> elements.
-        var dataListCinemaRoom = document.getElementById('json-datalistCinemaRoom');
-        var inputCinemaRoom = document.getElementById('ajaxCinemaRoom');
-
-         $.ajax({
-            type: 'GET',
-            url: '@Url.Content("/Admin/GetListCinemaRooms")',
-            success: function (result) {
-                result.forEach(function (item) {
-                    // Create a new <option> element.
-                    var option = document.createElement('option');
-
-
-                    // Set the value using the item in the JSON array.
-                    option["data-value"] = item["key"];
-                    option.value = item["value"];
-
-                    // Add the <option> element to the <datalist>.
-                    dataListCinemaRoom.appendChild(option);
-                });
-
-
-                inputCinemaRoom.placeholder = "Cinema Room";
-            },
-            error: function (e) {
-                inputCinemaRoom.placeholder = "Couldn't load datalist options :(";
-            }
-        });
-
-        // Update the placeholder text.
-        inputCinemaRoom.placeholder = "Loading options...";
-
-
-          // Get the <datalist> and <input> elements.
-        var dataListMovie = document.getElementById('json-datalistMovie');
-        var inputMovie = document.getElementById('ajaxMovie');
-
-         $.ajax({
-            type: 'GET',
-            url: '@Url.Content("/Admin/GetListMovies")',
-            success: function (result) {
-                result.forEach(function (item) {
-
-                    // Create a new <option> element.
-                    var option = document.createElement('option');
-
-                    // Set the value using the item in the JSON array.
-                    option["data-value"] = item["key"];
-                    option.value = item["value"];
-
-                    // Add the <option> element to the <datalist>.
-                    dataListMovie.appendChild(option);
-                });
-
-
-                inputMovie.placeholder = "Movie";
-            },
-            error: function (e) {
-                inputMovie.placeholder = "Couldn't load datalist options :(";
-            }
-        });
-
-        // Update the placeholder text.
-        inputMovie.placeholder = "Loading options...";
-
-
-        $("#addSessionForm").submit(function (e) {
-            e.preventDefault();
-            var formAction = $(this).attr("action");
-
-            var formData = new FormData();
-
-            formData.append("Start", $("#Start").val());
-            formData.append("End", $("#End").val());
-            formData.append("MovieId", $('option[value="' + $("#ajaxMovie").val() + '"]').first().prop("data-value"));
-            formData.append("CinemaRoomId", $('option[value="' + $("#ajaxCinemaRoom").val() + '"]').first().prop("data-value"));
-
-            debugger;
-
-            $.ajax({
-                type: "POST",
-                url: formAction,
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function () {
-                    alert("success");
-                    ChangeCinemaRoom();
-
-                },
-                error: function (e) {
-                    alert(e.statusText)
-                }
-            })
-
-        })
-
-    });
-</script>

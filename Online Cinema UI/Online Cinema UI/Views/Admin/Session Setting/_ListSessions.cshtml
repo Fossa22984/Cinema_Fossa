@@ -4,23 +4,23 @@
     <div class="d-flex flex-row bd-highlight mb-3 flex-wrap" id="flux">
         <table class="table table-bordered text-white">
             <thead>
-                <tr>
-                    <th style="text-align: center; vertical-align:middle" scope="col">#</th>
-                    <th style="text-align: center; vertical-align:middle" scope="col">Movie Title (#Id)</th>
-                    <th style="text-align: center; vertical-align:middle" scope="col">Start</th>
-                    <th style="text-align: center; vertical-align:middle" scope="col">End</th>
-                    <th style="text-align: center; vertical-align:middle" scope="col">Remote</th>
+                <tr class="text-center">
+                    <th scope="col">#</th>
+                    <th scope="col">Movie Title (#Id)</th>
+                    <th scope="col">Start</th>
+                    <th scope="col">End</th>
+                    <th scope="col">Remote</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
-                        <td style=" text-align: center; vertical-align:middle">@item.Id</td>
-                        <td style=" text-align: center; vertical-align:middle">@item.Movie.MovieTitle (#@item.Movie.Id)</td>
-                        <td style=" text-align: center; vertical-align:middle">@item.Start.ToString("dd.MM.yyyy HH:mm")</td>
-                        <td style=" text-align: center; vertical-align:middle">@item.End.ToString("dd.MM.yyyy HH:mm")</td>
-                        <td style=" text-align: center; vertical-align:middle">@item.Remote</td>
+                    <tr class="text-center">
+                        <td>@item.Id</td>
+                        <td>@item.Movie.MovieTitle (#@item.Movie.Id)</td>
+                        <td>@item.Start.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@item.End.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@item.Remote</td>
                     </tr>
                 }
             </tbody>
