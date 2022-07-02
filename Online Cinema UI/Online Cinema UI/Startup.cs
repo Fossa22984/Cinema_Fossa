@@ -12,6 +12,7 @@ using Online_Cinema_BLL.Services;
 using Online_Cinema_BLL.Services.Interfaces;
 using Online_Cinema_BLL.SignalR;
 using Online_Cinema_BLL.Ñache;
+using Online_Cinema_UI.Filters;
 using Online_Cinema_UI.Middlewares;
 using System;
 
@@ -82,8 +83,8 @@ namespace Online_Cinema_UI
             }
             app.UseStaticFiles();
 
+            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
             app.UseRouting();
-
             app.UseAuthentication();
             app.UseAuthorization();
 
