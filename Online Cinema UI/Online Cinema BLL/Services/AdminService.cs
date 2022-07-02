@@ -130,9 +130,9 @@ namespace Online_Cinema_BLL.Services
                    .AddEnvironmentVariables() // parses the values from the optional .env file at the solution root
                    .Build());
 
-            var tempFilePath = await _fileManager.CreateTempFile(file, idFilm);
+            _fileManager.UploadProgress += ChangeProgress;
+            var tempFilePath = await _fileManager.CreateTempFile(file, idFilm, idUser, movie.MovieTitle);
             movie.Duration = await _fileManager.ReadDurationFromMovie(tempFilePath);
-
 
             _uploadFileAzureManager.UploadProgress += ChangeProgress;
             var moviePath = await _uploadFileAzureManager.RunAsync(config, tempFilePath, movie.MovieTitle, idUser, idFilm);

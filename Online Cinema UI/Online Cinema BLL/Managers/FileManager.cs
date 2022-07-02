@@ -15,11 +15,14 @@ namespace Online_Cinema_BLL.Managers
     public class FileManager
     {
         public NotificationCache _notificationCache;
+
+        public delegate Task ProgressChange(string nameFilm, int progress, string idUser, string idFilm);
+        public event ProgressChange UploadProgress;
         public FileManager(NotificationCache notificationCache)
         {
             _notificationCache = notificationCache;
         }
-        public async Task<string> CreateTempFile(IFormFile file, string idFilm)
+        public async Task<string> CreateTempFile(IFormFile file, string idFilm, string idUser, string nameFilm)
         {
             var tempFilePath = Path.GetTempFileName();
 
@@ -42,7 +45,8 @@ namespace Online_Cinema_BLL.Managers
                         dest.Write(buffer, 0, currentBlockSize);
                         var percentageInt = (int)percentage;
                         if (percentageInt % 5 == 0)
-                            _notificationCache.UpdateProgress(idFilm, percentageInt / 2);
+                            await UploadProgress?.Invoke(nameFilm, percentageInt / 2, idUser, idFilm);
+                        //_notificationCache.UpdateProgress(idFilm, percentageInt / 2);
 
                         if (cancelFlag == true || percentage == 100)
                         {
