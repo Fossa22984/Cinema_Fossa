@@ -15,9 +15,12 @@ namespace Online_Cinema_BLL.Services
 {
     public class MoviesService
     {
-        private UnitOfWork _unit;
+        private IUnitOfWork _unit;
         public MoviesService() { }
-        public MoviesService(UnitOfWork unit) { _unit = unit; }
+        public MoviesService(IUnitOfWork unit)
+        {
+            _unit = unit;
+        }
 
         public async Task<IDictionary<int, string>> GetDictionaryMoviesAsync()
         {

@@ -1,6 +1,8 @@
 ﻿using MediaToolkit;
 using MediaToolkit.Model;
 using Microsoft.AspNetCore.Http;
+using Online_Cinema_BLL.Сache;
+using OnlineCinema_Core.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -12,14 +14,46 @@ namespace Online_Cinema_BLL.Managers
 {
     public class FileManager
     {
-        public async Task<string> CreateTempFile(IFormFile file)
+        public NotificationCache _notificationCache;
+        public FileManager(NotificationCache notificationCache)
+        {
+            _notificationCache = notificationCache;
+        }
+        public async Task<string> CreateTempFile(IFormFile file, string idFilm)
         {
             var tempFilePath = Path.GetTempFileName();
-            using (var stream = File.Create(tempFilePath))
+
+            byte[] buffer = new byte[1024 * 1024]; // 1MB buffer
+            bool cancelFlag = false;
+
+            using (Stream source = file.OpenReadStream())
             {
-                await file.CopyToAsync(stream);
+                long fileLength = source.Length;
+                using (FileStream dest = File.Create(tempFilePath))
+                {
+                    long totalBytes = 0;
+                    int currentBlockSize = 0;
+
+                    while ((currentBlockSize = source.Read(buffer, 0, buffer.Length)) > 0)
+                    {
+                        totalBytes += currentBlockSize;
+                        double percentage = (double)totalBytes * 100.0 / fileLength;
+
+                        dest.Write(buffer, 0, currentBlockSize);
+                        var percentageInt = (int)percentage;
+                        if (percentageInt % 5 == 0)
+                            _notificationCache.UpdateProgress(idFilm, percentageInt / 2);
+
+                        if (cancelFlag == true || percentage == 100)
+                        {
+                            // Delete dest file here
+                            break;
+                        }
+                    }
+                }
             }
-            return tempFilePath;
+
+            return await Task.FromResult(tempFilePath);
         }
 
         public async Task DeleteFile(string path)
@@ -38,7 +72,5 @@ namespace Online_Cinema_BLL.Managers
                 return await Task.FromResult(duration);
             }
         }
-
-
     }
 }

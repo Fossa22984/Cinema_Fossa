@@ -121,6 +121,7 @@ namespace Online_Cinema_BLL.Services
         {
             var idFilm = Guid.NewGuid().ToString();
             _notificationCache.Set(new Notification(idUser, idFilm, movie.MovieTitle));
+            await ChangeProgress(movie.MovieTitle, 0, idUser, idFilm);
 
             var configPath = AppDomain.CurrentDomain.BaseDirectory;
             ConfigWrapper config = new(new ConfigurationBuilder()
@@ -129,10 +130,9 @@ namespace Online_Cinema_BLL.Services
                    .AddEnvironmentVariables() // parses the values from the optional .env file at the solution root
                    .Build());
 
-            var tempFilePath = await _fileManager.CreateTempFile(file);
+            var tempFilePath = await _fileManager.CreateTempFile(file, idFilm);
             movie.Duration = await _fileManager.ReadDurationFromMovie(tempFilePath);
 
-            await ChangeProgress(movie.MovieTitle, 0, idUser, idFilm);
 
             _uploadFileAzureManager.UploadProgress += ChangeProgress;
             var moviePath = await _uploadFileAzureManager.RunAsync(config, tempFilePath, movie.MovieTitle, idUser, idFilm);

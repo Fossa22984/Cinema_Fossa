@@ -15,7 +15,7 @@ namespace Online_Cinema_BLL.Infrastructure
             collection.AddIdentity<User, Role>()
                 .AddEntityFrameworkStores<OnlineCinemaContext>().AddDefaultTokenProviders()/*.AddTokenProvider<EmailConfirmationTokenProvider<User>>("emailconfirmation")*/;
 
-            collection.AddTransient(typeof(UnitOfWork));
+            collection.AddTransient<IUnitOfWork, UnitOfWork>();
         }
     }
 }

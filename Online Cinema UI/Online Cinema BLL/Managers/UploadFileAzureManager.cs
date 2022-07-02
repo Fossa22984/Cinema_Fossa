@@ -267,7 +267,7 @@ namespace Online_Cinema_BLL.Managers
             string idFilm)
         {
             const int SleepIntervalMs = 1000 * 10;
-
+            const int currentProgress = 50;
             Job job;
             do
             {
@@ -278,7 +278,7 @@ namespace Online_Cinema_BLL.Managers
                     JobOutput output = job.Outputs[i];
                     if (output.State == JobState.Processing)
                     {
-                        await UploadProgress.Invoke(filmName, output.Progress, idUser, idFilm);
+                        await UploadProgress.Invoke(filmName, currentProgress + output.Progress / 2, idUser, idFilm);
                     }
                 }
 

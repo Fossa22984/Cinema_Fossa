@@ -53,22 +53,7 @@ namespace Online_Cinema_UI
             services.Configure<EmailConfirmationProviderOption>(op => op.TokenLifespan = TimeSpan.FromDays(5));
 
             services.AddAuthentication().AddCookie(op => op.LoginPath = "/Login");
-            //services.AddMvc()
-            //    .AddRazorPagesOptions(options =>
-            //    {
-            //        options.Conventions
-            //            .AddPageApplicationModelConvention("/FileUploadPage",
-            //                model =>
-            //                {
-            //        // Handle requests up to 50 MB
-            //        model.Filters.Add(
-            //                        new RequestSizeLimitAttribute(52428800));
-            //                });
-            //    })
-            //    .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
 
-            //services.AddTransient<ObserversManagementService>();
-            //services.AddTransient<SignalRObserver>();
             services.AddControllersWithViews();
             services.AddSignalR();
 
