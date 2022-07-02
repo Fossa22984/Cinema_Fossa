@@ -61,7 +61,7 @@
                     option.value = item["value"];
                     
                     debugger;
-                    if (option["data-value"] ==@Model.CinemaRoomId)
+                    if (option["data-value"] == $("#CinemaRoomId").val())
                         $("#ajaxCinemaRoom").val(option.value);
 
                     // Add the <option> element to the <datalist>.
@@ -97,7 +97,7 @@
                     option["data-value"] = item["key"];
                     option.value = item["value"];
                     debugger;
-                    if (option["data-value"] ==@Model.MovieId)
+                    if (option["data-value"] == $("#MovieId").val())
                         $("#ajaxMovie").val(option.value);
                     // Add the <option> element to the <datalist>.
                     dataListMovie.appendChild(option);

@@ -6,6 +6,9 @@
         <h3 class="mb-3 text-white">Создание сеанс</h3>
         <div class="form-row mb-4">
             <input asp-for="Id" type="hidden" />
+            <input asp-for="MovieId" type="hidden" />
+            <input asp-for="CinemaRoomId" type="hidden" />
+
             <div class="form-group col-md-3 search">
                 <label asp-for="CinemaRoomId" class="control-label text-white"></label>
                 <input onchange="ChangeCinemaRoom(this)" class="form-control btn clickOnButton text-white" type="text" id="ajaxCinemaRoom" list="json-datalistCinemaRoom" placeholder="Cinema Room" required>

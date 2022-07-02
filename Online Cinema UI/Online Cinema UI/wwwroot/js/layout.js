@@ -19,7 +19,7 @@
         showProgress(nameFilm, progress, id);
     });
 
-    //addDownload("Name Film", 26, 1);
+    //addDownload("Name Film", 58, 1);
     //addDownload("Name Film1", 49, 2);
     //addDownload("Name Film2", 84, 3);
     //test("Name Film", 58, 1);
@@ -41,6 +41,7 @@ function showProgress(nameFilm, progress, id) {
 
 
 function addDownload(nameFilm, progress, id) {
+    debugger;
     $("#download").append("<li  id='" + id + "'><a class='dropdown-item text-white' href='#'>" +
         "<p class='control-label text-white mb-2 pl-2 pr-2 text-overflow'>" +
         "<i class='fas fa-download text-white mr-2'></i>" + nameFilm + "</p><div class='progress mb-2'>" +
@@ -49,12 +50,15 @@ function addDownload(nameFilm, progress, id) {
 }
 
 function numberOfDownloads() {
+    debugger;
     var count = $("#download").children().length
     if (count > 0) {
         $(".num").text(count);
+        $("#navbarDropdownBell").attr("data-toggle", "dropdown");
         $("#numberOfDownloads").css("visibility", "visible");
     }
     else {
+        $("#navbarDropdownBell").removeAttr("data-toggle");
         $("#numberOfDownloads").css("visibility", "hidden");
     }
 }
