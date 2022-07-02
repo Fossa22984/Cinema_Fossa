@@ -1,0 +1,132 @@
+﻿.text-overflow {
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    margin-bottom: 0.5rem !important;
+}
+
+a.fa-bell {
+    position: relative;
+    font-size: 2em;
+    color: grey;
+    cursor: pointer;
+}
+
+span.fa-comment {
+    position: absolute;
+    font-size: 0.8em;
+    top: -4px;
+    color: #3eaaaf;
+    right: -3px;
+}
+
+span.num {
+    position: absolute;
+    text-align: center;
+    font-size: 0.45em;
+    top: 1px;
+    color: white;
+    right: 5px;
+}
+
+
+
+.clickOnButton {
+    border: 2px solid #3eaaaf !important;
+    box-shadow: 0 0 10px #3eaaaf;
+}
+
+
+
+#searchInput::placeholder {
+    font-weight: bold;
+    color: #c1c1c2;
+}
+
+input:focus {
+    outline: none !important;
+    border: 2px solid #3eaaaf !important;
+    box-shadow: 0 0 10px #3eaaaf;
+}
+
+textarea {
+    overflow: hidden !important;
+    resize: none !important;
+    background-color: #464649 !important;
+    border: none !important;
+    flex-wrap: wrap !important
+}
+
+    textarea:focus {
+        outline: none !important;
+        border: 2px solid #3eaaaf !important;
+        box-shadow: 0 0 10px #3eaaaf;
+    }
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none; /* Remove default arrow */
+}
+
+    select:focus {
+        outline: none !important;
+        border: 2px solid #3eaaaf !important;
+        box-shadow: 0 0 10px #3eaaaf;
+    }
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.mycontent {
+    overflow-y: scroll;
+    height: 95vh;
+}
+
+::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+input::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+}
+
+.mycontent::-webkit-scrollbar {
+    width: 0;
+}
+
+.dropdown-menu li a:hover {
+    border-radius: 5px;
+    background-color: #2f3333;
+}
+
+.mycontent1 {
+    overflow-y: scroll;
+}
+
+    .mycontent1::-webkit-scrollbar-track {
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+        border-radius: 10px;
+        background-color: transparent;
+    }
+
+    .mycontent1::-webkit-scrollbar {
+        width: 12px;
+        background-color: transparent;
+    }
+
+    .mycontent1::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+        background-color: #1d1d20;
+        border: solid 1px #3c3c3f;
+    }
