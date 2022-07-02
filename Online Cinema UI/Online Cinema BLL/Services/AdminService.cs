@@ -11,6 +11,7 @@ using Online_Cinema_BLL.Сache;
 using Online_Cinema_BLL.Сache.Models;
 using Online_Cinema_Core.Context;
 using Online_Cinema_Domain.Models;
+using OnlineCinema_Core.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -102,6 +103,7 @@ namespace Online_Cinema_BLL.Services
         {
             await _context.Sessions.AddAsync(session);
             await _context.SaveChangesAsync();
+            Log.Current.Debug($"Add session room id-> {session.Id} sesion id -> {session.Id}");
         }
         public async Task ChangeSessionAsync(Session session)
         {
@@ -111,6 +113,7 @@ namespace Online_Cinema_BLL.Services
             newSession.MovieId = session.MovieId;
             newSession.CinemaRoomId = session.CinemaRoomId;
             await _context.SaveChangesAsync();
+            Log.Current.Debug($"Change session room id-> {session.Id} sesion id -> {session.Id}");
         }
 
         public async Task<Movie> GetMovieAsync(int movieId) => await _context.Movies.Include(x => x.Genre).Where(x => x.Id == movieId).FirstOrDefaultAsync();
@@ -143,6 +146,7 @@ namespace Online_Cinema_BLL.Services
             movie.MoviePath = moviePath;
             await _context.Movies.AddAsync(movie);
             await _context.SaveChangesAsync();
+            Log.Current.Debug($"Add movie MovieTitle -> {movie.MovieTitle} movie id-> {movie.Id}");
         }
         public async Task ChangeFilmAsync(Movie movie, string genre)
         {
@@ -169,6 +173,7 @@ namespace Online_Cinema_BLL.Services
             newMovie.Genre = movie.Genre;
 
             await _context.SaveChangesAsync();
+            Log.Current.Debug($"Change movie MovieTitle -> {movie.MovieTitle} movie id-> {movie.Id}");
         }
 
         public async Task<List<CinemaRoom>> GetListCinemaRoomAsync() => await _context.CinemaRooms.Include(x => x.Sessions).ThenInclude(x => x.Movie).ToListAsync();
@@ -177,6 +182,7 @@ namespace Online_Cinema_BLL.Services
         {
             await _context.CinemaRooms.AddAsync(cinemaRoom);
             await _context.SaveChangesAsync();
+            Log.Current.Debug($"Add room -> {cinemaRoom.CinemaRoomName} movie id-> {cinemaRoom.Id}");
         }
         public async Task ChangeCinemaRoomAsync(CinemaRoom cinemaRoom)
         {
@@ -188,11 +194,12 @@ namespace Online_Cinema_BLL.Services
             //newCinemaRoom.Sessions = cinemaRoom.Sessions;
 
             await _context.SaveChangesAsync();
+            Log.Current.Debug($"Change room -> {cinemaRoom.CinemaRoomName} movie id-> {cinemaRoom.Id}");
         }
 
         public async Task ChangeProgress(string nameFilm, int progress, string idUser, string idFilm)
         {
-            _notificationCache.Update(new Notification(idUser, idFilm, nameFilm, progress));
+            _notificationCache.UpdateProgress(idFilm, progress);
             await _notificationHub.PushNotificationProgress(nameFilm, progress, idUser, idFilm);
         }
 

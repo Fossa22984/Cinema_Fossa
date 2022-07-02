@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
@@ -24,7 +24,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Online Cinema Core\Online Cinema Core.csproj" />
+    <ProjectReference Include="..\Online Cinema Core\Online Cinema Domain.csproj" />
+    <ProjectReference Include="..\OnlineCinema Core\OnlineCinema Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

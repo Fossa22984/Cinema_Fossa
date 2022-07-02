@@ -32,8 +32,6 @@ namespace Online_Cinema_BLL.Services
         {
             try
             {
-
-
                 if (genre != null)
                 {
                     var res = (await _unit.Genre.GetAllGenreAsync()).Where(x => genre.Contains(x.GenreName, StringComparison.OrdinalIgnoreCase)).ToList();

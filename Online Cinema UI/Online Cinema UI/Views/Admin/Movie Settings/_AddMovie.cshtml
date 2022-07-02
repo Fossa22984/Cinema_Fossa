@@ -147,6 +147,15 @@
         $("#fluxGenre").html("");
     }
 
+    function detachGenre(elem){
+        debugger;
+        var text = elem.t;
+        collectionGenres.splice(collectionGenres.indexOf(text), 1);
+        elem.detach();
+   }
+
+
+    var collectionGenres = new Array();
     $(function () {
         $.ajax({
             type: 'GET',
@@ -159,14 +168,17 @@
                 var res = $("#menuGenre li lable").val();
                 $("#menuGenre li").children().on("click", function (e) {
                     var text = $(this).text();
-
-                    $("#fluxGenre").append("<label class='btn clickOnButton text-white mr-3' onclick='{$(this).detach()}'>" + text+" &nbsp; <i class='fas fa-times' style='font-size:12px'></i></label >");
+                    if(!collectionGenres.some(x=>x == text)){
+                        collectionGenres.push(text);
+                        $("#fluxGenre").append("<label class='btn clickOnButton text-white mr-3' onclick='{detachGenre($(this))}'>" + text+" &nbsp; <i class='fas fa-times' style='font-size:12px'></i></label >");
+                    }
                 });
             },
             error: function (e) {
                 alert(e.statusText);
             }
         });
+
 
 
         $("#addFilmForm").submit(function (e) {

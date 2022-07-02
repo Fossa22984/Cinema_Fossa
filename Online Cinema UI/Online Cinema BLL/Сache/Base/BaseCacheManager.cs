@@ -1,4 +1,5 @@
 ﻿using Online_Cinema_BLL.Extansions;
+using OnlineCinema_Core.Config;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,7 @@ namespace Online_Cinema_BLL.Сache.Base
             lock (_bufferLocker)
             {
                 _models.Add(model);
+                Log.Current.Debug($"set new model in cache");
             }
         }
 
@@ -32,6 +34,7 @@ namespace Online_Cinema_BLL.Сache.Base
             lock (_bufferLocker)
             {
                 models.AddRange(models);
+                Log.Current.Debug($"set new models in cache");
             }
         }
 
@@ -42,6 +45,8 @@ namespace Online_Cinema_BLL.Сache.Base
                 var updateModel = _models.ElementAtOrDefault(index);
                 if (updateModel != null)
                     updateModel.Copy(model);
+
+                Log.Current.Debug($"update model in cache");
             }
         }
 
@@ -51,6 +56,8 @@ namespace Online_Cinema_BLL.Сache.Base
             {
                 if (_models.ElementAtOrDefault(index) != null)
                     _models.RemoveAt(index);
+
+                Log.Current.Debug($"Remove model from cache");
             }
         }
 

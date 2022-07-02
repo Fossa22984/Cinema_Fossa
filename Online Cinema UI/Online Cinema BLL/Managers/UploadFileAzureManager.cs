@@ -5,6 +5,7 @@ using Microsoft.Azure.Management.Media.Models;
 using Microsoft.WindowsAzure.Storage;
 using Microsoft.WindowsAzure.Storage.Blob;
 using Online_Cinema_BLL.Settings;
+using OnlineCinema_Core.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -40,8 +41,8 @@ namespace Online_Cinema_BLL.Managers
             }
             catch (Exception e)
             {
-                Console.Error.WriteLine("TIP: Make sure that you have filled out the appsettings.json file before running this sample.");
-                Console.Error.WriteLine($"{e.Message}");
+                Log.Current.Error("TIP: Make sure that you have filled out the appsettings.json file before running this sample.");
+                Log.Current.Error($"{e.Message}");
                 return null;
             }
 
@@ -71,25 +72,14 @@ namespace Online_Cinema_BLL.Managers
             if (job.State == JobState.Finished)
             {
                 await UploadProgress.Invoke(name, 100, idUser, idFilm);
-                Console.WriteLine("Job finished.");
-                //if (!Directory.Exists(OutputFolderName))
-                //    Directory.CreateDirectory(OutputFolderName);
-
-                //await DownloadOutputAssetAsync(client, config.ResourceGroup, config.AccountName, outputAsset.Name, OutputFolderName);
+                Log.Current.Success($"Movie upload to azure server is successful NameTitle -> {name} IdFilm -> {idFilm} idUser -> {idUser}");
 
                 StreamingLocator locator = await CreateStreamingLocatorAsync(client, config.ResourceGroup, config.AccountName, outputAsset.Name, locatorName);
 
                 IList<string> urls = await GetStreamingUrlsAsync(client, config.ResourceGroup, config.AccountName, locator.Name);
 
-                foreach (var url in urls)
-                {
-                    Console.WriteLine(url);
-                }
-
                 return urls.FirstOrDefault();
             }
-
-            Console.WriteLine("Done. Copy and paste the Streaming URL ending in '/manifest' into the Azure Media Player at 'http://aka.ms/azuremediaplayer'.");
 
             return null;
         }
@@ -160,8 +150,8 @@ namespace Online_Cinema_BLL.Managers
                 string uniqueness = $"-{Guid.NewGuid():N}";
                 outputAssetName += uniqueness;
 
-                Console.WriteLine("Warning – found an existing Asset with name = " + assetName);
-                Console.WriteLine("Creating an Asset with this name instead: " + outputAssetName);
+                Log.Current.Debug("Warning – found an existing Asset with name = " + assetName);
+                Log.Current.Debug("Creating an Asset with this name instead: " + outputAssetName);
             }
 
             return await client.Assets.CreateOrUpdateAsync(resourceGroupName, accountName, outputAssetName, asset);
@@ -272,7 +262,7 @@ namespace Online_Cinema_BLL.Managers
             string accountName,
             string transformName,
             string jobName,
-            string filmName, 
+            string filmName,
             string idUser,
             string idFilm)
         {
@@ -283,18 +273,13 @@ namespace Online_Cinema_BLL.Managers
             {
                 job = await client.Jobs.GetAsync(resourceGroupName, accountName, transformName, jobName);
 
-                Console.WriteLine($"Job is '{job.State}'.");
                 for (int i = 0; i < job.Outputs.Count; i++)
                 {
                     JobOutput output = job.Outputs[i];
-                    Console.Write($"\tJobOutput[{i}] is '{output.State}'.");
                     if (output.State == JobState.Processing)
                     {
-                       await UploadProgress.Invoke(filmName, output.Progress, idUser, idFilm);
-                        Console.Write($"  Progress (%): '{output.Progress}'.");
+                        await UploadProgress.Invoke(filmName, output.Progress, idUser, idFilm);
                     }
-
-                    Console.WriteLine();
                 }
 
                 if (job.State != JobState.Finished && job.State != JobState.Error && job.State != JobState.Canceled)
@@ -413,7 +398,7 @@ namespace Online_Cinema_BLL.Managers
             string directory = Path.Combine(outputFolderName, assetName);
             Directory.CreateDirectory(directory);
 
-            Console.WriteLine($"Downloading output results to '{directory}'...");
+            Log.Current.Debug($"Downloading output results to '{directory}'...");
 
             string continuationToken = null;
             IList<Task> downloadTasks = new List<Task>();
@@ -443,7 +428,7 @@ namespace Online_Cinema_BLL.Managers
 
             await Task.WhenAll(downloadTasks);
 
-            Console.WriteLine("Download complete.");
+            Log.Current.Success("Download complete.");
         }
 
         /// <summary>
