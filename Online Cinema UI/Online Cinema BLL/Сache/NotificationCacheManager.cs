@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Online_Cinema_BLL.Сache
 {
-    public class NotificationCache : BaseCacheManager<Notification>
+    public class NotificationCacheManager : BaseCacheManager<Notification>
     {
         public void Update(Notification notification)
         {

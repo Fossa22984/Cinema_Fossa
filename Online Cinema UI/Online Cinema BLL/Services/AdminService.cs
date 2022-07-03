@@ -24,21 +24,28 @@ namespace Online_Cinema_BLL.Services
     {
         private readonly OnlineCinemaContext _context;
 
+
         private UploadFileAzureManager _uploadFileAzureManager;
         private FileManager _fileManager;
         private NotificationHub _notificationHub;
-        private NotificationCache _notificationCache;
+        private NotificationCacheManager _notificationCache;
+        private SessionCacheManager _sessionCacheManager;
+        private CinemaRoomCacheManager _cinemaRoomCacheManager;
         public AdminService(OnlineCinemaContext context,
             UploadFileAzureManager uploadFileAzureManager,
             FileManager fileManager,
             NotificationHub notificationHub,
-            NotificationCache notificationCache)
+            NotificationCacheManager notificationCache,
+            SessionCacheManager sessionCacheManager,
+            CinemaRoomCacheManager cinemaRoomCacheManager)
         {
             this._context = context;
             _uploadFileAzureManager = uploadFileAzureManager;
             _fileManager = fileManager;
             _notificationHub = notificationHub;
             _notificationCache = notificationCache;
+            _sessionCacheManager = sessionCacheManager;
+            _cinemaRoomCacheManager = cinemaRoomCacheManager;
         }
 
         public IList<string> GetListStringGenreAsync()
@@ -79,18 +86,10 @@ namespace Online_Cinema_BLL.Services
         public async Task<Session> GetSessionAsync(int cinemaRoom)
         {
             var now = DateTime.Now;
-            var listSession = await _context.Sessions.Include(x => x.Movie).Include(x => x.CinemaRoom)
-                .Where(x => x.CinemaRoomId == cinemaRoom)
-                .Where(x => x.Start.Date == now.Date || x.Start.Date == now.AddDays(-1)).OrderBy(x => x.Start).ToListAsync();
+            var listSession = _sessionCacheManager.GetByCondition(x => x.CinemaRoomId == cinemaRoom)
+                .Where(x => x.Start.Date == now.Date || x.Start.Date == now.AddDays(-1)).OrderBy(x => x.Start).ToList();
 
-            foreach (var item in listSession)
-            {
-                if (now >= item.Start && now < item.End)
-                {
-                    return item;
-                }
-            }
-            return null;
+            return await Task.FromResult(listSession.FirstOrDefault(x => now >= x.Start && now < x.End));
         }
         public async Task<Session> GetSessionByIdAsync(int sessionId) => await _context.Sessions.Include(x => x.Movie).Where(x => x.Id == sessionId).FirstOrDefaultAsync();
         public async Task<IList<Session>> GetSessionsForACinemaRoomsAsync(int cinemaRoom) => await _context.Sessions.Include(x => x.Movie).Include(x => x.CinemaRoom).Where(x => x.CinemaRoomId == cinemaRoom).OrderBy(x => x.Start).ToListAsync();
@@ -103,6 +102,7 @@ namespace Online_Cinema_BLL.Services
         {
             await _context.Sessions.AddAsync(session);
             await _context.SaveChangesAsync();
+            _sessionCacheManager.Set(session);
             Log.Current.Debug($"Add session room id-> {session.Id} sesion id -> {session.Id}");
         }
         public async Task ChangeSessionAsync(Session session)
@@ -113,6 +113,8 @@ namespace Online_Cinema_BLL.Services
             newSession.MovieId = session.MovieId;
             newSession.CinemaRoomId = session.CinemaRoomId;
             await _context.SaveChangesAsync();
+
+            _sessionCacheManager.Update(session);
             Log.Current.Debug($"Change session room id-> {session.Id} sesion id -> {session.Id}");
         }
 
@@ -182,6 +184,8 @@ namespace Online_Cinema_BLL.Services
         {
             await _context.CinemaRooms.AddAsync(cinemaRoom);
             await _context.SaveChangesAsync();
+
+            _cinemaRoomCacheManager.Set(cinemaRoom);
             Log.Current.Debug($"Add room -> {cinemaRoom.CinemaRoomName} movie id-> {cinemaRoom.Id}");
         }
         public async Task ChangeCinemaRoomAsync(CinemaRoom cinemaRoom)
@@ -194,6 +198,8 @@ namespace Online_Cinema_BLL.Services
             //newCinemaRoom.Sessions = cinemaRoom.Sessions;
 
             await _context.SaveChangesAsync();
+
+            _cinemaRoomCacheManager.Update(cinemaRoom);
             Log.Current.Debug($"Change room -> {cinemaRoom.CinemaRoomName} movie id-> {cinemaRoom.Id}");
         }
 

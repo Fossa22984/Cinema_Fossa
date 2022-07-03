@@ -10,8 +10,8 @@ namespace Online_Cinema_BLL.SignalR
 {
     public class NotificationHub : Hub
     {
-        public NotificationCache _notificationCache { get; set; }
-        public NotificationHub(NotificationCache notificationCache)
+        public NotificationCacheManager _notificationCache { get; set; }
+        public NotificationHub(NotificationCacheManager notificationCache)
         {
             _notificationCache = notificationCache;
         }

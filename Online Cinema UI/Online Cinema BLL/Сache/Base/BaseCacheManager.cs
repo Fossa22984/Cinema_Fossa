@@ -33,7 +33,7 @@ namespace Online_Cinema_BLL.Сache.Base
         {
             lock (_bufferLocker)
             {
-                models.AddRange(models);
+                _models.AddRange(models);
                 Log.Current.Debug($"set new models in cache");
             }
         }

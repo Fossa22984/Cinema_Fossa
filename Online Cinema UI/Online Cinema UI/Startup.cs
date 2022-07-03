@@ -8,12 +8,13 @@ using Microsoft.Extensions.Hosting;
 using Online_Cinema_BLL.Infrastructure;
 using Online_Cinema_BLL.Infrastructure.Provider;
 using Online_Cinema_BLL.Managers;
+using Online_Cinema_BLL.Observers;
+using Online_Cinema_BLL.Observers.Base;
 using Online_Cinema_BLL.Services;
 using Online_Cinema_BLL.Services.Interfaces;
 using Online_Cinema_BLL.SignalR;
 using Online_Cinema_BLL.Ñache;
 using Online_Cinema_UI.Filters;
-using Online_Cinema_UI.Middlewares;
 using System;
 
 namespace Online_Cinema_UI
@@ -45,7 +46,18 @@ namespace Online_Cinema_UI
             services.AddTransient<UploadFileAzureManager>();
             services.AddTransient<FileManager>();
             services.AddSingleton<NotificationHub>();
-            services.AddSingleton<NotificationCache>();
+            services.AddSingleton<ChatHub>();
+
+            services.AddSingleton<ObserversPoolManager>();
+            services.AddSingleton<GetSessionObserver>();
+
+
+            services.AddSingleton<GetSessionObserver>();
+
+            services.AddSingleton<CinemaRoomCacheManager>();
+            services.AddSingleton<SessionCacheManager>();
+            services.AddSingleton<NotificationCacheManager>();
+
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 

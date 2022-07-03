@@ -5,6 +5,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.AzureKeyVault;
 using Microsoft.Extensions.Hosting;
 using Azure.Identity;
+using Microsoft.Extensions.DependencyInjection;
+using Online_Cinema_BLL.Observers.Base;
 
 namespace Online_Cinema_UI
 {
@@ -12,7 +14,17 @@ namespace Online_Cinema_UI
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+
+            var scope = host.Services.CreateScope();
+
+            var services = scope.ServiceProvider;
+
+
+            var observerPool = services.GetRequiredService<ObserversPoolManager>();
+            observerPool.Start();
+
+            host.Run();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

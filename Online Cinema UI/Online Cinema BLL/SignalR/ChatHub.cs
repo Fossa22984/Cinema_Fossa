@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Online_Cinema_BLL.Services;
+using Online_Cinema_Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +11,6 @@ namespace Online_Cinema_BLL.SignalR
 {
     public class ChatHub : Hub
     {
-        private readonly AdminService _adminService;
-        public ChatHub(AdminService adminService)
-        {
-            _adminService = adminService;
-        }
         public async Task SendMessage(string user, string message, string room, bool join)
         {
             if (join)
@@ -39,16 +35,10 @@ namespace Online_Cinema_BLL.SignalR
             return Groups.RemoveFromGroupAsync(Context.ConnectionId, roomName);
         }
 
-        public async Task VideoTest(string message, string room)
+        public async Task SendSession(Session session, string room)
         {
-            await Clients.Group(room).SendAsync("SendVideo", message).ConfigureAwait(true);
-
-        }
-
-        public async Task GetSession(string room)
-        {
-            var res = await _adminService.GetSessionAsync(Convert.ToInt32(room));
-            if (res != null) await Clients.Group(room).SendAsync("GetSession", res.Id).ConfigureAwait(true);
+            if (Clients != null)
+                await Clients.Group(room).SendAsync("GetSession", session.Id).ConfigureAwait(true);
         }
     }
 }

@@ -14,11 +14,11 @@ namespace Online_Cinema_BLL.Managers
 {
     public class FileManager
     {
-        public NotificationCache _notificationCache;
+        public NotificationCacheManager _notificationCache;
 
         public delegate Task ProgressChange(string nameFilm, int progress, string idUser, string idFilm);
         public event ProgressChange UploadProgress;
-        public FileManager(NotificationCache notificationCache)
+        public FileManager(NotificationCacheManager notificationCache)
         {
             _notificationCache = notificationCache;
         }
