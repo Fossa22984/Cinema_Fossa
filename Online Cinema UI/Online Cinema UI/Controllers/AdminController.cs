@@ -33,10 +33,10 @@ namespace Online_Cinema_UI.Controllers
         }
 
         public async Task<IActionResult> Index() => await Task.Run(() => { return View(); });
-        public async Task<JsonResult> GetListGenre() => await Task.Run(() => { return Json(_adminService.GetListStringGenreAsync().OrderBy(x => x).ToArray()); });
-        public async Task<JsonResult> GetListMovies() => await Task.Run( async () => { return Json((await _moviesService.GetDictionaryMoviesAsync()).OrderBy(x => x.Value).ToArray()); });
-        public async Task<JsonResult> GetListCinemaRooms() => await Task.Run(() => { return Json(_adminService.GetDictionaryCinemaRoomsAsync().OrderBy(x => x.Value).ToArray()); });
-        public async Task<JsonResult> GetListSessions() => await Task.Run(() => { return Json(_adminService.GetDictionarySessionsAsync().OrderBy(x => x.Value).ToArray()); });
+        public async Task<JsonResult> GetListGenre() => Json(await _adminService.GetListStringGenreAsync()); 
+        public async Task<JsonResult> GetListMovies() => Json((await _adminService.GetDictionaryMoviesAsync()).OrderBy(x => x.Value).ToArray()); 
+        public async Task<JsonResult> GetListCinemaRooms() => Json((await _adminService.GetDictionaryCinemaRoomsAsync()).OrderBy(x => x.Value).ToArray()); 
+        public async Task<JsonResult> GetListSessions() => Json((await _adminService.GetDictionarySessionsAsync()).OrderBy(x => x.Value).ToArray()); 
         public async Task<JsonResult> GetMovieDuration(int? movieId, DateTime? start)
         {
             if (movieId != null && start != null)
@@ -183,16 +183,7 @@ namespace Online_Cinema_UI.Controllers
                 }
             }
             var res = _mapper.Map<MovieViewModel, Movie>(movie);
-
-            var inputFile = new MediaFile { Filename = @".\wwwroot" + movie.MoviePath };
-            using (var engine = new Engine())
-            {
-                engine.GetMetadata(inputFile);
-                res.Duration = inputFile.Metadata.Duration;
-            }
-            //await _moviesService.ChangeMovieAsync(res, genre);
             await _adminService.ChangeFilmAsync(res, genre);
-
         }
 
         public async Task AddCinemaRoom(CinemaRoomViewModel cinemaRoom)
