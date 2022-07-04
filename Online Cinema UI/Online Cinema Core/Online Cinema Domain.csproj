@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Online Cinema Domain\Online Cinema Domain.Models.csproj" />
+    <ProjectReference Include="..\Online Cinema Domain\Online Cinema Models.Domain.csproj" />
   </ItemGroup>
 
 </Project>

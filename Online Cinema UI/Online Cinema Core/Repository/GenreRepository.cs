@@ -4,7 +4,6 @@ using Online_Cinema_Core.Repository.Interface;
 using Online_Cinema_Domain.Models;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -31,9 +30,9 @@ namespace Online_Cinema_Core.Repository
 
         public async Task<Genre> GetGenreByIdAsync(int Id)
         {
-            return await FindByCondition(x => x.Id == Id).Include(x=>x.Movies).FirstOrDefaultAsync();
+            return await FindByCondition(x => x.Id == Id).Include(x => x.Movies).FirstOrDefaultAsync();
         }
-        
+
         public void RemoveGenre(Genre genre)
         {
             Delete(genre);

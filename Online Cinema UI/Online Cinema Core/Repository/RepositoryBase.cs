@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Online_Cinema_Core.Context;
+﻿using Online_Cinema_Core.Context;
 using Online_Cinema_Core.Repository.Interface;
 using System;
 using System.Linq;

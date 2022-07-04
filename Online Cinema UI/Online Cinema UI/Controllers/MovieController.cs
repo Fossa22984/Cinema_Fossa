@@ -1,8 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Online_Cinema_BLL.Services;
-using Online_Cinema_BLL.Services.Interfaces;
+using Online_Cinema_BLL.Interfaces.Services;
 using Online_Cinema_Domain.Models;
 using System;
 using System.Threading.Tasks;
@@ -14,9 +13,9 @@ namespace Online_Cinema_UI.Controllers
     {
         private readonly ILogger<MovieController> _logger;
         private readonly IEmailSender _emailSender;
-        private readonly AdminService _adminService;
+        private readonly IAdminService _adminService;
 
-        public MovieController(ILogger<MovieController> logger, IEmailSender emailSender, AdminService adminService)
+        public MovieController(ILogger<MovieController> logger, IEmailSender emailSender, IAdminService adminService)
         {
             _logger = logger;
             _emailSender = emailSender;
@@ -64,11 +63,5 @@ namespace Online_Cinema_UI.Controllers
             };
             return Json(session);
         }
-
-        //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        //public IActionResult Error()
-        //{
-        //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-        //}
     }
 }

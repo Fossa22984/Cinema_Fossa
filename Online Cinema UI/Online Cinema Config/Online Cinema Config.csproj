@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>Online_Cinema_Config</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Models.View\Online Cinema Models.View.csproj" />
+    <ProjectReference Include="..\Online Cinema BLL.Cache\Online Cinema BLL.Cache.csproj" />
+    <ProjectReference Include="..\Online Cinema BLL.Observers\Online Cinema BLL.Observers.csproj" />
+    <ProjectReference Include="..\Online Cinema BLL.Services\Online Cinema BLL.Services.csproj" />
+    <ProjectReference Include="..\Online Cinema BLL.SignalR\Online Cinema BLL.SignalR.csproj" />
+    <ProjectReference Include="..\Online Cinema BLL\Online Cinema BLL.csproj" />
+  </ItemGroup>
+
+</Project>

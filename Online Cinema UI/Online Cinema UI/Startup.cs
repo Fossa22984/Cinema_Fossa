@@ -1,19 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Online_Cinema_BLL.Infrastructure;
 using Online_Cinema_BLL.Infrastructure.Provider;
-using Online_Cinema_BLL.Managers;
-using Online_Cinema_BLL.Observers;
-using Online_Cinema_BLL.Observers.Base;
-using Online_Cinema_BLL.Services;
-using Online_Cinema_BLL.Services.Interfaces;
 using Online_Cinema_BLL.SignalR;
-using Online_Cinema_BLL.Ñache;
+using Online_Cinema_Config.AppStart;
 using Online_Cinema_UI.Filters;
 using System;
 
@@ -40,26 +34,8 @@ namespace Online_Cinema_UI
 
             Configuration.GetSection("SendGridOptions").Bind(option);
             services.AddTransient<SendGridOptions>(x => option);
-            services.AddTransient<IEmailSender, EmailSender>();
-            services.AddTransient<MoviesService>();
-            services.AddTransient<AdminService>();
-            services.AddTransient<UploadFileAzureManager>();
-            services.AddTransient<FileManager>();
-            services.AddSingleton<NotificationHub>();
-            services.AddSingleton<ChatHub>();
 
-            services.AddSingleton<ObserversPoolManager>();
-            services.AddSingleton<GetSessionObserver>();
-
-
-            services.AddSingleton<GetSessionObserver>();
-
-            services.AddSingleton<CinemaRoomCacheManager>();
-            services.AddSingleton<SessionCacheManager>();
-            services.AddSingleton<NotificationCacheManager>();
-
-
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            DIRegistration.RegisterConfigs(ref services);
 
             services.AddApplicationInsightsTelemetry(Configuration["InstrumentationKey"]);
 

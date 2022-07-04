@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <RootNamespace>Online_Cinema_BLL.Services</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Online Cinema BLL.SignalR\Online Cinema BLL.SignalR.csproj" />
+    <ProjectReference Include="..\Online Cinema BLL\Online Cinema BLL.csproj" />
+    <ProjectReference Include="..\Online Cinema Core\Online Cinema Domain.csproj" />
+  </ItemGroup>
+
+</Project>

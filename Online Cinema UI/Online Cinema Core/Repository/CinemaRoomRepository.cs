@@ -30,7 +30,7 @@ namespace Online_Cinema_Core.Repository
 
         public async Task<CinemaRoom> GetCinemaRoomByIdAsync(int Id)
         {
-            return await FindByCondition(x => x.Id == Id).Include(x => x.Sessions).ThenInclude(x => x.Movie).FirstOrDefaultAsync();
+            return await FindByCondition(x => x.Id == Id).AsNoTracking().Include(x => x.Sessions).ThenInclude(x => x.Movie).FirstOrDefaultAsync();
         }
 
         public void RemoveCinemaRoom(CinemaRoom cinemaRoom)

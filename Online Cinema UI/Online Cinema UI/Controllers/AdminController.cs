@@ -1,14 +1,11 @@
 ﻿using AutoMapper;
-using MediaToolkit;
-using MediaToolkit.Model;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Online_Cinema_BLL.Services;
+using Online_Cinema_BLL.Interfaces.Services;
 using Online_Cinema_Domain.Models;
 using Online_Cinema_Domain.Models.IdentityModels;
-using Online_Cinema_UI.Models;
+using Online_Cinema_Models.View;
 using System;
 using System.IO;
 using System.Linq;
@@ -19,12 +16,12 @@ namespace Online_Cinema_UI.Controllers
     [Authorize(Roles = "Admin")]
     public class AdminController : Controller
     {
-        private readonly AdminService _adminService;
-        private readonly MoviesService _moviesService;
+        private readonly IAdminService _adminService;
+        private readonly IMoviesService _moviesService;
         private readonly UserManager<User> _userManager;
 
         private readonly IMapper _mapper;
-        public AdminController(AdminService adminService, MoviesService moviesService, IMapper mapper, UserManager<User> userManager)
+        public AdminController(IAdminService adminService, IMoviesService moviesService, IMapper mapper, UserManager<User> userManager)
         {
             _adminService = adminService;
             _moviesService = moviesService;
@@ -33,10 +30,10 @@ namespace Online_Cinema_UI.Controllers
         }
 
         public async Task<IActionResult> Index() => await Task.Run(() => { return View(); });
-        public async Task<JsonResult> GetListGenre() => Json(await _adminService.GetListStringGenreAsync()); 
-        public async Task<JsonResult> GetListMovies() => Json((await _adminService.GetDictionaryMoviesAsync()).OrderBy(x => x.Value).ToArray()); 
-        public async Task<JsonResult> GetListCinemaRooms() => Json((await _adminService.GetDictionaryCinemaRoomsAsync()).OrderBy(x => x.Value).ToArray()); 
-        public async Task<JsonResult> GetListSessions() => Json((await _adminService.GetDictionarySessionsAsync()).OrderBy(x => x.Value).ToArray()); 
+        public async Task<JsonResult> GetListGenre() => Json(await _adminService.GetListStringGenreAsync());
+        public async Task<JsonResult> GetListMovies() => Json((await _adminService.GetDictionaryMoviesAsync()).OrderBy(x => x.Value).ToArray());
+        public async Task<JsonResult> GetListCinemaRooms() => Json((await _adminService.GetDictionaryCinemaRoomsAsync()).OrderBy(x => x.Value).ToArray());
+        public async Task<JsonResult> GetListSessions() => Json((await _adminService.GetDictionarySessionsAsync()).OrderBy(x => x.Value).ToArray());
         public async Task<JsonResult> GetMovieDuration(int? movieId, DateTime? start)
         {
             if (movieId != null && start != null)

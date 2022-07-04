@@ -279,7 +279,7 @@
     };
 
     $(function () {
-
+        IsEnded = true;
 
         var myplayer = videojs('video');
         myplayer.controlBar.progressControl.hide();
@@ -294,19 +294,21 @@
         });
 
         @*connection.on("SendVideo", function (message) {
-                                    if ("@user" != "Admin") {
-                                        var vid = self.player.currentTime();
-                                        if (!(vid <= (message + 2) && vid >= (message - 2))) {
-                                            self.player.currentTime(message);
-                                        }
-                                    }
-                                });*@
+                                            if ("@user" != "Admin") {
+                                                var vid = self.player.currentTime();
+                                                if (!(vid <= (message + 2) && vid >= (message - 2))) {
+                                                    self.player.currentTime(message);
+                                                }
+                                            }
+                                        });*@
          var currentTime;
          var startTime;
          connection.on("GetSession", function (message) {
              if($("#sessionId").val() == message){
                 return;
              }
+
+             IsEnded = false;
              $.ajax({
                     type: 'GET',
                     data: { "sessionId": message },
@@ -362,26 +364,30 @@
         this.player = videojs('video');
 
         @*this.player.on('timeupdate', () => {
-                                    if ("@user" == "Admin") {
-                                        var room = $("#ChatId").val();
-                                        connection.invoke("VideoTest", self.player.currentTime().toString(), room).catch(function (err) {
-                                            return console.error(err.toString());
-                                        });
-                                        event.preventDefault();
-                                    }
-                                });*@
+                                            if ("@user" == "Admin") {
+                                                var room = $("#ChatId").val();
+                                                connection.invoke("VideoTest", self.player.currentTime().toString(), room).catch(function (err) {
+                                                    return console.error(err.toString());
+                                                });
+                                                event.preventDefault();
+                                            }
+                                        });*@
+
 
         this.player.on("ended", function () {
             $("#sessionId").val("");
             $("#movieTitle").text("");
             if (self.player.src() !="/Movies/Background Video.mp4")
                 self.player.src({ type: 'video/mp4', src:"/Movies/Background Video.mp4" });
-
+            
+            IsEnded = true;
             self.player.play();
 
         });
 
         this.player.on("play", function () {
+            if(IsEnded){return;}
+
              currentTime = (new Date() - Date.parse(startTime)) / 1000;
 
             var vid = self.player.currentTime();

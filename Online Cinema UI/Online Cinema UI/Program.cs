@@ -1,12 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Azure.KeyVault;
-using Microsoft.Azure.Services.AppAuthentication;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Configuration.AzureKeyVault;
-using Microsoft.Extensions.Hosting;
-using Azure.Identity;
 using Microsoft.Extensions.DependencyInjection;
-using Online_Cinema_BLL.Observers.Base;
+using Microsoft.Extensions.Hosting;
+using Online_Cinema_BLL.Interfaces.Observers;
 
 namespace Online_Cinema_UI
 {
@@ -21,7 +16,7 @@ namespace Online_Cinema_UI
             var services = scope.ServiceProvider;
 
 
-            var observerPool = services.GetRequiredService<ObserversPoolManager>();
+            var observerPool = services.GetRequiredService<IObserversPoolManager>();
             observerPool.Start();
 
             host.Run();

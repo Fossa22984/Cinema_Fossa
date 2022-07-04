@@ -15,7 +15,7 @@ namespace Online_Cinema_Core.Repository
 
         public async Task CreateMovie(Movie movie)
         {
-           await Create(movie);
+            await Create(movie);
         }
 
         public async Task<IEnumerable<Movie>> GetAllMovieAsync()
@@ -25,7 +25,7 @@ namespace Online_Cinema_Core.Repository
 
         public async Task<IEnumerable<Movie>> GetMovieByConditionAsync(Expression<Func<Movie, bool>> predicate)
         {
-            return await FindByCondition(predicate).Include(x=>x.Genre).ToListAsync();
+            return await FindByCondition(predicate).Include(x => x.Genre).ToListAsync();
         }
 
         public async Task<Movie> GetMovieByIdAsync(int Id)
