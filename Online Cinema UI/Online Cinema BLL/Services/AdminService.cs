@@ -144,65 +144,33 @@ namespace Online_Cinema_BLL.Services
 
             _uploadFileAzureManager.UploadProgress += ChangeProgress;
             var moviePath = await _uploadFileAzureManager.RunAsync(config, tempFilePath, movie.MovieTitle, idUser, idFilm);
-
             await _fileManager.DeleteFile(tempFilePath);
+
+            movie.MoviePath = moviePath;
             if (genre != null)
             {
                 var res = (await _unitOfWork.Genre.GetAllGenreAsync()).AsEnumerable().Where(x => genre.Contains(x.GenreName, StringComparison.Ordinal)).ToList();
                 movie.Genre = res;
             }
-            movie.MoviePath = moviePath;
-            _unitOfWork.Movie.CreateMovie(movie);
+            await _unitOfWork.Movie.CreateMovie(movie);
             await _unitOfWork.SaveAsync();
             Log.Current.Debug($"Add movie MovieTitle -> {movie.MovieTitle} movie id-> {movie.Id}");
         }
-        //public async Task ChangeFilmAsync(Movie movie, string genre)
-        //{
-        //    Movie updateMovie = await _unitOfWork.Movie.GetMovieByIdAsync(movie.Id);
-
-        //    updateMovie.Copy(movie);
-        //    updateMovie.Image = movie.Image;
-        //    if (genre != null)
-        //    {
-        //        var res = (await _unitOfWork.Genre.GetAllGenreAsync()).AsEnumerable().Where(x => genre.Contains(x.GenreName, StringComparison.Ordinal)).ToList();
-        //        updateMovie.Genre = res;
-        //    }
-
-
-
-        //    if (movie.Image.Length == 0)
-        //        updateMovie.Image = (await _unitOfWork.Movie.GetMovieByIdAsync(movie.Id)).Image;
-
-        //    _unitOfWork.Movie.UpdateMovie(updateMovie);
-        //    await _unitOfWork.SaveAsync();
-
-        //    Log.Current.Debug($"Change movie MovieTitle -> {movie.MovieTitle} movie id-> {movie.Id}");
-        //}
 
         public async Task ChangeFilmAsync(Movie movie, string genre)
         {
-            if (genre != null)
-            {
-                var res = (await _unitOfWork.Genre.GetAllGenreAsync()).AsEnumerable().Where(x => genre.Contains(x.GenreName, StringComparison.Ordinal)).ToList();
-                movie.Genre = res;
-            }
-
             var newMovie = await _unitOfWork.Movie.GetMovieByIdAsync(movie.Id);
-            if (movie.Image.Length != 0) newMovie.Image = movie.Image;
-            newMovie.MovieTitle = movie.MovieTitle;
-            //   newMovie.MoviePath = movie.MoviePath;
-            newMovie.DateOfRelease = movie.DateOfRelease;
-            newMovie.Duration = movie.Duration;
-            newMovie.Author = movie.Author;
-            newMovie.Actors = movie.Actors;
-            newMovie.Country = movie.Country;
-            newMovie.AgeLimit = movie.AgeLimit;
-            newMovie.Description = movie.Description;
-            newMovie.MovieBudget = movie.MovieBudget;
-            newMovie.IsCartoon = movie.IsCartoon;
-            newMovie.Remote = movie.Remote;
-            newMovie.Genre = movie.Genre;
+            if (!string.IsNullOrEmpty(genre))
+            {
+                var genres = (await _unitOfWork.Genre.GetAllGenreAsync()).AsEnumerable().Where(x => genre.Contains(x.GenreName, StringComparison.Ordinal)).ToList();
+                newMovie.Genre = genres;
+            }
+            else newMovie.Genre.Clear();
 
+            if (movie.Image.Length != 0) newMovie.Image = movie.Image;
+            newMovie.Copy(movie);
+
+            _unitOfWork.Movie.Update(newMovie);
             await _unitOfWork.SaveAsync();
             Log.Current.Debug($"Change movie MovieTitle -> {movie.MovieTitle} movie id-> {movie.Id}");
         }

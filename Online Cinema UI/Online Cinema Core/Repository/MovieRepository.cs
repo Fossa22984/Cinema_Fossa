@@ -13,9 +13,9 @@ namespace Online_Cinema_Core.Repository
     {
         public MovieRepository(OnlineCinemaContext context) : base(context) { }
 
-        public void CreateMovie(Movie movie)
+        public async Task CreateMovie(Movie movie)
         {
-           Create(movie);
+           await Create(movie);
         }
 
         public async Task<IEnumerable<Movie>> GetAllMovieAsync()

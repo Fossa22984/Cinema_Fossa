@@ -13,9 +13,9 @@ namespace Online_Cinema_Core.Repository
         protected OnlineCinemaContext context { get; set; }
         public RepositoryBase(OnlineCinemaContext context) { this.context = context; }
 
-        public void Create(T entity)
+        public async Task Create(T entity)
         {
-           context.Set<T>().Add(entity);
+            await context.Set<T>().AddAsync(entity);
         }
 
         public void Delete(T entity)
@@ -25,15 +25,13 @@ namespace Online_Cinema_Core.Repository
 
         public IQueryable<T> FindAll()
         {
-            return context.Set<T>()
-                .AsNoTracking();
+            return context.Set<T>();
         }
 
         public IQueryable<T> FindByCondition(Expression<Func<T, bool>> predicate)
         {
             return context.Set<T>()
-                .Where(predicate)
-                .AsNoTracking();
+                .Where(predicate);
         }
 
         public void Update(T entity)

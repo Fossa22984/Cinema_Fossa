@@ -21,7 +21,7 @@ namespace Online_Cinema_Core.Repository
 
         public async Task<IEnumerable<Genre>> GetAllGenreAsync()
         {
-            return await FindAll().AsNoTracking().Include(x => x.Movies).ToListAsync();
+            return await FindAll().Include(x => x.Movies).ToListAsync();
         }
 
         public async Task<IEnumerable<Genre>> GetGenreByConditionAsync(Expression<Func<Genre, bool>> predicate)

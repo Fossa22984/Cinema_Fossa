@@ -11,7 +11,7 @@ namespace Online_Cinema_Core.Repository.Interface
         Task<IEnumerable<Movie>> GetAllMovieAsync();
         Task<Movie> GetMovieByIdAsync(int Id);
         Task<IEnumerable<Movie>> GetMovieByConditionAsync(Expression<Func<Movie, bool>> predicate);
-        void CreateMovie(Movie movie);
+        Task CreateMovie(Movie movie);
         void UpdateMovie(Movie movie);
         void RemoveMovie(Movie movie);
     }
