@@ -12,11 +12,18 @@
         return console.error(err.toString());
     });
     connection.on("SendProgress", function (nameFilm, progress, id) {
+        debugger;
 
         var str = 'nameFilm -> ' + nameFilm + ' progress -> ' + progress + ' id -> ' + id;
         console.log(str);
 
         showProgress(nameFilm, progress, id);
+
+        if (progress == 0)
+            createToast("Начало загрузки", "Загрузка " + nameFilm + " началась", "info");
+
+        if (progress == 100)
+            createToast("Загрузка окончена", "Загрузка " + nameFilm + " закончилась", "success");
     });
 
     //addDownload("Name Film", 58, 1);
@@ -71,4 +78,15 @@ function checkSearch() {
     }
 
     else $('#searchButton').attr('disabled', 'disabled');
+}
+
+function createToast(title, text, theme) {
+    debugger;
+    new Toast({
+        title: title,
+        text: text,
+        theme: theme,
+        autohide: true,
+        interval: 5000
+    });
 }

@@ -1,116 +1,116 @@
 ﻿@model Online_Cinema_UI.Models.MovieViewModel
 
-<form id="addFilmForm" asp-action="AddMovie" method="post" enctype="multipart/form-data">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <h3 class="mb-3 text-white">Добавление</h3>
-    <h4 class="mb-3 text-white">Обязательные поля</h4>
-    <div class="form-row mb-4">
-        <div class="form-group col-md-3 pr-2">
-            <img id="viewImage" src="~/Images/background-fon.jpg" />
-        </div>
-        <div class="form-group col-md-9">
-            <div class="form-row">
-                <div class="form-group col-md-11">
-                    <label asp-for="MovieTitle" class="control-label text-white"></label>
-                    <input asp-for="MovieTitle" class="form-control text-white" required />
-                    <span asp-validation-for="MovieTitle" class="text-danger"></span>
-                </div>
-                <div class="form-group align-self-center col-md-1">
-                    <label asp-for="IsCartoon" class="control-label text-white"></label>
-                    <input asp-for="IsCartoon" class="form-control text-white" />
-                    <span asp-validation-for="IsCartoon" class="text-danger"></span>
-                </div>
-
+    <form id="addFilmForm" asp-action="AddMovie" method="post" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <h3 class="mb-3 text-white">Добавление</h3>
+        <h4 class="mb-3 text-white">Обязательные поля</h4>
+        <div class="form-row mb-4">
+            <div class="form-group col-md-3 pr-2">
+                <img id="viewImage" src="~/Images/background-fon.jpg" />
             </div>
-            <div class="form-row">
-                <div class="form-group col-md-4">
-                    <label asp-for="ImageFile" class="control-label text-white"></label>
-                    <label class="form-control m-0 p-0" >
-                        <input asp-for="ImageFile" type="file" accept="image/png,image/jpeg" class="form-control text-white" placeholder="Прикрепите файл" >
-                        <button type="button" class="btn btn-outline-secondary text-white w-100 clickOnButton" onclick=" $('#ImageFile').trigger('click'); ">Добавить обложку</button>
-                    </label>
-                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+            <div class="form-group col-md-9">
+                <div class="form-row">
+                    <div class="form-group col-md-11">
+                        <label asp-for="MovieTitle" class="control-label text-white"></label>
+                        <input asp-for="MovieTitle" class="form-control text-white" required />
+                        <span asp-validation-for="MovieTitle" class="text-danger"></span>
+                    </div>
+                    <div class="form-group align-self-center col-md-1">
+                        <label asp-for="IsCartoon" class="control-label text-white"></label>
+                        <input asp-for="IsCartoon" class="form-control text-white" />
+                        <span asp-validation-for="IsCartoon" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-4">
+                        <label asp-for="ImageFile" class="control-label text-white"></label>
+                        <label class="form-control m-0 p-0">
+                            <input asp-for="ImageFile" type="file" accept="image/png,image/jpeg" class="form-control text-white" placeholder="Прикрепите файл">
+                            <button type="button" class="btn btn-outline-secondary text-white w-100 clickOnButton" onclick=" $('#ImageFile').trigger('click'); ">Добавить обложку</button>
+                        </label>
+                        <span asp-validation-for="ImageFile" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <p id="VideoTitle" class="control-label text-white text-overflow">Video</p>
+                        <label class="form-control m-0 p-0">
+                            <input asp-for="VideoFile" type="file" accept="video/*" class="form-control text-white" placeholder="Прикрепите файл">
+                            <button type="button" class="btn btn-outline-secondary text-white w-100 clickOnButton" onclick=" $('#VideoFile').trigger('click'); ">Добавить файл</button>
+                        </label>
+                        <span asp-validation-for="VideoFile" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group col-md-2">
+                        <label asp-for="DateOfRelease" class="control-label text-white"></label>
+                        <input asp-for="DateOfRelease" type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control text-white" required />
+                        <span asp-validation-for="DateOfRelease" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-md-2">
+                        <label asp-for="AgeLimit" class="control-label text-white"></label>
+                        <select asp-for="AgeLimit" class="form-select form-control text-white">
+                            <option class="elgg-input-dropdown" selected value="0">0+</option>
+                            <option class="elgg-input-dropdown" value="6">6+</option>
+                            <option class="elgg-input-dropdown" value="12">12+</option>
+                            <option class="elgg-input-dropdown" value="16">16+</option>
+                            <option class="elgg-input-dropdown" value="18">18+</option>
+                        </select>
+                        <span asp-validation-for="AgeLimit" class="text-danger"></span>
+                    </div>
+
+                </div>
+                <div class="form-group">
+                    <div class=" dropdown">
+                        <button class="btn dropdown-toggle clickOnButton text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Genre
+                        </button>
+                        <ul id="menuGenre" class="dropdown-menu mycontent menuGenre" aria-labelledby="navbarDropdown">
+                        </ul>
+                    </div>
                 </div>
 
-                <div class="form-group col-md-4">
-                    <p id="VideoTitle" class="control-label text-white text-overflow">Video</p>
-                    <label class="form-control m-0 p-0">
-                        <input asp-for="VideoFile" type="file" accept="video/*" class="form-control text-white" placeholder="Прикрепите файл">
-                        <button type="button" class="btn btn-outline-secondary text-white w-100 clickOnButton" onclick=" $('#VideoFile').trigger('click'); ">Добавить файл</button>
-                    </label>
-                    <span asp-validation-for="VideoFile" class="text-danger"></span>
+                <div class="d-flex flex-row bd-highlight mb-3 flex-wrap" id="fluxGenre">
+                    @*<label class="btn clickOnButton text-white" onclick="{ $(this).detach() }"> Genre1 &nbsp;<i class="fas fa-times" style="font-size:12px"></i></label>*@
                 </div>
-
-                <div class="form-group col-md-2">
-                    <label asp-for="DateOfRelease" class="control-label text-white"></label>
-                    <input asp-for="DateOfRelease" type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control text-white" required />
-                    <span asp-validation-for="DateOfRelease" class="text-danger"></span>
-                </div>
-                <div class="form-group col-md-2">
-                    <label asp-for="AgeLimit" class="control-label text-white"></label>
-                    <select asp-for="AgeLimit" class="form-select form-control text-white">
-                        <option class="elgg-input-dropdown" selected value="0">0+</option>
-                        <option class="elgg-input-dropdown" value="6">6+</option>
-                        <option class="elgg-input-dropdown" value="12">12+</option>
-                        <option class="elgg-input-dropdown" value="16">16+</option>
-                        <option class="elgg-input-dropdown" value="18">18+</option>
-                    </select>
-                    <span asp-validation-for="AgeLimit" class="text-danger"></span>
-                </div>
-
-            </div>
-            <div class="form-group">
-                <div class=" dropdown">
-                    <button class="btn dropdown-toggle clickOnButton text-white" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Genre
-                    </button>
-                    <ul id="menuGenre" class="dropdown-menu mycontent menuGenre" aria-labelledby="navbarDropdown">
-                    </ul>
-                </div>
-            </div>
-
-            <div class="d-flex flex-row bd-highlight mb-3 flex-wrap" id="fluxGenre">
-                @*<label class="btn clickOnButton text-white" onclick="{ $(this).detach() }"> Genre1 &nbsp;<i class="fas fa-times" style="font-size:12px"></i></label>*@
             </div>
         </div>
-    </div>
 
-    <h4 class="mb-3 text-white">Дополнительные поля</h4>
-    <div class="form-group">
-        <label asp-for="Author" class="control-label text-white"></label>
-        <textarea asp-for="Author" class="form-control text-white"></textarea>
-        <span asp-validation-for="Author" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Actors" class="control-label text-white"></label>
-        <textarea asp-for="Actors" class="form-control text-white"></textarea>
-        <span asp-validation-for="Actors" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Country" class="control-label text-white"></label>
-        <input asp-for="Country" class="form-control text-white" />
-        <span asp-validation-for="Country" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="Description" class="control-label text-white"></label>
-        <textarea asp-for="Description" class="form-control text-white"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
-    <div class="form-group">
-        <label asp-for="MovieBudget" class="control-label text-white"></label>
-        <input asp-for="MovieBudget" class="form-control text-white" />
-        <span asp-validation-for="MovieBudget" class="text-danger"></span>
-    </div>
-    <div class="form-row">
-        <div class="form-group col-md-11">
-            <input type="submit" class="btn btn-dark mt-4 w-100" value="Добавить" />
+        <h4 class="mb-3 text-white">Дополнительные поля</h4>
+        <div class="form-group">
+            <label asp-for="Author" class="control-label text-white"></label>
+            <textarea asp-for="Author" class="form-control text-white"></textarea>
+            <span asp-validation-for="Author" class="text-danger"></span>
         </div>
-        <div class="form-group col-md-1">
-            <button type="reset" class="btn btn-dark mt-4 w-100" onclick="Clear()">
-                <i class="fas fa-eraser text-white"></i>
-            </button>
+        <div class="form-group">
+            <label asp-for="Actors" class="control-label text-white"></label>
+            <textarea asp-for="Actors" class="form-control text-white"></textarea>
+            <span asp-validation-for="Actors" class="text-danger"></span>
         </div>
-    </div>
-</form>
+        <div class="form-group">
+            <label asp-for="Country" class="control-label text-white"></label>
+            <input asp-for="Country" class="form-control text-white" />
+            <span asp-validation-for="Country" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Description" class="control-label text-white"></label>
+            <textarea asp-for="Description" class="form-control text-white"></textarea>
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="MovieBudget" class="control-label text-white"></label>
+            <input asp-for="MovieBudget" class="form-control text-white" />
+            <span asp-validation-for="MovieBudget" class="text-danger"></span>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-11">
+                <input type="submit" class="btn btn-dark mt-4 w-100" value="Добавить" />
+            </div>
+            <div class="form-group col-md-1">
+                <button type="reset" class="btn btn-dark mt-4 w-100" onclick="Clear()">
+                    <i class="fas fa-eraser text-white"></i>
+                </button>
+            </div>      
+        </div>
+    </form>
 
-<script src="~/js/admin/movie-settings/add.js"></script>
+    <script src="~/js/admin/movie-settings/add.js"></script>

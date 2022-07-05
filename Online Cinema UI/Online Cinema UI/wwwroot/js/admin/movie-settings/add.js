@@ -82,12 +82,17 @@ $(function () {
             processData: false,
             contentType: false,
             success: function () {
-                alert("success");
+                //alert("success");
             },
             error: function (e) {
-                alert(e.statusText)
+                createToast("Ошибка", e.statusText, "danger");
+                //alert(e.statusText)
             }
         })
+
+        //createToast('tit','text');
+
+        createToast("Подготовка к загрузке", "Загрузка " + $("#MovieTitle").val() + " скоро начнется", "warning");
 
     })
 });
