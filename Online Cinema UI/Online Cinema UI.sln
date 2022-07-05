@@ -33,7 +33,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UI", "UI", "{A79ECD82-46F8-
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Models", "Models", "{0A7A7359-D577-4FC8-B449-76AC878B991F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Online Cinema Models.View", "Models.View\Online Cinema Models.View.csproj", "{AEA1279B-8EEC-45FB-B125-B85C00F79796}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Online Cinema Models.View", "Models.View\Online Cinema Models.View.csproj", "{AEA1279B-8EEC-45FB-B125-B85C00F79796}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Online Cinema Core.Settings", "Online Cinema Core.Settings\Online Cinema Core.Settings.csproj", "{C9EBDF86-075F-413B-BB51-DCB7415A9E47}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -85,6 +87,10 @@ Global
 		{AEA1279B-8EEC-45FB-B125-B85C00F79796}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AEA1279B-8EEC-45FB-B125-B85C00F79796}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AEA1279B-8EEC-45FB-B125-B85C00F79796}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9EBDF86-075F-413B-BB51-DCB7415A9E47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9EBDF86-075F-413B-BB51-DCB7415A9E47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9EBDF86-075F-413B-BB51-DCB7415A9E47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9EBDF86-075F-413B-BB51-DCB7415A9E47}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -101,6 +107,7 @@ Global
 		{FEF4DC18-7861-4145-9975-27DEE3A79490} = {3EA7D52B-2FFB-46DC-9F78-91D512A7F870}
 		{2C908184-2843-4F24-BCB5-FBEABDE68AAF} = {6B524B25-7DE7-4D80-902F-315025990CD5}
 		{AEA1279B-8EEC-45FB-B125-B85C00F79796} = {0A7A7359-D577-4FC8-B449-76AC878B991F}
+		{C9EBDF86-075F-413B-BB51-DCB7415A9E47} = {6B524B25-7DE7-4D80-902F-315025990CD5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8068926A-2A6D-46F9-B8D1-029C7D93E037}

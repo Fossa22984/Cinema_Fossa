@@ -9,6 +9,8 @@ using Online_Cinema_BLL.Observers.Base;
 using Online_Cinema_BLL.Services;
 using Online_Cinema_BLL.Services.Managers;
 using Online_Cinema_BLL.SignalR;
+using Online_Cinema_Core.Settings.Interfaces;
+using Online_Cinema_Core.Settings.Managers;
 
 namespace Online_Cinema_Config.AppStart
 {
@@ -27,6 +29,8 @@ namespace Online_Cinema_Config.AppStart
             //Managers
             services.AddTransient<IUploadFileAzureManager, UploadFileAzureManager>();
             services.AddTransient<IFileManager, FileManager>();
+
+            services.AddTransient<IAzureSettingsManager, AzureSettingsManager>();
 
             //SignalR
             services.AddSingleton<NotificationHub>();

@@ -3,13 +3,14 @@ using Azure.Storage.Blobs.Models;
 using Microsoft.Azure.Management.Media;
 using Microsoft.Azure.Management.Media.Models;
 using Online_Cinema_BLL.Interfaces.Managers;
-using Online_Cinema_BLL.Settings;
+using Online_Cinema_Core.Settings.Models;
 using OnlineCinema_Core.Config;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using static Online_Cinema_BLL.Models.Notification;
 
 namespace Online_Cinema_BLL.Services.Managers
 {
@@ -29,7 +30,7 @@ namespace Online_Cinema_BLL.Services.Managers
         /// </summary>
         /// <param name="config">The parm is of type ConfigWrapper. This class reads values from local configuration file.</param>
         /// <returns></returns>
-        public async Task<string> RunAsync(ConfigWrapper config, string filePath, string name, string idUser, string idFilm)
+        public async Task<string> RunAsync(AzureSettingsModel config, string filePath, string name, string idUser, string idFilm)
         {
             this.filePath = filePath;
             IAzureMediaServicesClient client;
@@ -69,7 +70,7 @@ namespace Online_Cinema_BLL.Services.Managers
 
             if (job.State == JobState.Finished)
             {
-                await UploadProgress.Invoke(name, 100, idUser, idFilm);
+                await UploadProgress.Invoke(name, 100, idUser, idFilm, notificationType: NotificationTypeEnum.SuccessfulLoad);
                 Log.Current.Success($"Movie upload to azure server is successful NameTitle -> {name} IdFilm -> {idFilm} idUser -> {idUser}");
 
                 StreamingLocator locator = await CreateStreamingLocatorAsync(client, config.ResourceGroup, config.AccountName, outputAsset.Name, locatorName);

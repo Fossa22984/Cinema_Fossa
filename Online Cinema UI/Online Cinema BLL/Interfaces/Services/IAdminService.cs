@@ -3,6 +3,7 @@ using Online_Cinema_Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using static Online_Cinema_BLL.Models.Notification;
 
 namespace Online_Cinema_BLL.Interfaces.Services
 {
@@ -25,6 +26,6 @@ namespace Online_Cinema_BLL.Interfaces.Services
         Task<CinemaRoom> GetCinemaRoomAsync(int CinemaRoomId);
         Task AddCinemaRoomAsync(CinemaRoom cinemaRoom);
         Task ChangeCinemaRoomAsync(CinemaRoom cinemaRoom);
-        Task ChangeProgress(string nameFilm, int progress, string idUser, string idFilm);
+        Task ChangeProgress(string nameFilm, int progress, string idUser, string idFilm, NotificationTypeEnum notificationType = NotificationTypeEnum.None);
     }
 }

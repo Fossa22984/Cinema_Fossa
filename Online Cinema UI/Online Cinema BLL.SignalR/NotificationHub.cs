@@ -2,6 +2,7 @@
 using Online_Cinema_BLL.Interfaces.Cache;
 using Online_Cinema_BLL.Interfaces.SignalR;
 using System.Threading.Tasks;
+using static Online_Cinema_BLL.Models.Notification;
 
 namespace Online_Cinema_BLL.SignalR
 {
@@ -16,9 +17,9 @@ namespace Online_Cinema_BLL.SignalR
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, room);
         }
-        public async Task PushNotificationProgress(string nameFilm, int progress, string idUser, string idFilm)
+        public async Task PushNotificationProgress(string nameFilm, int progress, string idUser, string idFilm, NotificationTypeEnum notificationType)
         {
-            await Clients.Group(idUser).SendAsync("SendProgress", nameFilm, progress, idFilm).ConfigureAwait(true);
+            await Clients.Group(idUser).SendAsync("SendProgress", nameFilm, progress, idFilm, notificationType).ConfigureAwait(true);
         }
 
         public async Task GetNotifications(string idUser)

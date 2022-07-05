@@ -4,8 +4,8 @@ using Online_Cinema_BLL.Interfaces.Cache;
 using Online_Cinema_BLL.Interfaces.Managers;
 using Online_Cinema_BLL.Interfaces.Services;
 using Online_Cinema_BLL.Models;
-using Online_Cinema_BLL.Settings;
 using Online_Cinema_BLL.SignalR;
+using Online_Cinema_Core.Settings.Interfaces;
 using Online_Cinema_Core.UnitOfWork;
 using Online_Cinema_Domain.Models;
 using OnlineCinema_Core.Config;
@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using static Online_Cinema_BLL.Models.Notification;
 
 namespace Online_Cinema_BLL.Services
 {
@@ -28,13 +29,15 @@ namespace Online_Cinema_BLL.Services
         private INotificationCacheManager _notificationCache;
         private ISessionCacheManager _sessionCacheManager;
         private ICinemaRoomCacheManager _cinemaRoomCacheManager;
+        private IAzureSettingsManager _azureSettingsManager;
         public AdminService(IUnitOfWork unitOfWork,
             IUploadFileAzureManager uploadFileAzureManager,
             IFileManager fileManager,
             NotificationHub notificationHub,
             INotificationCacheManager notificationCache,
             ISessionCacheManager sessionCacheManager,
-            ICinemaRoomCacheManager cinemaRoomCacheManager)
+            ICinemaRoomCacheManager cinemaRoomCacheManager,
+            IAzureSettingsManager azureSettingsManager)
         {
             _unitOfWork = unitOfWork;
             _uploadFileAzureManager = uploadFileAzureManager;
@@ -43,6 +46,7 @@ namespace Online_Cinema_BLL.Services
             _notificationCache = notificationCache;
             _sessionCacheManager = sessionCacheManager;
             _cinemaRoomCacheManager = cinemaRoomCacheManager;
+            _azureSettingsManager = azureSettingsManager;
         }
 
         public async Task<IList<string>> GetListStringGenreAsync()
@@ -121,21 +125,15 @@ namespace Online_Cinema_BLL.Services
         public async Task AddFilmAsync(Movie movie, string genre, IFormFile file, string idUser)
         {
             var idFilm = Guid.NewGuid().ToString();
-            _notificationCache.Set(new Notification(idUser, idFilm, movie.MovieTitle));
+            _notificationCache.Set(new Notification(idUser, idFilm, movie.MovieTitle, notificationType: NotificationTypeEnum.StartLoad));
             await ChangeProgress(movie.MovieTitle, 0, idUser, idFilm);
-
-            var configPath = AppDomain.CurrentDomain.BaseDirectory;
-            ConfigWrapper config = new(new ConfigurationBuilder()
-                   .SetBasePath(Path.Combine(configPath, "Settings"))
-                   .AddJsonFile("azureSetings.json", optional: true, reloadOnChange: true)
-                   .AddEnvironmentVariables() // parses the values from the optional .env file at the solution root
-                   .Build());
 
             _fileManager.UploadProgress += ChangeProgress;
             var tempFilePath = await _fileManager.CreateTempFile(file, idFilm, idUser, movie.MovieTitle);
             movie.Duration = await _fileManager.ReadDurationFromMovie(tempFilePath);
 
             _uploadFileAzureManager.UploadProgress += ChangeProgress;
+            var config = _azureSettingsManager.Get();
             var moviePath = await _uploadFileAzureManager.RunAsync(config, tempFilePath, movie.MovieTitle, idUser, idFilm);
             await _fileManager.DeleteFile(tempFilePath);
 
@@ -191,10 +189,10 @@ namespace Online_Cinema_BLL.Services
             Log.Current.Debug($"Change room -> {cinemaRoom.CinemaRoomName} movie id-> {cinemaRoom.Id}");
         }
 
-        public async Task ChangeProgress(string nameFilm, int progress, string idUser, string idFilm)
+        public async Task ChangeProgress(string nameFilm, int progress, string idUser, string idFilm, NotificationTypeEnum notificationType = NotificationTypeEnum.None)
         {
             _notificationCache.UpdateProgress(idFilm, progress);
-            await _notificationHub.PushNotificationProgress(nameFilm, progress, idUser, idFilm);
+            await _notificationHub.PushNotificationProgress(nameFilm, progress, idUser, idFilm, notificationType);
         }
     }
 }

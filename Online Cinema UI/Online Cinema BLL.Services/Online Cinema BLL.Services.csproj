@@ -12,6 +12,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Online Cinema BLL.SignalR\Online Cinema BLL.SignalR.csproj" />
     <ProjectReference Include="..\Online Cinema BLL\Online Cinema BLL.csproj" />
+    <ProjectReference Include="..\Online Cinema Core.Settings\Online Cinema Core.Settings.csproj" />
     <ProjectReference Include="..\Online Cinema Core\Online Cinema Domain.csproj" />
   </ItemGroup>
 
