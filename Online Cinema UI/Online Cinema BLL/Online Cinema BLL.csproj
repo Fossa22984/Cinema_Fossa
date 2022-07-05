@@ -24,14 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Online Cinema Core.Settings\Online Cinema Core.Settings.csproj" />
     <ProjectReference Include="..\Online Cinema Core\Online Cinema Domain.csproj" />
     <ProjectReference Include="..\OnlineCinema Core\Online Cinema Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Settings\azureSetings.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Azure.Management.Media;
 using Microsoft.Identity.Client;
 using Microsoft.Rest;
-using Online_Cinema_BLL.Settings;
+using Online_Cinema_Core.Settings.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,7 +19,7 @@ namespace Online_Cinema_BLL.Services.Managers
         /// <param name="config">The param is of type ConfigWrapper, which reads values from local configuration file.</param>
         /// <returns>A task.</returns>
         // <CreateMediaServicesClientAsync>
-        public static async Task<IAzureMediaServicesClient> CreateMediaServicesClientAsync(ConfigWrapper config, bool interactive = false)
+        public static async Task<IAzureMediaServicesClient> CreateMediaServicesClientAsync(AzureSettingsModel config, bool interactive = false)
         {
             ServiceClientCredentials credentials;
             if (interactive)
@@ -41,7 +41,7 @@ namespace Online_Cinema_BLL.Services.Managers
         /// <param name="config">The param is of type ConfigWrapper. This class reads values from local configuration file.</param>
         /// <returns></returns>
         // <GetCredentialsAsync>
-        private static async Task<ServiceClientCredentials> GetCredentialsAsync(ConfigWrapper config)
+        private static async Task<ServiceClientCredentials> GetCredentialsAsync(AzureSettingsModel config)
         {
             // Use ConfidentialClientApplicationBuilder.AcquireTokenForClient to get a token using a service principal with symmetric key
 
@@ -66,7 +66,7 @@ namespace Online_Cinema_BLL.Services.Managers
         /// <param name="config">The param is of type ConfigWrapper. This class reads values from local configuration file.</param>
         /// <returns></returns>
         // <GetCredentialsInteractiveAuthAsync>
-        private static async Task<ServiceClientCredentials> GetCredentialsInteractiveAuthAsync(ConfigWrapper config)
+        private static async Task<ServiceClientCredentials> GetCredentialsInteractiveAuthAsync(AzureSettingsModel config)
         {
             var scopes = new[] { config.ArmAadAudience + "/user_impersonation" };
 

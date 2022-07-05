@@ -17,6 +17,7 @@
     <ProjectReference Include="..\Online Cinema BLL.Services\Online Cinema BLL.Services.csproj" />
     <ProjectReference Include="..\Online Cinema BLL.SignalR\Online Cinema BLL.SignalR.csproj" />
     <ProjectReference Include="..\Online Cinema BLL\Online Cinema BLL.csproj" />
+    <ProjectReference Include="..\Online Cinema Core.Settings\Online Cinema Core.Settings.csproj" />
   </ItemGroup>
 
 </Project>
