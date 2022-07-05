@@ -36,10 +36,10 @@ $(function () {
             processData: false,
             contentType: false,
             success: function () {
-                alert("success");
+                createToast("Добавление", "Добавление зала «" + $("#CinemaRoomName").val() + "» прошло успешно", "info");
             },
             error: function (e) {
-                alert(e.statusText)
+                createToast("Ошибка", e.statusText, "danger");
             }
         })
 

@@ -132,12 +132,12 @@ $(function () {
             processData: false,
             contentType: false,
             success: function () {
-                alert("success");
+                createToast("Добавление", "Добавление сессии прошло успешно", "info");
                 ChangeCinemaRoom();
 
             },
             error: function (e) {
-                alert(e.statusText)
+                createToast("Ошибка", e.statusText, "danger");
             }
         })
 

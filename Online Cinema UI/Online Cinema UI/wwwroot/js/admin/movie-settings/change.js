@@ -75,10 +75,10 @@ $(function () {
             processData: false,
             contentType: false,
             success: function () {
-                alert("success");
+                createToast("Изменение", "Изменение «" + $("#MovieTitle").val() + "» прошло успешн", "info");
             },
             error: function (e) {
-                alert(e.statusText)
+                createToast("Ошибка", e.statusText, "danger");
             }
         })
 

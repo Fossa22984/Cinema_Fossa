@@ -8,7 +8,9 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
+    <link href="~/lib/toast/css/toast.css" rel="stylesheet" />
     <link href="~/css/layout.css" rel="stylesheet" />
+
 </head>
 @*sticky-top*@
 <body style="background-color: #0e0e10">
@@ -134,7 +136,7 @@
 
     }
     else
-    { @RenderBody()}   
+    { @RenderBody()}
 
 
     @*    @section ScriptsLayout{*@
@@ -147,6 +149,7 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
     <script src="~/lib/microsoft-signalr/signalr.min.js"></script>
+    <script src="~/lib/toast/js/toast.min.js"></script>
     <script src="~/js/layout.js"></script>
 
     @await RenderSectionAsync("Scripts", required: false)
