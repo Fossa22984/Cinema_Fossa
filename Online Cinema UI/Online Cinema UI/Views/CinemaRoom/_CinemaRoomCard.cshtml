@@ -2,7 +2,7 @@
 
 @foreach (var cinemaRoom in Model)
 {
-    <form asp-action="CinemaRoom" asp-controller="Movie" method="get">
+    <form asp-action="CinemaRoom" asp-controller="CinemaRoom" method="get">
         <div class="card card2" data-toggle="tooltip" data-placement="top" onclick="{$(this).parent()[0].submit(); }">
             <input type="hidden" name="id" value="@cinemaRoom.Id"  />
             <div class="myCardContainer">
