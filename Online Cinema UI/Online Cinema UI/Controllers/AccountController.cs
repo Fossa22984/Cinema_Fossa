@@ -54,7 +54,7 @@ namespace Online_Cinema_UI.Controllers
             }
 
             if (User.Identity.IsAuthenticated)
-                return Redirect("/Movie/Index");
+                return Redirect("/CinemaRoom/Index");
 
             return View();
         }
@@ -100,7 +100,7 @@ namespace Online_Cinema_UI.Controllers
                 new { guid = token, userEmail = user.Email }, Request.Scheme, Request.Host.Value);
             await _emailSender.SendEmailAsync(user.Email, "Link ->>>", link);
 
-            return Redirect("/Movie/Index");
+            return Redirect("/CinemaRoom/Index");
         }
 
         [HttpGet]
@@ -116,7 +116,7 @@ namespace Online_Cinema_UI.Controllers
 
             if (result.Succeeded)
             {
-                return RedirectToAction("Index", "Movie");
+                return RedirectToAction("Index", "CinemaRoom");
             }
             return View("Index");
         }
@@ -141,7 +141,7 @@ namespace Online_Cinema_UI.Controllers
             await _emailSender.SendEmailAsync(user.Email, "Link ->>>", link);
 
             // add Send View 
-            return Redirect("/Movie/Index");
+            return Redirect("/CinemaRoom/Index");
         }
 
         [HttpGet]
@@ -166,7 +166,7 @@ namespace Online_Cinema_UI.Controllers
             var res = await _userManager.ConfirmEmailAsync(user, guid);
             if (res.Succeeded)
             {
-                return RedirectToAction("Index", "Movie");
+                return RedirectToAction("Index", "CinemaRoom");
             }
             //todo add ERROR PAGE
             return View();

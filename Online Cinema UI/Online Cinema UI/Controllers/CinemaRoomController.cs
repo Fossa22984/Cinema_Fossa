@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 namespace Online_Cinema_UI.Controllers
 {
     [Authorize]
-    public class MovieController : Controller
+    public class CinemaRoomController : Controller
     {
-        private readonly ILogger<MovieController> _logger;
+        private readonly ILogger<CinemaRoomController> _logger;
         private readonly IEmailSender _emailSender;
         private readonly IAdminService _adminService;
 
-        public MovieController(ILogger<MovieController> logger, IEmailSender emailSender, IAdminService adminService)
+        public CinemaRoomController(ILogger<CinemaRoomController> logger, IEmailSender emailSender, IAdminService adminService)
         {
             _logger = logger;
             _emailSender = emailSender;

@@ -39,7 +39,6 @@ function ChangeFilm(e) {
         data: { "movie": $('option[value="' + $("#ajax").val() + '"]').first().prop("data-value") },
         url: "/Admin/_ChangeMovie",
         success: function (result) {
-            debugger;
             if (result != "") $("#movieSettingsDiv").html(result);
             else $("#movieSettingsDiv").html("");
         }

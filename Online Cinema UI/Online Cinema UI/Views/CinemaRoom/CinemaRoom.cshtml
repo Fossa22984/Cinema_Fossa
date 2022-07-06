@@ -1,0 +1,58 @@
+﻿@model Online_Cinema_Domain.Models.CinemaRoom
+@{
+    @inject Microsoft.AspNetCore.Identity.UserManager<Online_Cinema_Domain.Models.IdentityModels.User> UserManager
+    var user = await UserManager.GetUserAsync(User);
+}
+
+<link href="//amp.azure.net/libs/amp/2.1.0/skins/amp-default/azuremediaplayer.min.css" rel="stylesheet">
+<script src="//amp.azure.net/libs/amp/2.1.0/azuremediaplayer.min.js"></script>
+<link href="~/css/cinemaroom.css" rel="stylesheet" />
+
+
+<input asp-for="Id" type="hidden" />
+<input id="sessionId" type="hidden" />
+<div class="mycontent pt-1 mb-3" id="videoDiv" style="width: 75vw;">
+    <div class="row p-0 m-0" style="height: 82vh; width:100%;">
+        <video id="video" class="azuremediaplayer amp-default-skin" controls autoplay style="width: 100%; height:100%" data-setup="{}">
+            <source type="video/mp4" src="https://fossamultimedia1-euwe.streaming.media.azure.net/13526c9a-764c-4378-b1ed-fd5a081bb570/Разочарование.ism/manifest(format=mpd-time-cmaf)" />
+        </video>
+    </div>
+    <div class="row m-3 mb-5">
+        <div class="w-100">
+            <img src=@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(Model.CinemaRoomImage)) class="clickOnButton" style=" width: 50px; height: 50px; object-fit: cover; border-radius: 50%; border:solid 2px  #3eaaaf; float:left; margin-right:10px; ">
+            <h2 class="text-white">@Model.CinemaRoomName</h2>
+            <div class="d-flex flex-row bd-highlight mb-3">
+                <h4 class="text-white">В данный момент идёт: &nbsp; </h4>
+                <h4 class="text-white" id="movieTitle"></h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="row d-flex flex-row bd-highlight m-3 mb-5 flex-wrap">
+        <input id="dateSession" type="date" class="btn clickOnButton text-white" placeholder="Поиск по дате" style="width:65%; color:white" />
+        <button type="button" class="btn clickOnButton text-white" onclick="SearchByDate()">Расписание сессий</button>
+    </div>
+
+    <div class="m-3" id="listSessionsDiv"></div>
+</div>
+<div id="chatDiv" style=" background: #18181b; width: 25vw">
+    <div class=" cardss" style="  height: 95vh!important; ">
+        <div>
+            <div class="d-flex flex-row justify-content-center">
+                <p class="text-white" style=" overflow-wrap: break-word;">ЧАТ</p>
+            </div>
+        </div>
+        <div class="mycontent1" id="ChatRoom" data-scroll="true" onscroll="ScrollChat(this)" style=" overflow-wrap: break-word;">
+        </div>
+        <div>
+            <textarea class="form-control text-white" id="MessageTextarea" onkeyup="checkChatMessage()"></textarea>
+            <button id="sendMessageButton" class="btn btn-dark mt-4" style="background-color: #3eaaaf; width:100%;" disabled>Чат</button>
+        </div>
+    </div>
+    <input type="hidden" id="ChatId" value="@Model.Id" />
+</div>
+
+
+@section Scripts{
+    <script src="~/js/movie/cinemaroom.js"></script>
+}
