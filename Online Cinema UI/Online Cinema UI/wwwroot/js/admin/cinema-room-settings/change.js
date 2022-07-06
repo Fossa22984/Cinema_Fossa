@@ -21,7 +21,6 @@ function GetAllSessions(e) {
         data: { "cinemaRoomId": $("#Id").val() },
         url: "/Admin/_ListSessions",
         success: function (result) {
-            debugger;
             $("#listSessionsDiv").html(result);
         }
     });
@@ -66,7 +65,7 @@ $(function () {
             processData: false,
             contentType: false,
             success: function () {
-                createToast("Изменение", "Изменение зала «" + $("#CinemaRoomName").val() + "» прошло успешн", "info");
+                createToast("Изменение", "Изменение зала «" + $("#CinemaRoomName").val() + "» прошло успешно", "info");
             },
             error: function (e) {
                 createToast("Ошибка", e.statusText, "danger");

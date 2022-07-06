@@ -15,7 +15,23 @@ function Clear() {
     $("#fluxGenre").html("");
 }
 
+function detachGenre(elem) {
+    var text = ($(elem).text()).replace(/\s/g, '');
+    collectionGenres.splice(collectionGenres.indexOf(text), 1);
+    $(elem).detach();
+}
+
+
 var collectionGenres = new Array();
+GetGenres();
+function GetGenres() {
+    var Genres = $("#fluxGenre").children();
+
+    for (var i = 0; i < Genres.length; i++) {
+        collectionGenres.push(($(Genres[i]).text()).replace(/\s/g, ''));
+    }
+}
+
 $(function () {
     $.ajax({
         type: 'GET',
@@ -31,7 +47,7 @@ $(function () {
                 if (!collectionGenres.some(x => x == text)) {
                     collectionGenres.push(text);
 
-                    $("#fluxGenre").append("<label class='btn clickOnButton text-white mr-3' onclick='{$(this).detach()}'>" + text + " &nbsp; <i class='fas fa-times' style='font-size:12px'></i></label >");
+                    $("#fluxGenre").append("<label class='btn clickOnButton text-white mr-3' onclick='{detachGenre(this)}'>" + text + " &nbsp; <i class='fas fa-times' style='font-size:12px'></i></label >");
                 }
             });
         },
@@ -50,13 +66,13 @@ $(function () {
         var file = fileInput.files[0];
         formData.append("ImageFile", file);
 
-        debugger;
+
         var listLable = $("#fluxGenre").children();
         var genres = [];
         for (var i = 0; i < listLable.length; i++)
             genres.push($(listLable[i]).text());
         formData.append("genre", genres);
-        debugger;
+
         formData.append("Id", $("#Id").val());
         formData.append("MovieTitle", $("#MovieTitle").val());
         formData.append("MoviePath", $("#MoviePath").val());
@@ -70,8 +86,6 @@ $(function () {
         formData.append("IsCartoon", $('#IsCartoon').is(":checked"));
         formData.append("Remote", $('#Remote').is(":checked"));
 
-        debugger;
-
         $.ajax({
             type: "POST",
             url: formAction,
@@ -79,7 +93,7 @@ $(function () {
             processData: false,
             contentType: false,
             success: function () {
-                createToast("Изменение", "Изменение «" + $("#MovieTitle").val() + "» прошло успешн", "info");
+                createToast("Изменение", "Изменение «" + $("#MovieTitle").val() + "» прошло успешно", "info");
             },
             error: function (e) {
                 createToast("Ошибка", e.statusText, "danger");

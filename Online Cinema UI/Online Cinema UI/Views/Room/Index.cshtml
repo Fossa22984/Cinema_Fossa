@@ -1,0 +1,15 @@
+﻿@model IEnumerable<Online_Cinema_Domain.Models.Movie>
+<link href="~/css/card.css" rel="stylesheet" />
+
+
+<div class="col mycontent pt-3">
+    <input type="hidden" id="pageNumber" value="1" />
+    <input type="hidden" id="searchHidden" value="" />
+
+    <div class="cards" id="flux">
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/movie/index.js"></script>
+}

@@ -4,7 +4,7 @@
     <div class="d-flex flex-row bd-highlight mb-3 flex-wrap" id="flux">
         <table class="table table-bordered text-white">
             <thead>
-                <tr>
+                <tr class="text-center">
                     <th scope="col">Movie Title</th>
                     <th scope="col">Start</th>
                     <th scope="col">End</th>
@@ -13,7 +13,7 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr>
+                    <tr class="text-center">
                         <td>@item.Movie.MovieTitle</td>
                         <td>@item.Start.ToString("dd.MM.yyyy HH:mm")</td>
                         <td>@item.End.ToString("dd.MM.yyyy HH:mm")</td>
@@ -23,10 +23,3 @@
         </table>
     </div>
 }
-
-<style>
-    th, td {
-        text-align: center;
-        vertical-align: middle;
-    }
-</style>

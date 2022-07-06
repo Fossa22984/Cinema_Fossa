@@ -12,8 +12,6 @@
         return console.error(err.toString());
     });
     connection.on("SendProgress", function (nameFilm, progress, id, notificationType) {
-        debugger;
-
         var str = 'nameFilm -> ' + nameFilm + ' progress -> ' + progress + ' id -> ' + id;
         console.log(str);
 
@@ -48,7 +46,6 @@ function showProgress(nameFilm, progress, id) {
 
 
 function addDownload(nameFilm, progress, id) {
-    debugger;
     $("#download").append("<li  id='" + id + "'><a class='dropdown-item text-white' href='#'>" +
         "<p class='control-label text-white mb-2 pl-2 pr-2 text-overflow'>" +
         "<i class='fas fa-download text-white mr-2'></i>" + nameFilm + "</p><div class='progress mb-2'>" +
@@ -57,7 +54,6 @@ function addDownload(nameFilm, progress, id) {
 }
 
 function numberOfDownloads() {
-    debugger;
     var count = $("#download").children().length
     if (count > 0) {
         $(".num").text(count);
@@ -81,7 +77,6 @@ function checkSearch() {
 }
 
 function createToast(title, text, theme) {
-    debugger;
     new Toast({
         title: title,
         text: text,

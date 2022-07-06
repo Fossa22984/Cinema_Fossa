@@ -77,8 +77,10 @@
                 <div class="d-flex flex-row bd-highlight mb-3 flex-wrap " id="fluxGenre">
                     @foreach (var item in Model.Genres)
                     {
-                        <label class="btn clickOnButton text-white mr-3" onclick="{ $(this).detach() }">@item.GenreName &nbsp;<i class="fas fa-times" style="font-size:12px"></i> </label>
+                        <label class="btn clickOnButton text-white mr-3" onclick="{ detachGenre(this)}">@item.GenreName &nbsp;<i class="fas fa-times" style="font-size:12px"></i> </label>
                     }
+
+
                 </div>
             </div>
         </div>

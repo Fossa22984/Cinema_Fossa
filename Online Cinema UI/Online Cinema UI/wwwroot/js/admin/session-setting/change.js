@@ -4,8 +4,6 @@
     }
 
     function ChangeMovie(e) {
-        var res = $("#End").val();
-        debugger;
         $.ajax({
             type: 'GET',
             data: {
@@ -14,7 +12,6 @@
             },
             url: "/Admin/GetMovieDuration",
             success: function (result) {
-                debugger;
                 if (result != "") $("#End").val(result);
                 else $("#End").val("");
             }
@@ -31,7 +28,6 @@
                 },
                 url: "/Admin/_ListSessions",
                 success: function (result) {
-                    debugger;
                     if (result != "") $("#listSessionsDiv").html(result);
                     else $("#listSessionsDiv").html("");
                 }
@@ -41,8 +37,6 @@
     }
 
     $(function () {
-
-        debugger;
         // Get the <datalist> and <input> elements.
         var dataListCinemaRoom = document.getElementById('json-datalistCinemaRoom');
         var inputCinemaRoom = document.getElementById('ajaxCinemaRoom');
@@ -55,12 +49,10 @@
                     // Create a new <option> element.
                     var option = document.createElement('option');
 
-
                     // Set the value using the item in the JSON array.
                     option["data-value"] = item["key"];
                     option.value = item["value"];
                     
-                    debugger;
                     if (option["data-value"] == $("#CinemaRoomId").val())
                         $("#ajaxCinemaRoom").val(option.value);
 
@@ -96,7 +88,7 @@
                     // Set the value using the item in the JSON array.
                     option["data-value"] = item["key"];
                     option.value = item["value"];
-                    debugger;
+
                     if (option["data-value"] == $("#MovieId").val())
                         $("#ajaxMovie").val(option.value);
                     // Add the <option> element to the <datalist>.
@@ -121,14 +113,11 @@
 
             var formData = new FormData();
 
-
             formData.append("Id", $("#Id").val());
             formData.append("Start", $("#Start").val());
             formData.append("End", $("#End").val());
             formData.append("MovieId", $('option[value="' + $("#ajaxMovie").val() + '"]').first().prop("data-value"));
             formData.append("CinemaRoomId", $('option[value="' + $("#ajaxCinemaRoom").val() + '"]').first().prop("data-value"));
-
-            debugger;
 
             $.ajax({
                 type: "POST",

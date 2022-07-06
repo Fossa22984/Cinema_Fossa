@@ -5,7 +5,6 @@
 
 $("#VideoFile").change(function (event) {
     let files = event.target.files;
-    debugger;
     $("#VideoTitle").text("Video: «" + files[0].name + "»");
 });
 
@@ -20,6 +19,12 @@ $("textarea").each(function () {
 function Clear() {
     $("#viewImage").attr("src", "../Images/background-fon.jpg");
     $("#fluxGenre").html("");
+}
+
+function detachGenre(elem) {
+    var text = $(elem).text();
+    collectionGenres.splice(collectionGenres.indexOf(text), 1);
+    $(elem).detach();
 }
 
 var collectionGenres = new Array();
@@ -40,7 +45,7 @@ $(function () {
                 if (!collectionGenres.some(x => x == text)) {
                     collectionGenres.push(text);
 
-                    $("#fluxGenre").append("<label class='btn clickOnButton text-white mr-3' onclick='{$(this).detach()}'>" + text + " &nbsp; <i class='fas fa-times' style='font-size:12px'></i></label >");
+                    $("#fluxGenre").append("<label class='btn clickOnButton text-white mr-3' onclick='{detachGenre(this)}'>" + text + " &nbsp; <i class='fas fa-times' style='font-size:12px'></i></label >");
                 }
             });
         },

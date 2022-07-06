@@ -1,0 +1,88 @@
+﻿.vjs-progress-holder {
+    visibility: hidden;
+}
+
+.amp-controlbaricons-middle {
+    visibility: hidden;
+}
+
+.vjs-control-bar {
+    background-color: transparent;
+}
+
+.amp-content-title {
+    visibility: hidden;
+}
+
+.amp-default-skin .vjs-controls-enabled .vjs-big-play-button {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.cardss {
+    display: grid;
+    grid-template-rows: 0.2fr 5fr 1fr;
+    padding: 15px;
+    grid-gap: 15px;
+}
+/* Change all text and icon colors in the player. */
+.vjs-matrix.video-js {
+    color: #3eaaaf;
+}
+
+/* Change the border of the big play button. */
+.vjs-matrix .vjs-big-play-button {
+    border-color: #3eaaaf;
+}
+
+/* Change the color of various "bars". */
+
+.vjs-matrix .vjs-play-progress {
+    background: #3eaaaf;
+}
+
+.vjs-theme-city {
+    --vjs-theme-city--primary: #bf3b4d;
+    --vjs-theme-city--secondary: #3eaaaf !important;
+}
+
+.video-js .vjs-remaining-time {
+    color: transparent;
+    opacity: 0;
+}
+
+.chat-button {
+    display: flex !important;
+    align-items: center;
+    width: 100%;
+    justify-content: end;
+    padding-right: 7px !important;
+}
+
+.amp-controlbaricons-left {
+    justify-content: flex-start;
+}
+
+.amp-controlbaricons-right {
+    justify-content: flex-end !important;
+    display: flex !important;
+    width: 100% !important;
+}
+
+.vjs-volume-level {
+    background: #3eaaaf !important;
+}
+
+.amp-default-skin .vjs-control {
+    color: #3eaaaf !important;
+}
+
+.vjs-control-bar {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr 1fr 30px;
+}
+
+#detach-button-host {
+    visibility: hidden !important;
+}

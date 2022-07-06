@@ -5,7 +5,6 @@
 
 function ChangeMovie(e) {
     var res = $("#End").val();
-    debugger;
     $.ajax({
         type: 'GET',
         data: {
@@ -14,7 +13,6 @@ function ChangeMovie(e) {
         },
         url: "/Admin/GetMovieDuration",
         success: function (result) {
-            debugger;
             if (result != "") $("#End").val(result);
             else $("#End").val("");
         }
@@ -31,7 +29,6 @@ function ChangeCinemaRoom(e) {
             },
             url: "/Admin/_ListSessions",
             success: function (result) {
-                debugger;
                 if (result != "") $("#listSessionsDiv").html(result);
                 else $("#listSessionsDiv").html("");
             }
@@ -44,8 +41,6 @@ function ChangeCinemaRoom(e) {
 
 
 $(function () {
-
-    debugger;
     // Get the <datalist> and <input> elements.
     var dataListCinemaRoom = document.getElementById('json-datalistCinemaRoom');
     var inputCinemaRoom = document.getElementById('ajaxCinemaRoom');
@@ -122,8 +117,6 @@ $(function () {
         formData.append("End", $("#End").val());
         formData.append("MovieId", $('option[value="' + $("#ajaxMovie").val() + '"]').first().prop("data-value"));
         formData.append("CinemaRoomId", $('option[value="' + $("#ajaxCinemaRoom").val() + '"]').first().prop("data-value"));
-
-        debugger;
 
         $.ajax({
             type: "POST",
