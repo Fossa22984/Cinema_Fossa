@@ -11,8 +11,8 @@ namespace Online_Cinema_Core.Repository.Interface
         Task<IEnumerable<Genre>> GetAllGenreAsync();
         Task<Genre> GetGenreByIdAsync(int Id);
         Task<IEnumerable<Genre>> GetGenreByConditionAsync(Expression<Func<Genre, bool>> predicate);
-        void CreateGenre(Genre genre);
-        void UpdateGenre(Genre genre);
-        void RemoveGenre(Genre genre);
+        Task CreateGenre(Genre genre);
+        Task UpdateGenre(Genre genre);
+        Task RemoveGenre(Genre genre);
     }
 }

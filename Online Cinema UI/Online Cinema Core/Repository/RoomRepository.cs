@@ -13,9 +13,9 @@ namespace Online_Cinema_Core.Repository
     {
         public RoomRepository(OnlineCinemaContext context) : base(context) { }
 
-        public void CreateRoom(Room room)
+        public async Task CreateRoom(Room room)
         {
-            Create(room);
+            await Create(room);
         }
 
         public async Task<IEnumerable<Room>> GetAllRoomAsync()
@@ -33,14 +33,14 @@ namespace Online_Cinema_Core.Repository
             return await FindByCondition(x => x.Id == Id).FirstOrDefaultAsync();
         }
 
-        public void RemoveRoom(Room room)
+        public async Task RemoveRoom(Room room)
         {
-            Delete(room);
+            await Delete(room);
         }
 
-        public void UpdateRoom(Room room)
+        public async Task UpdateRoom(Room room)
         {
-            Update(room);
+            await Update(room);
         }
     }
 }

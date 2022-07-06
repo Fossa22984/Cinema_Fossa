@@ -11,8 +11,8 @@ namespace Online_Cinema_Core.Repository.Interface
         Task<IEnumerable<Session>> GetAllSessionAsync();
         Task<Session> GetSessionByIdAsync(int Id);
         Task<IEnumerable<Session>> GetSessionByConditionAsync(Expression<Func<Session, bool>> predicate);
-        void CreateSession(Session session);
-        void UpdateSession(Session session);
-        void RemoveSession(Session session);
+        Task CreateSession(Session session);
+        Task UpdateSession(Session session);
+        Task RemoveSession(Session session);
     }
 }

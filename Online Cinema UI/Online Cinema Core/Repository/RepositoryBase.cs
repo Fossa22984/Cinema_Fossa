@@ -17,9 +17,10 @@ namespace Online_Cinema_Core.Repository
             await context.Set<T>().AddAsync(entity);
         }
 
-        public void Delete(T entity)
+        public Task Delete(T entity)
         {
             context.Set<T>().Remove(entity);
+            return Task.CompletedTask;
         }
 
         public IQueryable<T> FindAll()
@@ -33,9 +34,10 @@ namespace Online_Cinema_Core.Repository
                 .Where(predicate);
         }
 
-        public void Update(T entity)
+        public Task Update(T entity)
         {
             context.Set<T>().Update(entity);
+            return Task.CompletedTask;
         }
     }
 }

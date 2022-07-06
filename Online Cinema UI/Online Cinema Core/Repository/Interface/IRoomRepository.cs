@@ -11,8 +11,8 @@ namespace Online_Cinema_Core.Repository.Interface
         Task<IEnumerable<Room>> GetAllRoomAsync();
         Task<Room> GetRoomByIdAsync(int Id);
         Task<IEnumerable<Room>> GetRoomByConditionAsync(Expression<Func<Room, bool>> predicate);
-        void CreateRoom(Room room);
-        void UpdateRoom(Room room);
-        void RemoveRoom(Room room);
+        Task CreateRoom(Room room);
+        Task UpdateRoom(Room room);
+        Task RemoveRoom(Room room);
     }
 }

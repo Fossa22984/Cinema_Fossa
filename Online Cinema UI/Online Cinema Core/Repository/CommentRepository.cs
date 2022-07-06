@@ -13,9 +13,9 @@ namespace Online_Cinema_Core.Repository
     {
         public CommentRepository(OnlineCinemaContext context) : base(context) { }
 
-        public void CreateComment(Comment comment)
+        public async Task CreateComment(Comment comment)
         {
-            Create(comment);
+            await Create(comment);
         }
 
         public async Task<IEnumerable<Comment>> GetAllCommentAsync()
@@ -33,14 +33,14 @@ namespace Online_Cinema_Core.Repository
             return await FindByCondition(x => x.Id == Id).FirstOrDefaultAsync();
         }
 
-        public void RemoveComment(Comment comment)
+        public async Task RemoveComment(Comment comment)
         {
-            Delete(comment);
+            await Delete(comment);
         }
 
-        public void UpdateComment(Comment comment)
+        public async Task UpdateComment(Comment comment)
         {
-            Update(comment);
+            await Update(comment);
         }
     }
 }

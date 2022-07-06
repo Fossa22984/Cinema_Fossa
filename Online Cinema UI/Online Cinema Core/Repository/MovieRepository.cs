@@ -33,14 +33,14 @@ namespace Online_Cinema_Core.Repository
             return await FindByCondition(x => x.Id == Id).Include(x => x.Genres).FirstOrDefaultAsync();
         }
 
-        public void RemoveMovie(Movie movie)
+        public async Task RemoveMovie(Movie movie)
         {
-            Delete(movie);
+            await Delete(movie);
         }
 
-        public void UpdateMovie(Movie movie)
+        public async Task UpdateMovie(Movie movie)
         {
-            Update(movie);
+           await Update(movie);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Online_Cinema_Core.Repository.Interface
         IQueryable<T> FindAll();
         IQueryable<T> FindByCondition(Expression<Func<T, bool>> predicate);
         Task Create(T entity);
-        void Update(T entity);
-        void Delete(T entity);
+        Task Update(T entity);
+        Task Delete(T entity);
     }
 }

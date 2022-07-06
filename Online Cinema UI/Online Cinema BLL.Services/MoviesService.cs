@@ -35,7 +35,7 @@ namespace Online_Cinema_BLL.Services
                     var res = (await _unit.Genre.GetAllGenreAsync()).Where(x => genre.Contains(x.GenreName, StringComparison.OrdinalIgnoreCase)).ToList();
                     movie.Genres = res;
                 }
-                _unit.Movie.Create(movie);
+                await _unit.Movie.Create(movie);
                 await _unit.SaveAsync();
             }
             catch (Exception)
@@ -51,7 +51,7 @@ namespace Online_Cinema_BLL.Services
                     var res = (await _unit.Genre.GetAllGenreAsync()).Where(x => genre.Contains(x.GenreName, StringComparison.OrdinalIgnoreCase));
                     movie.Genres = res.ToList();
                 }
-                _unit.Movie.Update(movie);
+                await _unit.Movie.Update(movie);
                 await _unit.SaveAsync();
             }
             catch (Exception)

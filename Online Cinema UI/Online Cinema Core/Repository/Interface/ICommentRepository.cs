@@ -11,8 +11,8 @@ namespace Online_Cinema_Core.Repository.Interface
         Task<IEnumerable<Comment>> GetAllCommentAsync();
         Task<Comment> GetCommentByIdAsync(int Id);
         Task<IEnumerable<Comment>> GetCommentByConditionAsync(Expression<Func<Comment, bool>> predicate);
-        void CreateComment(Comment comment);
-        void UpdateComment(Comment comment);
-        void RemoveComment(Comment comment);
+        Task CreateComment(Comment comment);
+        Task UpdateComment(Comment comment);
+        Task RemoveComment(Comment comment);
     }
 }

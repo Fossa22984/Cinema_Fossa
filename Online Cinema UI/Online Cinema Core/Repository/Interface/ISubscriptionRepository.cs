@@ -11,9 +11,9 @@ namespace Online_Cinema_Core.Repository.Interface
         Task<IEnumerable<Subscription>> GetAllSubscriptionAsync();
         Task<Subscription> GetSubscriptionByIdAsync(int Id);
         Task<IEnumerable<Subscription>> GetSubscriptionByConditionAsync(Expression<Func<Subscription, bool>> predicate);
-        void CreateSubscription(Subscription subscription);
-        void UpdateSubscription(Subscription subscription);
-        void RemoveSubscription(Subscription subscription);
+        Task CreateSubscription(Subscription subscription);
+        Task UpdateSubscription(Subscription subscription);
+        Task RemoveSubscription(Subscription subscription);
     }
 }
 //Task<IEnumerable<Address>> GetAll Async();

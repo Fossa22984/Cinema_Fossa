@@ -106,7 +106,7 @@ namespace Online_Cinema_BLL.Services
 
         public async Task AddSessionAsync(Session session)
         {
-            _unitOfWork.Session.CreateSession(session);
+            await _unitOfWork.Session.CreateSession(session);
             await _unitOfWork.SaveAsync();
 
             _sessionCacheManager.Set(session);
@@ -114,7 +114,7 @@ namespace Online_Cinema_BLL.Services
         }
         public async Task ChangeSessionAsync(Session session)
         {
-            _unitOfWork.Session.UpdateSession(session);
+            await _unitOfWork.Session.UpdateSession(session);
             await _unitOfWork.SaveAsync();
 
             _sessionCacheManager.Update(session);
@@ -161,7 +161,7 @@ namespace Online_Cinema_BLL.Services
             if (movie.Image.Length != 0) newMovie.Image = movie.Image;
             newMovie.Copy(movie);
 
-            _unitOfWork.Movie.Update(newMovie);
+            await _unitOfWork.Movie.Update(newMovie);
             await _unitOfWork.SaveAsync();
             Log.Current.Debug($"Change movie MovieTitle -> {movie.MovieTitle} movie id-> {movie.Id}");
         }
@@ -171,7 +171,7 @@ namespace Online_Cinema_BLL.Services
         public async Task<CinemaRoom> GetCinemaRoomAsync(int CinemaRoomId) => await _unitOfWork.CinemaRoom.GetCinemaRoomByIdAsync(CinemaRoomId);
         public async Task AddCinemaRoomAsync(CinemaRoom cinemaRoom)
         {
-            _unitOfWork.CinemaRoom.CreateCinemaRoom(cinemaRoom);
+            await _unitOfWork.CinemaRoom.CreateCinemaRoom(cinemaRoom);
             await _unitOfWork.SaveAsync();
 
             _cinemaRoomCacheManager.Set(cinemaRoom);
@@ -182,7 +182,7 @@ namespace Online_Cinema_BLL.Services
             if (cinemaRoom.CinemaRoomImage.Length == 0)
                 cinemaRoom.CinemaRoomImage = (await _unitOfWork.CinemaRoom.GetCinemaRoomByIdAsync(cinemaRoom.Id)).CinemaRoomImage;
 
-            _unitOfWork.CinemaRoom.UpdateCinemaRoom(cinemaRoom);
+            await _unitOfWork.CinemaRoom.UpdateCinemaRoom(cinemaRoom);
             await _unitOfWork.SaveAsync();
 
             _cinemaRoomCacheManager.Update(cinemaRoom);
