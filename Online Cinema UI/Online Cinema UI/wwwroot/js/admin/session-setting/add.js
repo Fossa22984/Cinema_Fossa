@@ -4,8 +4,6 @@
 }
 
 function ChangeMovie(e) {
-    var res = $("#End").val();
-    debugger;
     $.ajax({
         type: 'GET',
         data: {
@@ -117,9 +115,10 @@ $(function () {
         var formAction = $(this).attr("action");
 
         var formData = new FormData();
-
-        formData.append("Start", $("#Start").val());
-        formData.append("End", $("#End").val());
+        var startDateUtc = new Date($("#Start").val()).toUTCString();
+        var endDateUtc = new Date($("#End").val()).toUTCString();
+        formData.append("Start", startDateUtc);
+        formData.append("End", endDateUtc);
         formData.append("MovieId", $('option[value="' + $("#ajaxMovie").val() + '"]').first().prop("data-value"));
         formData.append("CinemaRoomId", $('option[value="' + $("#ajaxCinemaRoom").val() + '"]').first().prop("data-value"));
 

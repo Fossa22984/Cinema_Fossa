@@ -15,8 +15,8 @@
                 {
                     <tr>
                         <td>@item.Movie.MovieTitle</td>
-                        <td>@item.Start.ToString("dd.MM.yyyy HH:mm")</td>
-                        <td>@item.End.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@item.Start.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@item.End.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
                     </tr>
                 }
             </tbody>

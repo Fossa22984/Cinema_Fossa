@@ -294,13 +294,13 @@
         });
 
         @*connection.on("SendVideo", function (message) {
-                                            if ("@user" != "Admin") {
-                                                var vid = self.player.currentTime();
-                                                if (!(vid <= (message + 2) && vid >= (message - 2))) {
-                                                    self.player.currentTime(message);
-                                                }
-                                            }
-                                        });*@
+                                                                    if ("@user" != "Admin") {
+                                                                        var vid = self.player.currentTime();
+                                                                        if (!(vid <= (message + 2) && vid >= (message - 2))) {
+                                                                            self.player.currentTime(message);
+                                                                        }
+                                                                    }
+                                                                });*@
          var currentTime;
          var startTime;
          connection.on("GetSession", function (message) {
@@ -314,8 +314,8 @@
                     data: { "sessionId": message },
                     url: '@Url.Content("/Movie/GetSession")',
                     success: function (result) {
-                        var res = new Date()
-                        startTime = result.start;
+                        var res = new Date();
+                        startTime = convertUTCDateToLocalDate(new Date(result.start));
                         currentTime = (new Date() - Date.parse(startTime)) / 1000;
 
                         var res = $("#sessionId").val()
@@ -334,6 +334,16 @@
                 });
             });
 
+            function convertUTCDateToLocalDate(date) {
+                var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
+
+                var offset = date.getTimezoneOffset() / 60;
+                var hours = date.getHours();
+
+                newDate.setHours(hours - offset);
+
+                return newDate;
+            }
 
 
 
@@ -364,14 +374,14 @@
         this.player = videojs('video');
 
         @*this.player.on('timeupdate', () => {
-                                            if ("@user" == "Admin") {
-                                                var room = $("#ChatId").val();
-                                                connection.invoke("VideoTest", self.player.currentTime().toString(), room).catch(function (err) {
-                                                    return console.error(err.toString());
-                                                });
-                                                event.preventDefault();
-                                            }
-                                        });*@
+                                                                    if ("@user" == "Admin") {
+                                                                        var room = $("#ChatId").val();
+                                                                        connection.invoke("VideoTest", self.player.currentTime().toString(), room).catch(function (err) {
+                                                                            return console.error(err.toString());
+                                                                        });
+                                                                        event.preventDefault();
+                                                                    }
+                                                                });*@
 
 
         this.player.on("ended", function () {
@@ -379,7 +389,7 @@
             $("#movieTitle").text("");
             if (self.player.src() !="/Movies/Background Video.mp4")
                 self.player.src({ type: 'video/mp4', src:"/Movies/Background Video.mp4" });
-            
+
             IsEnded = true;
             self.player.play();
 
@@ -387,8 +397,7 @@
 
         this.player.on("play", function () {
             if(IsEnded){return;}
-
-             currentTime = (new Date() - Date.parse(startTime)) / 1000;
+            currentTime = (new Date() - Date.parse(startTime)) / 1000;
 
             var vid = self.player.currentTime();
             if (!(vid <= (currentTime + 1) && vid >= (currentTime - 1))) {

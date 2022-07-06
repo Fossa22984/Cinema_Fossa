@@ -87,7 +87,7 @@ namespace Online_Cinema_BLL.Services
 
         public async Task<Session> GetSessionAsync(int cinemaRoom)
         {
-            var now = DateTime.Now;
+            var now = DateTime.UtcNow;
             var listSession = _sessionCacheManager.GetByCondition(x => x.CinemaRoomId == cinemaRoom)
                 .Where(x => x.Start.Date == now.Date || x.Start.Date == now.AddDays(-1)).OrderBy(x => x.Start).ToList();
 

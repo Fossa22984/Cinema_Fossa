@@ -18,8 +18,8 @@
                     <tr class="text-center">
                         <td>@item.Id</td>
                         <td>@item.Movie.MovieTitle (#@item.Movie.Id)</td>
-                        <td>@item.Start.ToString("dd.MM.yyyy HH:mm")</td>
-                        <td>@item.End.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@item.Start.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                        <td>@item.End.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
                         <td>@item.IsRemoved</td>
                     </tr>
                 }

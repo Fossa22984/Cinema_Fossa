@@ -121,10 +121,11 @@
 
             var formData = new FormData();
 
-
+            var startDateUtc = new Date($("#Start").val()).toUTCString();
+            var endDateUtc = new Date($("#End").val()).toUTCString();
             formData.append("Id", $("#Id").val());
-            formData.append("Start", $("#Start").val());
-            formData.append("End", $("#End").val());
+            formData.append("Start", startDateUtc);
+            formData.append("End", endDateUtc);
             formData.append("MovieId", $('option[value="' + $("#ajaxMovie").val() + '"]').first().prop("data-value"));
             formData.append("CinemaRoomId", $('option[value="' + $("#ajaxCinemaRoom").val() + '"]').first().prop("data-value"));
 
