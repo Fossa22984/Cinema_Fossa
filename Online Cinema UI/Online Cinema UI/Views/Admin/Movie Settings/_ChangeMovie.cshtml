@@ -23,9 +23,9 @@
                         <span asp-validation-for="IsCartoon" class="text-danger"></span>
                     </div>
                     <div class="form-group align-self-center col-md-1">
-                        <label asp-for="Remote" class="control-label text-white"></label>
-                        <input asp-for="Remote" class="form-control text-white" />
-                        <span asp-validation-for="Remote" class="text-danger"></span>
+                        <label asp-for="IsRemoved" class="control-label text-white"></label>
+                        <input asp-for="IsRemoved" class="form-control text-white" />
+                        <span asp-validation-for="IsRemoved" class="text-danger"></span>
                     </div>
 
                 </div>
@@ -75,7 +75,7 @@
                 </div>
 
                 <div class="d-flex flex-row bd-highlight mb-3 flex-wrap " id="fluxGenre">
-                    @foreach (var item in Model.Genre)
+                    @foreach (var item in Model.Genres)
                     {
                         <label class="btn clickOnButton text-white mr-3" onclick="{ $(this).detach() }">@item.GenreName &nbsp;<i class="fas fa-times" style="font-size:12px"></i> </label>
                     }

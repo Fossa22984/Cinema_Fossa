@@ -16,12 +16,6 @@ namespace Online_Cinema_Domain.Models
         public int CinemaRoomId { get; set; }
         public CinemaRoom CinemaRoom { get; set; }
 
-        public IList<User> ViewersList { get; set; }
-        public Session()
-        {
-            ViewersList = new List<User>();
-        }
-
-        public bool Remote { get; set; }
+        public bool IsRemoved { get; set; }
     }
 }

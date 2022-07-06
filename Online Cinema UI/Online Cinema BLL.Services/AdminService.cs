@@ -126,7 +126,7 @@ namespace Online_Cinema_BLL.Services
         {
             var idFilm = Guid.NewGuid().ToString();
             _notificationCache.Set(new Notification(idUser, idFilm, movie.MovieTitle, notificationType: NotificationTypeEnum.StartLoad));
-            await ChangeProgress(movie.MovieTitle, 0, idUser, idFilm);
+            await ChangeProgress(movie.MovieTitle, 0, idUser, idFilm, NotificationTypeEnum.StartLoad);
 
             _fileManager.UploadProgress += ChangeProgress;
             var tempFilePath = await _fileManager.CreateTempFile(file, idFilm, idUser, movie.MovieTitle);
@@ -141,7 +141,7 @@ namespace Online_Cinema_BLL.Services
             if (genre != null)
             {
                 var res = (await _unitOfWork.Genre.GetAllGenreAsync()).AsEnumerable().Where(x => genre.Contains(x.GenreName, StringComparison.Ordinal)).ToList();
-                movie.Genre = res;
+                movie.Genres = res;
             }
             await _unitOfWork.Movie.CreateMovie(movie);
             await _unitOfWork.SaveAsync();
@@ -154,9 +154,9 @@ namespace Online_Cinema_BLL.Services
             if (!string.IsNullOrEmpty(genre))
             {
                 var genres = (await _unitOfWork.Genre.GetAllGenreAsync()).AsEnumerable().Where(x => genre.Contains(x.GenreName, StringComparison.Ordinal)).ToList();
-                newMovie.Genre = genres;
+                newMovie.Genres = genres;
             }
-            else newMovie.Genre.Clear();
+            else newMovie.Genres.Clear();
 
             if (movie.Image.Length != 0) newMovie.Image = movie.Image;
             newMovie.Copy(movie);

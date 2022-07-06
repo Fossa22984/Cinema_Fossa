@@ -11,14 +11,12 @@ namespace Online_Cinema_Domain.Models
         public string Description { get; set; }
 
         public IList<Session> Sessions { get; set; }
-        public IList<User> ViewersList { get; set; }
 
         public CinemaRoom()
         {
             Sessions = new List<Session>();
-            ViewersList = new List<User>();
         }
 
-        public bool Remote { get; set; }
+        public bool IsRemoved { get; set; }
     }
 }

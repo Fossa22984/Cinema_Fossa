@@ -1,4 +1,5 @@
 ﻿using Online_Cinema_Domain.Models.IdentityModels;
+using System;
 using System.Collections.Generic;
 
 namespace Online_Cinema_Domain.Models
@@ -16,13 +17,9 @@ namespace Online_Cinema_Domain.Models
         public int? MovieId { get; set; }
         public Movie Movie { get; set; }
 
-        public IList<User> Participants { get; set; }
+        public Guid OwnerId { get; set; }
+        public User Owner { get; set; }
 
-        public Room()
-        {
-            Participants = new List<User>();
-        }
-
-        public bool Remote { get; set; }
+        public bool IsRemoved { get; set; }
     }
 }

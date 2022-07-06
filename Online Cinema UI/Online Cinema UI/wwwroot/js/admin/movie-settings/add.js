@@ -22,6 +22,7 @@ function Clear() {
     $("#fluxGenre").html("");
 }
 
+var collectionGenres = new Array();
 $(function () {
     $.ajax({
         type: 'GET',
@@ -35,7 +36,12 @@ $(function () {
             $("#menuGenre li").children().on("click", function (e) {
                 var text = $(this).text();
 
-                $("#fluxGenre").append("<label class='btn clickOnButton text-white mr-3' onclick='{$(this).detach()}'>" + text + " &nbsp; <i class='fas fa-times' style='font-size:12px'></i></label >");
+                var text = $(this).text();
+                if (!collectionGenres.some(x => x == text)) {
+                    collectionGenres.push(text);
+
+                    $("#fluxGenre").append("<label class='btn clickOnButton text-white mr-3' onclick='{$(this).detach()}'>" + text + " &nbsp; <i class='fas fa-times' style='font-size:12px'></i></label >");
+                }
             });
         },
         error: function (e) {

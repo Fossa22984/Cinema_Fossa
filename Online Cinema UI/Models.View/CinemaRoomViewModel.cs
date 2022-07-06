@@ -19,8 +19,8 @@ namespace Online_Cinema_Models.View
         [Required]
         public string Description { get; set; }
 
-        [Display(Name = "Removed?")]
-        public bool Remote { get; set; }
+        [Display(Name = "Is Removed?")]
+        public bool IsRemoved { get; set; }
         public IList<Session> Sessions { get; set; }
 
         public CinemaRoomViewModel()

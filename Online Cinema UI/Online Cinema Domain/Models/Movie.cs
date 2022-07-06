@@ -27,7 +27,7 @@ namespace Online_Cinema_Domain.Models
         public decimal? MovieBudget { get; set; }//Бюджет фильма 
         public bool IsCartoon { get; set; }
 
-        public IList<Genre> Genre { get; set; }//Жанр 
+        public IList<Genre> Genres { get; set; }//Жанр 
         public IList<Comment> Comments { get; set; }
         public IList<Session> Sessions { get; set; }
         public IList<Room> Rooms { get; set; }
@@ -36,9 +36,9 @@ namespace Online_Cinema_Domain.Models
         {
             Comments = new List<Comment>();
             Sessions = new List<Session>();
-            Genre = new List<Genre>();
+            Genres = new List<Genre>();
             Rooms = new List<Room>();
         }
-        public bool Remote { get; set; }
+        public bool IsRemoved { get; set; }
     }
 }

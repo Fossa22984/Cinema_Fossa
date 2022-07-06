@@ -22,7 +22,7 @@ namespace Online_Cinema_Models.View
         public int CinemaRoomId { get; set; }
 
 
-        [Display(Name = "Removed?")]
-        public bool Remote { get; set; }
+        [Display(Name = "Is Removed?")]
+        public bool IsRemoved { get; set; }
     }
 }

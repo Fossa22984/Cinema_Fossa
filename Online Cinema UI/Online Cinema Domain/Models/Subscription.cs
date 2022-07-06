@@ -17,6 +17,6 @@ namespace Online_Cinema_Domain.Models
             Users = new List<User>();
         }
 
-        public bool Remote { get; set; }
+        public bool IsRemoved { get; set; }
     }
 }

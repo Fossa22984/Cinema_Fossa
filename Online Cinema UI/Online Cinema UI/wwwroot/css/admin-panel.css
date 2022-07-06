@@ -32,14 +32,17 @@ input, select {
     border: none !important;
 }
 
+    input[type=submit], button[type=reset] {
+        background-color: #3eaaaf !important;
+        border: none !important;
+    }
+
+
+
 .search input {
     background-color: transparent !important;
 }
 
-input [type=submit], button[type=reset] {
-    background-color: #3eaaaf !important;
-    border: none !important;
-}
 
 datalist {
     max-height: 50px !important;

@@ -13,6 +13,6 @@ namespace Online_Cinema_Domain.Models
             Movies = new List<Movie>();
         }
 
-        public bool Remote { get; set; }
+        public bool IsRemoved { get; set; }
     }
 }

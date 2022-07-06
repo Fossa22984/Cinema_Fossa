@@ -9,7 +9,7 @@
                     <th scope="col">Movie Title (#Id)</th>
                     <th scope="col">Start</th>
                     <th scope="col">End</th>
-                    <th scope="col">Remote</th>
+                    <th scope="col">Is Removed</th>
                 </tr>
             </thead>
             <tbody>
@@ -20,7 +20,7 @@
                         <td>@item.Movie.MovieTitle (#@item.Movie.Id)</td>
                         <td>@item.Start.ToString("dd.MM.yyyy HH:mm")</td>
                         <td>@item.End.ToString("dd.MM.yyyy HH:mm")</td>
-                        <td>@item.Remote</td>
+                        <td>@item.IsRemoved</td>
                     </tr>
                 }
             </tbody>

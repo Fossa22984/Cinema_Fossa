@@ -40,12 +40,12 @@ namespace Online_Cinema_Models.View
         [Display(Name = "Cartoon?")]
         public bool IsCartoon { get; set; }
 
-        [Display(Name = "Removed?")]
-        public bool Remote { get; set; }
-        public IList<Genre> Genre { get; set; }//Жанр 
+        [Display(Name = "Is Removed?")]
+        public bool IsRemoved { get; set; }
+        public IList<Genre> Genres { get; set; }//Жанр 
         public MovieViewModel()
         {
-            Genre = new List<Genre>();
+            Genres = new List<Genre>();
         }
     }
 

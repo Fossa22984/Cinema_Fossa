@@ -11,7 +11,7 @@
     }).catch(function (err) {
         return console.error(err.toString());
     });
-    connection.on("SendProgress", function (nameFilm, progress, id) {
+    connection.on("SendProgress", function (nameFilm, progress, id, notificationType) {
         debugger;
 
         var str = 'nameFilm -> ' + nameFilm + ' progress -> ' + progress + ' id -> ' + id;
@@ -19,10 +19,10 @@
 
         showProgress(nameFilm, progress, id);
 
-        if (progress == 0)
+        if (notificationType == 1)
             createToast("Начало загрузки", "Загрузка " + nameFilm + " началась", "info");
 
-        if (progress == 100)
+        if (notificationType == 2)
             createToast("Загрузка окончена", "Загрузка " + nameFilm + " закончилась", "success");
     });
 
