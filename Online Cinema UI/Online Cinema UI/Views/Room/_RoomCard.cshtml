@@ -2,11 +2,14 @@
 
 @foreach (var room in Model)
 {
-    <form asp-action="CinemaRoom" asp-controller="Movie" method="get">
+    <form asp-action="Room" asp-controller="Room" method="get">
         <div class="card card2" data-toggle="tooltip" data-placement="top" onclick="{$(this).parent()[0].submit(); }">
             <input type="hidden" name="id" value="@room.Id" />
             <div class="myCardContainer">
-                <img src="@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(room.RoomImage))" alt="las vegas">
+                @if (room.RoomImage.Length != 0)
+                {<img alt="las vegas" src=@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(room.RoomImage)) /> }
+                else
+                { <img alt="las vegas" src="~/Images/background-fon.jpg" />}
             </div>
             <div class="details">
                 <h3>@room.RoomName</h3>

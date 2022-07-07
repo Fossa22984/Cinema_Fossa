@@ -7,6 +7,7 @@ using Online_Cinema_Domain.Models;
 using Online_Cinema_Domain.Models.IdentityModels;
 using Online_Cinema_Models.View;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,14 +18,12 @@ namespace Online_Cinema_UI.Controllers
     public class AdminController : Controller
     {
         private readonly IAdminService _adminService;
-        private readonly IMoviesService _moviesService;
         private readonly UserManager<User> _userManager;
 
         private readonly IMapper _mapper;
-        public AdminController(IAdminService adminService, IMoviesService moviesService, IMapper mapper, UserManager<User> userManager)
+        public AdminController(IAdminService adminService, IMapper mapper, UserManager<User> userManager)
         {
             _adminService = adminService;
-            _moviesService = moviesService;
             _mapper = mapper;
             _userManager = userManager;
         }
@@ -110,9 +109,9 @@ namespace Online_Cinema_UI.Controllers
         public async Task<IActionResult> _ListSessions(int? cinemaRoomId, DateTime? dateSession, string returnUrl = "")
         {
             if (cinemaRoomId != null && dateSession != null)
-                return PartialView("Session Setting/_ListSessions", await _adminService.GetSessionsForACinemaRoomsAsync(cinemaRoomId.Value, dateSession.Value));
+                return PartialView("Session Setting/_ListSessions", _mapper.Map<IList<Session>, IList<SessionViewModel>>(await _adminService.GetSessionsForACinemaRoomsAsync(cinemaRoomId.Value, dateSession.Value)));
 
-            return PartialView("Session Setting/_ListSessions", await _adminService.GetSessionsForACinemaRoomsAsync(cinemaRoomId.Value));
+            return PartialView("Session Setting/_ListSessions", _mapper.Map<IList<Session>, IList<SessionViewModel>>(await _adminService.GetSessionsForACinemaRoomsAsync(cinemaRoomId.Value)));
         }
         [HttpGet]
         public async Task<IActionResult> _SessionSettings(string returnUrl = "")

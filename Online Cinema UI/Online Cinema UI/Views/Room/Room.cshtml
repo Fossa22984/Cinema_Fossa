@@ -1,4 +1,4 @@
-﻿@model Online_Cinema_Models.View.CinemaRoomViewModel
+﻿@model Online_Cinema_Models.View.RoomViewModel
 @{
     @inject Microsoft.AspNetCore.Identity.UserManager<Online_Cinema_Domain.Models.IdentityModels.User> UserManager
     var user = await UserManager.GetUserAsync(User);
@@ -19,8 +19,8 @@
     </div>
     <div class="row m-3 mb-5">
         <div class="w-100">
-            <img src=@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(Model.CinemaRoomImage)) class="clickOnButton" style=" width: 50px; height: 50px; object-fit: cover; border-radius: 50%; border:solid 2px  #3eaaaf; float:left; margin-right:10px; ">
-            <h2 class="text-white">@Model.CinemaRoomName</h2>
+            <img src=@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(Model.RoomImage)) class="clickOnButton" style=" width: 50px; height: 50px; object-fit: cover; border-radius: 50%; border:solid 2px  #3eaaaf; float:left; margin-right:10px; ">
+            <h2 class="text-white">@Model.RoomName</h2>
             <div class="d-flex flex-row bd-highlight mb-3">
                 <h4 class="text-white">В данный момент идёт: &nbsp; </h4>
                 <h4 class="text-white" id="movieTitle"></h4>
@@ -54,5 +54,5 @@
 
 
 @section Scripts{
-    <script src="~/js/movie/cinemaroom.js"></script>
+   @* <script src="~/js/movie/cinemaroom.js"></script>*@
 }

@@ -194,5 +194,12 @@ namespace Online_Cinema_BLL.Services
             _notificationCache.UpdateProgress(idFilm, progress);
             await _notificationHub.PushNotificationProgress(nameFilm, progress, idUser, idFilm, notificationType);
         }
+
+
+
+        public async Task<IList<Room>> GetListRoomsAsync() => (await _unitOfWork.Room.GetRoomByConditionAsync(x=>x.IsRemoved!=true)).ToList();
+        public async Task<Room> GetRoomAsync(int roomId) => await _unitOfWork.Room.GetRoomByIdAsync(roomId);
+        public async Task<Room> GetRoomAsync(Guid userId) => (await _unitOfWork.Room.GetRoomByConditionAsync(x => x.OwnerId == userId)).FirstOrDefault();
+
     }
 }

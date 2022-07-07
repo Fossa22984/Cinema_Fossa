@@ -12,7 +12,7 @@ namespace Online_Cinema_Domain.Models.IdentityModels
 
         [Column(TypeName = "Date")]
         public DateTime? Birthday { get; set; }
-        public Room Room { get; set; }
+      virtual  public Room Room { get; set; }
 
         public int? SubscriptionId { get; set; }
         public Subscription Subscription { get; set; }

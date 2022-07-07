@@ -21,5 +21,9 @@ namespace Online_Cinema_Domain.Models
         public User Owner { get; set; }
 
         public bool IsRemoved { get; set; }
+
+        public Room() {
+            IsRemoved = true;
+        }
     }
 }

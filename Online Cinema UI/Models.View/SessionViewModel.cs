@@ -16,6 +16,7 @@ namespace Online_Cinema_Models.View
 
         [Required, Display(Name = "Movie")]
         public int MovieId { get; set; }
+        public MovieViewModel Movie { get; set; }
 
 
         [Required, Display(Name = "Cinema Room")]

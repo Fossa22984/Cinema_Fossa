@@ -1,15 +1,73 @@
-﻿@model IEnumerable<Online_Cinema_Domain.Models.Movie>
+﻿@model IEnumerable<Online_Cinema_Models.View.RoomViewModel>
 <link href="~/css/card.css" rel="stylesheet" />
 
+<div class="container-fluid pt-3">
+    <div class="row">
+        <div class="container-fluid">
+            <div class="row justify-content-end">
+                <div style="display: flex; justify-content: end; padding-right: 40px;" >
+                    <a type="button" asp-controller="Room" asp-action="_ChangeRoom" class="btn btn-outline-secondary" onclick="SSession(this)" >Редактор комнаты</a>
+                </div>
+            </div>
 
-<div class="col mycontent pt-3">
-    <input type="hidden" id="pageNumber" value="1" />
-    <input type="hidden" id="searchHidden" value="" />
+            <div class="row">
+                <div class="col myconten pt-3t">
+                    <input type="hidden" id="pageNumber" value="1" />
+                    <input type="hidden" id="searchHidden" value="" />
 
-    <div class="cards" id="flux">
+                    <div class="cards" id="flux">
+                    </div>
+                </div>
+            </div>
+
+        </div>
     </div>
 </div>
 
-@section Scripts {
-    <script src="~/js/movie/index.js"></script>
-}
+
+    @section Scripts {
+        <script>
+            $(function () {
+                AjaxRequest();
+                Change();
+
+                $('#flux').bind('scroll', function () {
+                    if ($(this).scrollTop() + $(this).innerHeight() >= $(this)[0].scrollHeight) {
+                        AjaxRequest();
+                        Change();
+                    }
+                });
+
+                $("#searchButton").on("click", function () {
+                    $.ajax({
+                        type: 'POST',
+                        url: "/Room/_RoomCard",
+                        success: function (result) {
+                            $("#flux").html(result);
+                        }
+                    });
+
+                    parseInt($("#pageNumber").val("1"));
+                });
+
+            });
+
+            function AjaxRequest() {
+                let res = parseInt($("#pageNumber").val());
+                $.ajax({
+                    type: 'POST',
+                    url: "/Room/_RoomCard",
+                    //$('#posttext-' + publicationId).val()
+                    success: function (result) {
+                        $("#flux").append(result);
+                    }
+                });
+            }
+
+            function Change() {
+                let count = parseInt($("#pageNumber").val());
+                count++;
+                $("#pageNumber").val(count);
+            }
+        </script>
+    }

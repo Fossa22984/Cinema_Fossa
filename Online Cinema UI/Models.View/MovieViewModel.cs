@@ -42,10 +42,10 @@ namespace Online_Cinema_Models.View
 
         [Display(Name = "Is Removed?")]
         public bool IsRemoved { get; set; }
-        public IList<Genre> Genres { get; set; }//Жанр 
+        public IList<GenreViewModel> Genres { get; set; }//Жанр 
         public MovieViewModel()
         {
-            Genres = new List<Genre>();
+            Genres = new List<GenreViewModel>();
         }
     }
 

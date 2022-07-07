@@ -16,6 +16,12 @@ namespace Online_Cinema_Config.AppStart
 
             CreateMap<SessionViewModel, Session>();
             CreateMap<Session, SessionViewModel>();
+
+            CreateMap<GenreViewModel, Genre>();
+            CreateMap<Genre, GenreViewModel>();
+
+            CreateMap<RoomViewModel, Room>();
+            CreateMap<Room, RoomViewModel>();
         }
 
 

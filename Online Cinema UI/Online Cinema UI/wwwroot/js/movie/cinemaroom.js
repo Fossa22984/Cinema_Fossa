@@ -3,7 +3,7 @@ function GetAllSessions(e) {
     $.ajax({
         type: 'GET',
         data: { "cinemaRoomId": $("#Id").val() },
-        url: '/CinemaRoom/_ListSessions',
+        url: "/CinemaRoom/_ListSessions",
         success: function (result) {
             $("#listSessionsDiv").html(result);
         }
@@ -18,7 +18,7 @@ function SearchByDate(e) {
             "cinemaRoomId": $("#Id").val(),
             "dateSession": $("#dateSession").val()
         },
-        url: '/CinemaRoom/_ListSessions',
+        url: "/CinemaRoom/_ListSessions",
         success: function (result) {
             if (result != "") $("#listSessionsDiv").html(result);
             else $("#listSessionsDiv").html(result);
@@ -40,7 +40,7 @@ const messages = document.getElementById('ChatRoom');
 
 function getMessages() {
     shouldScroll = messages.scrollTop + messages.clientHeight === messages.scrollHeight;
-    if (!shouldScroll && $(messages).attr("data-scroll")=="true") {
+    if (!shouldScroll && $(messages).attr("data-scroll") == "true") {
         scrollToBottom();
     }
 }
@@ -62,10 +62,10 @@ $("textarea").each(function () {
     this.style.height = "auto";
     this.style.height = (this.scrollHeight) + "px";
     if (parseInt(this.style.height) > 150) {
-        this.style.height="150px"
+        this.style.height = "150px"
     }
 });
-    function showChat(e) {
+function showChat(e) {
     if ($(e).attr("data-open") == "true") {
         $("#chatDiv").attr("hidden", "hidden");
         $(e).attr("data-open", "false");
@@ -131,58 +131,49 @@ $(function () {
 
     });
 
-    //connection.on("SendVideo", function (message) {
-    //                                                            if ("@user" != "Admin") {
-    //                                                                var vid = self.player.currentTime();
-    //                                                                if (!(vid <= (message + 2) && vid >= (message - 2))) {
-    //                                                                    self.player.currentTime(message);
-    //                                                                }
-    //                                                            }
-    //                                                        });
-     var currentTime;
-     var startTime;
-     connection.on("GetSession", function (message) {
-         if($("#sessionId").val() == message){
+    var currentTime;
+    var startTime;
+    connection.on("GetSession", function (message) {
+        if ($("#sessionId").val() == message) {
             return;
-         }
-
-         IsEnded = false;
-         $.ajax({
-                type: 'GET',
-                data: { "sessionId": message },
-             url: '/CinemaRoom/GetSession',
-                success: function (result) {
-                    var res = new Date();
-                    startTime = convertUTCDateToLocalDate(new Date(result.start));
-                    currentTime = (new Date() - Date.parse(startTime)) / 1000;
-
-                    var res = $("#sessionId").val()
-                    if ($("#sessionId").val() == "") {
-                        self.player.src({ type: 'video/mp4', src: result.movie.moviePath });
-                        self.player.currentTime(currentTime);
-                        $("#sessionId").val(result.id);
-                        $("#movieTitle").text(result.movie.movieTitle);
-
-                    }
-                    var vid = self.player.currentTime();
-                    if (!(vid <= (currentTime + 1) && vid >= (currentTime - 1))) {
-                        self.player.currentTime(currentTime);
-                    }
-                }
-            });
-        });
-
-        function convertUTCDateToLocalDate(date) {
-            var newDate = new Date(date.getTime()+date.getTimezoneOffset()*60*1000);
-
-            var offset = date.getTimezoneOffset() / 60;
-            var hours = date.getHours();
-
-            newDate.setHours(hours - offset);
-
-            return newDate;
         }
 
+        IsEnded = false;
+        $.ajax({
+            type: 'GET',
+            data: { "sessionId": message },
+            url: '/CinemaRoom/GetSession',
+            success: function (result) {
+                var res = new Date();
+                startTime = convertUTCDateToLocalDate(new Date(result.start));
+                currentTime = (new Date() - Date.parse(startTime)) / 1000;
+
+                var res = $("#sessionId").val()
+                if ($("#sessionId").val() == "") {
+                    self.player.src({ type: 'video/mp4', src: result.movie.moviePath });
+                    self.player.currentTime(currentTime);
+                    $("#sessionId").val(result.id);
+                    $("#movieTitle").text(result.movie.movieTitle);
+
+                }
+                var vid = self.player.currentTime();
+                if (!(vid <= (currentTime + 1) && vid >= (currentTime - 1))) {
+                    self.player.currentTime(currentTime);
+                }
+            }
+        });
+    });
+
+    function convertUTCDateToLocalDate(date) {
+        var newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+
+        var offset = date.getTimezoneOffset() / 60;
+        var hours = date.getHours();
+
+        newDate.setHours(hours - offset);
+
+        return newDate;
+    }
 
 
     connection.start().then(function () {
@@ -211,22 +202,11 @@ $(function () {
     var self = this;
     this.player = videojs('video');
 
-    //this.player.on('timeupdate', () => {
-    //                                                            if ("@user" == "Admin") {
-    //                                                                var room = $("#ChatId").val();
-    //                                                                connection.invoke("VideoTest", self.player.currentTime().toString(), room).catch(function (err) {
-    //                                                                    return console.error(err.toString());
-    //                                                                });
-    //                                                                event.preventDefault();
-    //                                                            }
-    //                                                        });
-
-
     this.player.on("ended", function () {
         $("#sessionId").val("");
         $("#movieTitle").text("");
-        if (self.player.src() !="/Movies/Background Video.mp4")
-            self.player.src({ type: 'video/mp4', src:"/Movies/Background Video.mp4" });
+        if (self.player.src() != "/Movies/Background Video.mp4")
+            self.player.src({ type: 'video/mp4', src: "/Movies/Background Video.mp4" });
 
         IsEnded = true;
         self.player.play();
@@ -234,7 +214,7 @@ $(function () {
     });
 
     this.player.on("play", function () {
-        if(IsEnded){return;}
+        if (IsEnded) { return; }
         currentTime = (new Date() - Date.parse(startTime)) / 1000;
 
         var vid = self.player.currentTime();

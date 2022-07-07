@@ -21,17 +21,12 @@ namespace Online_Cinema_Models.View
 
         [Required]
         public string Description { get; set; }
-
-        public string Password { get; set; }
         public bool IsOpen { get; set; }
+
+        public Guid OwnerId { get; set; }
         public string Owner { get; set; }
 
         public int? MovieId { get; set; }
-
-        public RoomViewModel()
-        {
-
-        }
 
         [Display(Name = "Is Removed?")]
         public bool IsRemoved { get; set; }

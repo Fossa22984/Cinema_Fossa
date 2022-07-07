@@ -27,5 +27,12 @@ namespace Online_Cinema_BLL.Interfaces.Services
         Task AddCinemaRoomAsync(CinemaRoom cinemaRoom);
         Task ChangeCinemaRoomAsync(CinemaRoom cinemaRoom);
         Task ChangeProgress(string nameFilm, int progress, string idUser, string idFilm, NotificationTypeEnum notificationType = NotificationTypeEnum.None);
+
+
+
+
+        Task<IList<Room>> GetListRoomsAsync();
+        Task<Room> GetRoomAsync(int roomId);
+        Task<Room> GetRoomAsync(Guid userId);
     }
 }
