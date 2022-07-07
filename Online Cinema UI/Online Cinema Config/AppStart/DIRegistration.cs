@@ -9,6 +9,8 @@ using Online_Cinema_BLL.Observers.Base;
 using Online_Cinema_BLL.Services;
 using Online_Cinema_BLL.Services.Managers;
 using Online_Cinema_BLL.SignalR;
+using Online_Cinema_Core.Context.Initializer;
+using Online_Cinema_Core.Interface;
 using Online_Cinema_Core.Settings.Interfaces;
 using Online_Cinema_Core.Settings.Managers;
 
@@ -25,6 +27,9 @@ namespace Online_Cinema_Config.AppStart
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddTransient<IMoviesService, MoviesService>();
             services.AddTransient<IAdminService, AdminService>();
+            services.AddTransient<IAccountService, AccountService>();
+            services.AddTransient<IRoomService, RoomService>();
+            services.AddTransient<ICinemaRoomService, CinemaRoomService>();
 
             //Managers
             services.AddTransient<IUploadFileAzureManager, UploadFileAzureManager>();
@@ -44,6 +49,8 @@ namespace Online_Cinema_Config.AppStart
             services.AddSingleton<ICinemaRoomCacheManager, CinemaRoomCacheManager>();
             services.AddSingleton<ISessionCacheManager, SessionCacheManager>();
             services.AddSingleton<INotificationCacheManager, NotificationCacheManager>();
+
+            services.AddTransient<IDatabaseInitializer, DatabaseInitializer>();
         }
     }
 }

@@ -15,13 +15,13 @@ namespace Online_Cinema_UI.Controllers
 {
     public class RoomController : Controller
     {
-        private readonly IAdminService _adminService;
+        private readonly IRoomService _roomService;
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
 
-        public RoomController(IAdminService adminService, IMapper mapper, UserManager<User> userManager)
+        public RoomController(IRoomService roomService, IMapper mapper, UserManager<User> userManager)
         {
-            _adminService = adminService;
+            _roomService = roomService;
             _mapper = mapper;
             _userManager = userManager;
         }
@@ -30,48 +30,26 @@ namespace Online_Cinema_UI.Controllers
 
         public async Task<IActionResult> _RoomCard()
         {
-            return PartialView(_mapper.Map<IList<Room>, IEnumerable<RoomViewModel>>(await _adminService.GetListRoomsAsync()));
+            return PartialView(await _roomService.GetListRoomsAsync());
         }
 
         [HttpGet]
         public async Task<IActionResult> Room(int id)
         {
-            return View(_mapper.Map<Room, RoomViewModel>(await _adminService.GetRoomAsync(id)));
+            return View(await _roomService.GetRoomAsync(id));
         }
 
         [HttpGet]
         public async Task<IActionResult> _ChangeRoom()
         {
 
-            var room = await _adminService.GetRoomAsync((await _userManager.GetUserAsync(User)).Id);
+            var room = await _roomService.GetRoomAsync((await _userManager.GetUserAsync(User)).Id);
 
             if (room != null)
             {
-                var roomViewModel = _mapper.Map<Room, RoomViewModel>(room);
-                return View(roomViewModel);
-
+                return View(room);
             }
             return View("/Room/Index");
         }
-
-        public async Task ChangeRoom(CinemaRoomViewModel cinemaRoom)
-        {
-            if (cinemaRoom.ImageFile != null)
-            {
-                if (cinemaRoom.ImageFile.Length > 0)
-                {
-                    using (var ms = new MemoryStream())
-                    {
-                        cinemaRoom.ImageFile.CopyTo(ms);
-                        var fileBytes = ms.ToArray();
-                        cinemaRoom.CinemaRoomImage = fileBytes;
-                    }
-                }
-            }
-            var res = _mapper.Map<CinemaRoomViewModel, CinemaRoom>(cinemaRoom);
-
-            await _adminService.ChangeCinemaRoomAsync(res);
-        }
-
     }
 }

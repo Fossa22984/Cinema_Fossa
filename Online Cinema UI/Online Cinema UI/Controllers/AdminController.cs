@@ -84,13 +84,13 @@ namespace Online_Cinema_UI.Controllers
 
         #region Session Setting
         [HttpGet]
-        public async Task<IActionResult> _AddSession(string returnUrl = "")
+        public async Task<IActionResult> _AddSession()
         {
-            return PartialView("Session Setting/_AddSession");
+            return await Task.FromResult(PartialView("Session Setting/_AddSession"));
         }
 
         [HttpGet]
-        public async Task<IActionResult> _ChangeSession(int? session, string returnUrl = "")
+        public async Task<IActionResult> _ChangeSession(int? session)
         {
             if (session != null)
             {
@@ -114,9 +114,9 @@ namespace Online_Cinema_UI.Controllers
             return PartialView("Session Setting/_ListSessions", _mapper.Map<IList<Session>, IList<SessionViewModel>>(await _adminService.GetSessionsForACinemaRoomsAsync(cinemaRoomId.Value)));
         }
         [HttpGet]
-        public async Task<IActionResult> _SessionSettings(string returnUrl = "")
+        public async Task<IActionResult> _SessionSettings()
         {
-            return PartialView("Session Setting/_SessionSettings");
+            return await Task.FromResult(PartialView("Session Setting/_SessionSettings"));
         }
         #endregion
 
@@ -126,43 +126,8 @@ namespace Online_Cinema_UI.Controllers
         [DisableRequestSizeLimit]
         public async Task AddMovie(MovieViewModel movie, string genre)
         {
-            if (movie.ImageFile != null)
-            {
-                if (movie.ImageFile.Length > 0)
-                {
-                    using (var ms = new MemoryStream())
-                    {
-                        movie.ImageFile.CopyTo(ms);
-                        var fileBytes = ms.ToArray();
-                        movie.Image = fileBytes;
-                    }
-                }
-            }
-            else
-            {
-                var fileInfo = new FileInfo(@".\wwwroot\Images\background-fon.jpg");
-                if (fileInfo.Length > 0)
-                {
-                    movie.Image = new byte[fileInfo.Length];
-                    using (FileStream fs = fileInfo.OpenRead())
-                    {
-                        fs.Read(movie.Image, 0, movie.Image.Length);
-                    }
-
-                }
-            }
-            var res = _mapper.Map<MovieViewModel, Movie>(movie);
-
-            //var inputFile = new MediaFile { Filename = @".\wwwroot" + movie.MoviePath };
-            //using (var engine = new Engine())
-            //{
-            //    engine.GetMetadata(inputFile);
-            //    res.Duration = inputFile.Metadata.Duration;
-            //}
-            //await _moviesService.AddMovieAsync(res, genre);
-
             var id = (await _userManager.GetUserAsync(User)).UserName;
-            await _adminService.AddFilmAsync(res, genre, movie.VideoFile, id);
+            await _adminService.AddFilmAsync(movie, genre, movie.VideoFile, id);
         }
         public async Task ChangeMovie(MovieViewModel movie, string genre)
         {

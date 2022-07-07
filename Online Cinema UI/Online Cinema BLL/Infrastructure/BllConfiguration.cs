@@ -13,7 +13,7 @@ namespace Online_Cinema_BLL.Infrastructure
         {
             collection.AddDbContext<OnlineCinemaContext>(x => x.UseSqlServer(dbConnection));
             collection.AddIdentity<User, Role>()
-                .AddEntityFrameworkStores<OnlineCinemaContext>().AddDefaultTokenProviders()/*.AddTokenProvider<EmailConfirmationTokenProvider<User>>("emailconfirmation")*/;
+                .AddEntityFrameworkStores<OnlineCinemaContext>().AddDefaultTokenProviders().AddUserManager<UserManager<User>>()/*.AddTokenProvider<EmailConfirmationTokenProvider<User>>("emailconfirmation")*/;
 
             collection.AddTransient<IUnitOfWork, UnitOfWork>();
         }

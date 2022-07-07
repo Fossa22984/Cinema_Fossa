@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Online_Cinema_Domain.Models;
+using Online_Cinema_Domain.Models.IdentityModels;
 using Online_Cinema_Models.View;
 
 namespace Online_Cinema_Config.AppStart
@@ -8,6 +9,9 @@ namespace Online_Cinema_Config.AppStart
     {
         public AutoMapperProfile()
         {
+            CreateMap<User, RegisterViewModel>();
+            CreateMap<RegisterViewModel, User>();
+
             CreateMap<MovieViewModel, Movie>();
             CreateMap<Movie, MovieViewModel>();
 

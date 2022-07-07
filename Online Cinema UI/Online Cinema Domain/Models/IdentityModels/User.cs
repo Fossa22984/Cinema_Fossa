@@ -12,17 +12,17 @@ namespace Online_Cinema_Domain.Models.IdentityModels
 
         [Column(TypeName = "Date")]
         public DateTime? Birthday { get; set; }
-      virtual  public Room Room { get; set; }
+        virtual public Room Room { get; set; }
 
         public int? SubscriptionId { get; set; }
         public Subscription Subscription { get; set; }
 
-       // public IList<User> Friends { get; set; }
+        // public IList<User> Friends { get; set; }
         public IList<Comment> Comments { get; set; }
 
         public User()
         {
-           // Friends = new List<User>();
+            // Friends = new List<User>();
             Comments = new List<Comment>();
             Room = new Room();
             Photo = new byte[] { };

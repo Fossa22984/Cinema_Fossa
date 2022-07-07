@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Online_Cinema_BLL.Interfaces.Cache;
 using Online_Cinema_BLL.Interfaces.Managers;
@@ -8,8 +10,11 @@ using Online_Cinema_BLL.SignalR;
 using Online_Cinema_Core.Settings.Interfaces;
 using Online_Cinema_Core.UnitOfWork;
 using Online_Cinema_Domain.Models;
+using Online_Cinema_Domain.Models.IdentityModels;
+using Online_Cinema_Models.View;
 using OnlineCinema_Core.Config;
 using OnlineCinema_Core.Extensions;
+using OnlineCinema_Core.Helpers;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -30,6 +35,8 @@ namespace Online_Cinema_BLL.Services
         private ISessionCacheManager _sessionCacheManager;
         private ICinemaRoomCacheManager _cinemaRoomCacheManager;
         private IAzureSettingsManager _azureSettingsManager;
+        private IMapper _mapper;
+        UserManager<User> _userManager;
         public AdminService(IUnitOfWork unitOfWork,
             IUploadFileAzureManager uploadFileAzureManager,
             IFileManager fileManager,
@@ -37,7 +44,9 @@ namespace Online_Cinema_BLL.Services
             INotificationCacheManager notificationCache,
             ISessionCacheManager sessionCacheManager,
             ICinemaRoomCacheManager cinemaRoomCacheManager,
-            IAzureSettingsManager azureSettingsManager)
+            IAzureSettingsManager azureSettingsManager,
+            IMapper mapper,
+            UserManager<User> userManager)
         {
             _unitOfWork = unitOfWork;
             _uploadFileAzureManager = uploadFileAzureManager;
@@ -47,6 +56,8 @@ namespace Online_Cinema_BLL.Services
             _sessionCacheManager = sessionCacheManager;
             _cinemaRoomCacheManager = cinemaRoomCacheManager;
             _azureSettingsManager = azureSettingsManager;
+            _mapper = mapper;
+            _userManager = userManager;
         }
 
         public async Task<IList<string>> GetListStringGenreAsync()
@@ -122,8 +133,11 @@ namespace Online_Cinema_BLL.Services
         }
 
         public async Task<Movie> GetMovieAsync(int movieId) => await _unitOfWork.Movie.GetMovieByIdAsync(movieId);
-        public async Task AddFilmAsync(Movie movie, string genre, IFormFile file, string idUser)
+        public async Task AddFilmAsync(MovieViewModel movieView, string genre, IFormFile file, string idUser)
         {
+            await readImage(movieView);
+            var movie = _mapper.Map<MovieViewModel, Movie>(movieView);
+
             var idFilm = Guid.NewGuid().ToString();
             _notificationCache.Set(new Notification(idUser, idFilm, movie.MovieTitle, notificationType: NotificationTypeEnum.StartLoad));
             await ChangeProgress(movie.MovieTitle, 0, idUser, idFilm, NotificationTypeEnum.StartLoad);
@@ -166,8 +180,6 @@ namespace Online_Cinema_BLL.Services
             Log.Current.Debug($"Change movie MovieTitle -> {movie.MovieTitle} movie id-> {movie.Id}");
         }
 
-
-        public async Task<IList<CinemaRoom>> GetListCinemaRoomAsync() => (await _unitOfWork.CinemaRoom.GetAllCinemaRoomAsync()).ToList();
         public async Task<CinemaRoom> GetCinemaRoomAsync(int CinemaRoomId) => await _unitOfWork.CinemaRoom.GetCinemaRoomByIdAsync(CinemaRoomId);
         public async Task AddCinemaRoomAsync(CinemaRoom cinemaRoom)
         {
@@ -196,10 +208,35 @@ namespace Online_Cinema_BLL.Services
         }
 
 
+        private async Task readImage(MovieViewModel movieView)
+        {
+            if (movieView.ImageFile != null)
+            {
+                if (movieView.ImageFile.Length > 0)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        movieView.ImageFile.CopyTo(ms);
+                        var fileBytes = ms.ToArray();
+                        movieView.Image = fileBytes;
+                    }
+                }
+            }
+            else
+            {
+                var fileInfo = new FileInfo(DefaultIconHelper.Current.DefaultIconPath);
+                if (fileInfo.Length > 0)
+                {
+                    movieView.Image = new byte[fileInfo.Length];
+                    using (FileStream fs = fileInfo.OpenRead())
+                    {
+                        fs.Read(movieView.Image, 0, movieView.Image.Length);
+                    }
 
-        public async Task<IList<Room>> GetListRoomsAsync() => (await _unitOfWork.Room.GetRoomByConditionAsync(x=>x.IsRemoved!=true)).ToList();
-        public async Task<Room> GetRoomAsync(int roomId) => await _unitOfWork.Room.GetRoomByIdAsync(roomId);
-        public async Task<Room> GetRoomAsync(Guid userId) => (await _unitOfWork.Room.GetRoomByConditionAsync(x => x.OwnerId == userId)).FirstOrDefault();
+                }
+            }
+            await Task.CompletedTask;
+        }
 
     }
 }

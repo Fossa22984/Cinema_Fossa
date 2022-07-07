@@ -6,10 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="11.0.1" />
+    <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.2.9" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Models.View\Online Cinema Models.View.csproj" />
     <ProjectReference Include="..\Online Cinema BLL.SignalR\Online Cinema BLL.SignalR.csproj" />
     <ProjectReference Include="..\Online Cinema BLL\Online Cinema BLL.csproj" />
     <ProjectReference Include="..\Online Cinema Core.Settings\Online Cinema Core.Settings.csproj" />

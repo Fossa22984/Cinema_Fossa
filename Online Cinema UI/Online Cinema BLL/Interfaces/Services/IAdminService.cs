@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Online_Cinema_Domain.Models;
+using Online_Cinema_Models.View;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -20,19 +21,12 @@ namespace Online_Cinema_BLL.Interfaces.Services
         Task AddSessionAsync(Session session);
         Task ChangeSessionAsync(Session session);
         Task<Movie> GetMovieAsync(int movieId);
-        Task AddFilmAsync(Movie movie, string genre, IFormFile file, string idUser);
+        Task AddFilmAsync(MovieViewModel movie, string genre, IFormFile file, string idUser);
         Task ChangeFilmAsync(Movie movie, string genre);
-        Task<IList<CinemaRoom>> GetListCinemaRoomAsync();
         Task<CinemaRoom> GetCinemaRoomAsync(int CinemaRoomId);
         Task AddCinemaRoomAsync(CinemaRoom cinemaRoom);
         Task ChangeCinemaRoomAsync(CinemaRoom cinemaRoom);
         Task ChangeProgress(string nameFilm, int progress, string idUser, string idFilm, NotificationTypeEnum notificationType = NotificationTypeEnum.None);
 
-
-
-
-        Task<IList<Room>> GetListRoomsAsync();
-        Task<Room> GetRoomAsync(int roomId);
-        Task<Room> GetRoomAsync(Guid userId);
     }
 }

@@ -15,18 +15,20 @@ namespace Online_Cinema_UI.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly RoleManager<Role> _roleManager;
         private readonly IEmailSender _emailSender;
+        private readonly IAccountService _accountService;
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager, IEmailSender emailSender)
+        public AccountController(UserManager<User> userManager,
+            SignInManager<User> signInManager,
+            IEmailSender emailSender,
+            IAccountService accountService)
         {
-            this._signInManager = signInManager;
-            this._userManager = userManager;
-            this._roleManager = roleManager;
-            this._emailSender = emailSender;
+            _signInManager = signInManager;
+            _userManager = userManager;
+            _emailSender = emailSender;
+            _accountService = accountService;
         }
 
-        //[HttpGet]
         public async Task<IActionResult> Settings() => await Task.Run(() => { return View(); });
 
         [HttpGet] public async Task<IActionResult> _ProfileSettings() { return PartialView(await _userManager.GetUserAsync(User)); }
@@ -36,25 +38,8 @@ namespace Online_Cinema_UI.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            //Add Default Admin
-            if (!_userManager.Users.Where(x => x.UserName == "Admin").Any())
-            {
-                var admin = new User() { Email = "my.code.fossa@gmail.com", EmailConfirmed = true, UserName = "Admin" };
-                var fileInfo = new FileInfo(@".\wwwroot\Images\background-fon.jpg");
-                if (fileInfo.Length > 0)
-                {
-                    admin.Photo = new byte[fileInfo.Length];
-                    using (FileStream fs = fileInfo.OpenRead())
-                    {
-                        fs.Read(admin.Photo, 0, admin.Photo.Length);
-                    }
-                }
-                var res = await _userManager.CreateAsync(admin, "31415926535@qAZ");
-                await _userManager.AddToRolesAsync(admin, new List<string>() { "Admin", "User" });
-            }
-
             if (User.Identity.IsAuthenticated)
-                return Redirect("/CinemaRoom/Index");
+                return await Task.FromResult(Redirect("/CinemaRoom/Index"));
 
             return View();
         }
@@ -67,40 +52,7 @@ namespace Online_Cinema_UI.Controllers
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!TryValidateModel(model)) return View("Index");
-
-            var user = new User() { Email = model.Email, UserName = model.Username, Birthday = model.Birthday };
-
-            var fileInfo = new FileInfo(@".\wwwroot\Images\background-fon.jpg");
-            if (fileInfo.Length > 0)
-            {
-                user.Photo = new byte[fileInfo.Length];
-                using (FileStream fs = fileInfo.OpenRead())
-                {
-                    fs.Read(user.Photo, 0, user.Photo.Length);
-                }
-
-            }
-
-            var result = await _userManager.CreateAsync(user, model.Password);
-
-            if (!result.Succeeded) return View("Index");
-
-            if (await _roleManager.FindByNameAsync("user") == null)
-            {
-                var role = await _roleManager.CreateAsync(new Role() { Name = "user" });
-                if (role.Succeeded)
-                    await _userManager.AddToRoleAsync(user, "user");
-            }
-            else await _userManager.AddToRoleAsync(user, "user");
-
-            await _signInManager.SignInAsync(user, false);
-
-            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var link = Url.Action("Confirm", "Account",
-                new { guid = token, userEmail = user.Email }, Request.Scheme, Request.Host.Value);
-            await _emailSender.SendEmailAsync(user.Email, "Link ->>>", link);
-
-            return Redirect("/CinemaRoom/Index");
+            return await _accountService.Register(model) ? Redirect("/CinemaRoom/Index") : View("Index");
         }
 
         [HttpGet]
@@ -140,12 +92,14 @@ namespace Online_Cinema_UI.Controllers
                 new { guid = token, userEmail = user.Email }, Request.Scheme, Request.Host.Value);
             await _emailSender.SendEmailAsync(user.Email, "Link ->>>", link);
 
-            // add Send View 
             return Redirect("/CinemaRoom/Index");
         }
 
         [HttpGet]
-        public async Task<IActionResult> ChangePasswordAsync(string userEmail, string guid) => await Task.Run(() => { return View(new ResetPasswordViewModel() { Email = userEmail, Guid = guid }); });
+        public async Task<IActionResult> ChangePasswordAsync(string userEmail, string guid) => await Task.Run(() =>
+        {
+            return View(new ResetPasswordViewModel() { Email = userEmail, Guid = guid });
+        });
 
         [HttpPost]
         [AutoValidateAntiforgeryToken]
@@ -153,30 +107,18 @@ namespace Online_Cinema_UI.Controllers
         {
             if (!TryValidateModel(model)) return View();
 
-            var user = await _userManager.FindByEmailAsync(model.Email);
-            var res = await _userManager.ResetPasswordAsync(user, model.Guid, model.Password);
-            //todo add view changePassword Success
+            await _accountService.ConfirmResetPasswordAsync(model);
             return View();
         }
 
         [HttpGet]
         public async Task<IActionResult> ConfirmAsync(string guid, string userEmail)
         {
-            var user = await _userManager.FindByEmailAsync(email: userEmail);
-            var res = await _userManager.ConfirmEmailAsync(user, guid);
-            if (res.Succeeded)
+            if (await _accountService.ConfirmAsync(guid, userEmail))
             {
                 return RedirectToAction("Index", "CinemaRoom");
             }
-            //todo add ERROR PAGE
             return View();
         }
     }
-
-
-    //[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-    //public IActionResult Error()
-    //{
-    //    return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    //}
 }

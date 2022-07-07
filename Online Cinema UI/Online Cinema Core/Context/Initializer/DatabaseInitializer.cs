@@ -1,53 +1,86 @@
-﻿using Online_Cinema_Domain.Models;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Online_Cinema_Core.Interface;
+using Online_Cinema_Domain.Models;
 using Online_Cinema_Domain.Models.IdentityModels;
+using OnlineCinema_Core.Helpers;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Online_Cinema_Core.Context.Initializer
 {
-    public static class ModelInitializer
+    public class DatabaseInitializer : IDatabaseInitializer
     {
-        public static void Initializer(OnlineCinemaContext onlineCinemaContext/*, UserManager<User> _userManager*/)
+        OnlineCinemaContext _onlineCinemaContext;
+        UserManager<User> _userManager;
+        public DatabaseInitializer(OnlineCinemaContext onlineCinemaContext, UserManager<User> userManager)
         {
-            onlineCinemaContext.Database.EnsureCreated();
+            _onlineCinemaContext = onlineCinemaContext;
+            _userManager = userManager;
+        }
+
+        public void Initialize()
+        {
+            _onlineCinemaContext.Database.EnsureCreated();
+
 
             #region Add Role (Admin)
-            if (!onlineCinemaContext.Roles.Any())
+            if (!_onlineCinemaContext.Roles.Any())
             {
-                onlineCinemaContext.Roles.Add(new Role() { Name = "Admin", NormalizedName = "Admin" });
-                onlineCinemaContext.Roles.Add(new Role() { Name = "User", NormalizedName = "User" });
-                onlineCinemaContext.SaveChanges();
+                _onlineCinemaContext.Roles.Add(new Role() { Name = "Admin", NormalizedName = "Admin" });
+                _onlineCinemaContext.Roles.Add(new Role() { Name = "User", NormalizedName = "User" });
+                _onlineCinemaContext.SaveChanges();
             }
             #endregion
+
+            #region Add Default Admin
+            if (!_userManager.Users.Where(x => x.UserName == "Admin").Any())
+            {
+                var admin = new User() { Email = "my.code.fossa@gmail.com", EmailConfirmed = true, UserName = "Admin" };
+                var fileInfo = new FileInfo(DefaultIconHelper.Current.DefaultIconPath);
+                if (fileInfo.Length > 0)
+                {
+                    admin.Photo = new byte[fileInfo.Length];
+                    using (FileStream fs = fileInfo.OpenRead())
+                    {
+                        fs.Read(admin.Photo, 0, admin.Photo.Length);
+                    }
+                }
+                _userManager.CreateAsync(admin, "31415926535@qAZ").Wait();
+                _userManager.AddToRolesAsync(admin, new List<string>() { "Admin", "User" }).Wait();
+            }
+            #endregion
+
             #region Add Genres
-            if (!onlineCinemaContext.Genres.Any())
+            if (!_onlineCinemaContext.Genres.Any())
             {
-                onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Артхаус" });
-                onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Биографический" });
-                onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Боевик" });
-                onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Вестерн" });
-                onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Военный" });
-                onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Детектив" });
-                onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Детский" });
-                onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Документальный" });
-                onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Драма" });
-                onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Исторический" });
-                onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Кинокомикс" });
-                onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Комедия" });
-                onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Короткометражный" });
-                onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Криминал" });
-                onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Мелодрама" });
-                onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Мистика" });
-                onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Немое кино" });
-                onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Приключения" });
-                onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Триллер" });
-                onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Ужасы" });
-                onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Фантастика" });
-                onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Фэнтези" });
+                _onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Артхаус" });
+                _onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Биографический" });
+                _onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Боевик" });
+                _onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Вестерн" });
+                _onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Военный" });
+                _onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Детектив" });
+                _onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Детский" });
+                _onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Документальный" });
+                _onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Драма" });
+                _onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Исторический" });
+                _onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Кинокомикс" });
+                _onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Комедия" });
+                _onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Короткометражный" });
+                _onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Криминал" });
+                _onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Мелодрама" });
+                _onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Мистика" });
+                _onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Немое кино" });
+                _onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Приключения" });
+                _onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Триллер" });
+                _onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Ужасы" });
+                _onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Фантастика" });
+                _onlineCinemaContext.Genres.Add(new Genre() { GenreName = "Фэнтези" });
 
-                onlineCinemaContext.SaveChanges();
+                _onlineCinemaContext.SaveChanges();
             }
             #endregion
-
 
             #region Add Movies
             //for (int i = 0; i < 10; i++)

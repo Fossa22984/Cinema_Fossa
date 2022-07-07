@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Online Cinema Domain\Online Cinema Models.Domain.csproj" />
+    <ProjectReference Include="..\OnlineCinema Core\Online Cinema Core.csproj" />
   </ItemGroup>
 
 </Project>

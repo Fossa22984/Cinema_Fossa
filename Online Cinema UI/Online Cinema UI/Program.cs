@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Online_Cinema_BLL.Interfaces.Observers;
+using Online_Cinema_Core.Interface;
 
 namespace Online_Cinema_UI
 {
@@ -18,6 +19,9 @@ namespace Online_Cinema_UI
 
             var observerPool = services.GetRequiredService<IObserversPoolManager>();
             observerPool.Start();
+
+            var dataBaseInitilizer = services.GetRequiredService<IDatabaseInitializer>();
+            dataBaseInitilizer.Initialize();
 
             host.Run();
         }
