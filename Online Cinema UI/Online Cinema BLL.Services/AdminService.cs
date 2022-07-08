@@ -95,7 +95,6 @@ namespace Online_Cinema_BLL.Services
             return dictionary;
         }
 
-
         public async Task<Session> GetSessionAsync(int cinemaRoom)
         {
             var now = DateTime.UtcNow;
@@ -104,27 +103,29 @@ namespace Online_Cinema_BLL.Services
 
             return await Task.FromResult(listSession.FirstOrDefault(x => now >= x.Start && now < x.End));
         }
-        public async Task<Session> GetSessionByIdAsync(int sessionId) => await _unitOfWork.Session.GetSessionByIdAsync(sessionId);
-        public async Task<IList<Session>> GetSessionsForACinemaRoomsAsync(int cinemaRoom) => (await _unitOfWork.Session.GetSessionByConditionAsync(x => x.CinemaRoomId == cinemaRoom)).ToList();
-        public async Task<IList<Session>> GetSessionsForACinemaRoomsAsync(int cinemaRoom, DateTime date)
+        public async Task<SessionViewModel> GetSessionByIdAsync(int sessionId) =>
+            _mapper.Map<Session, SessionViewModel>(await _unitOfWork.Session.GetSessionByIdAsync(sessionId));
+        public async Task<IList<SessionViewModel>> GetSessionsForACinemaRoomsAsync(int cinemaRoom) =>
+            _mapper.Map<List<Session>, List<SessionViewModel>>((await _unitOfWork.Session.GetSessionByConditionAsync(x => x.CinemaRoomId == cinemaRoom)).ToList());
+        public async Task<IList<SessionViewModel>> GetSessionsForACinemaRoomsAsync(int cinemaRoom, DateTime date)
         {
             var allSessions = await _unitOfWork.Session.GetSessionByConditionAsync(x => x.CinemaRoom.Id == cinemaRoom);
-            return allSessions.AsEnumerable().Where(x => x.CinemaRoom.Id == cinemaRoom && x.Start.ToString("dd.MM.yyyy").Contains(date.ToString("dd.MM.yyyy"), StringComparison.OrdinalIgnoreCase)).ToList();
-            //            return _context.Sessions.Include(x => x.Movie).Include(x => x.CinemaRoom).AsEnumerable()
-            // .Where(x => x.CinemaRoom.Id == cinemaRoom && x.Start.ToString("dd.MM.yyyy").Contains(date.ToString("dd.MM.yyyy"), StringComparison.OrdinalIgnoreCase)).OrderBy(x => x.Start).ToList();
-
+            var sesions = allSessions.AsEnumerable().Where(x => x.CinemaRoom.Id == cinemaRoom && x.Start.ToString("dd.MM.yyyy").Contains(date.ToString("dd.MM.yyyy"), StringComparison.OrdinalIgnoreCase)).ToList();
+            return _mapper.Map<List<Session>, List<SessionViewModel>>(sesions);
         }
 
-        public async Task AddSessionAsync(Session session)
+        public async Task AddSessionAsync(SessionViewModel sessionView)
         {
+            var session = _mapper.Map<SessionViewModel, Session>(sessionView);
             await _unitOfWork.Session.CreateSession(session);
             await _unitOfWork.SaveAsync();
 
             _sessionCacheManager.Set(session);
             Log.Current.Debug($"Add session room id-> {session.Id} sesion id -> {session.Id}");
         }
-        public async Task ChangeSessionAsync(Session session)
+        public async Task ChangeSessionAsync(SessionViewModel sessionView)
         {
+            var session = _mapper.Map<SessionViewModel, Session>(sessionView);
             await _unitOfWork.Session.UpdateSession(session);
             await _unitOfWork.SaveAsync();
 
@@ -132,10 +133,12 @@ namespace Online_Cinema_BLL.Services
             Log.Current.Debug($"Change session room id-> {session.Id} sesion id -> {session.Id}");
         }
 
-        public async Task<Movie> GetMovieAsync(int movieId) => await _unitOfWork.Movie.GetMovieByIdAsync(movieId);
+        public async Task<MovieViewModel> GetMovieAsync(int movieId) =>
+            _mapper.Map<Movie, MovieViewModel>(await _unitOfWork.Movie.GetMovieByIdAsync(movieId));
         public async Task AddFilmAsync(MovieViewModel movieView, string genre, IFormFile file, string idUser)
         {
-            await readImage(movieView);
+            movieView.Image = await readImageOrFillDefault(movieView.ImageFile);
+
             var movie = _mapper.Map<MovieViewModel, Movie>(movieView);
 
             var idFilm = Guid.NewGuid().ToString();
@@ -162,8 +165,11 @@ namespace Online_Cinema_BLL.Services
             Log.Current.Debug($"Add movie MovieTitle -> {movie.MovieTitle} movie id-> {movie.Id}");
         }
 
-        public async Task ChangeFilmAsync(Movie movie, string genre)
+        public async Task ChangeFilmAsync(MovieViewModel movieView, string genre)
         {
+            movieView.Image = await readImage(movieView.ImageFile);
+            var movie = _mapper.Map<MovieViewModel, Movie>(movieView);
+
             var newMovie = await _unitOfWork.Movie.GetMovieByIdAsync(movie.Id);
             if (!string.IsNullOrEmpty(genre))
             {
@@ -180,17 +186,26 @@ namespace Online_Cinema_BLL.Services
             Log.Current.Debug($"Change movie MovieTitle -> {movie.MovieTitle} movie id-> {movie.Id}");
         }
 
-        public async Task<CinemaRoom> GetCinemaRoomAsync(int CinemaRoomId) => await _unitOfWork.CinemaRoom.GetCinemaRoomByIdAsync(CinemaRoomId);
-        public async Task AddCinemaRoomAsync(CinemaRoom cinemaRoom)
+        public async Task<CinemaRoomViewModel> GetCinemaRoomAsync(int CinemaRoomId)
         {
+            return _mapper.Map<CinemaRoom, CinemaRoomViewModel>(await _unitOfWork.CinemaRoom.GetCinemaRoomByIdAsync(CinemaRoomId));
+        }
+        public async Task AddCinemaRoomAsync(CinemaRoomViewModel cinemaRoomView)
+        {
+            cinemaRoomView.CinemaRoomImage = await readImageOrFillDefault(cinemaRoomView.ImageFile);
+            var cinemaRoom = _mapper.Map<CinemaRoomViewModel, CinemaRoom>(cinemaRoomView);
+
             await _unitOfWork.CinemaRoom.CreateCinemaRoom(cinemaRoom);
             await _unitOfWork.SaveAsync();
 
             _cinemaRoomCacheManager.Set(cinemaRoom);
             Log.Current.Debug($"Add room -> {cinemaRoom.CinemaRoomName} movie id-> {cinemaRoom.Id}");
         }
-        public async Task ChangeCinemaRoomAsync(CinemaRoom cinemaRoom)
+        public async Task ChangeCinemaRoomAsync(CinemaRoomViewModel cinemaRoomView)
         {
+            cinemaRoomView.CinemaRoomImage = await readImage(cinemaRoomView.ImageFile);
+            var cinemaRoom = _mapper.Map<CinemaRoomViewModel, CinemaRoom>(cinemaRoomView);
+
             if (cinemaRoom.CinemaRoomImage.Length == 0)
                 cinemaRoom.CinemaRoomImage = (await _unitOfWork.CinemaRoom.GetCinemaRoomByIdAsync(cinemaRoom.Id)).CinemaRoomImage;
 
@@ -201,42 +216,58 @@ namespace Online_Cinema_BLL.Services
             Log.Current.Debug($"Change room -> {cinemaRoom.CinemaRoomName} movie id-> {cinemaRoom.Id}");
         }
 
-        public async Task ChangeProgress(string nameFilm, int progress, string idUser, string idFilm, NotificationTypeEnum notificationType = NotificationTypeEnum.None)
+        private async Task ChangeProgress(string nameFilm, int progress, string idUser, string idFilm, NotificationTypeEnum notificationType = NotificationTypeEnum.None)
         {
             _notificationCache.UpdateProgress(idFilm, progress);
             await _notificationHub.PushNotificationProgress(nameFilm, progress, idUser, idFilm, notificationType);
         }
 
 
-        private async Task readImage(MovieViewModel movieView)
+        private async Task<byte[]> readImageOrFillDefault(IFormFile fromFile)
         {
-            if (movieView.ImageFile != null)
+            byte[] image = null;
+            if (fromFile != null)
             {
-                if (movieView.ImageFile.Length > 0)
+                if (fromFile.Length > 0)
                 {
                     using (var ms = new MemoryStream())
                     {
-                        movieView.ImageFile.CopyTo(ms);
+                        fromFile.CopyTo(ms);
                         var fileBytes = ms.ToArray();
-                        movieView.Image = fileBytes;
+                        image = fileBytes;
                     }
                 }
             }
             else
             {
-                var fileInfo = new FileInfo(DefaultIconHelper.Current.DefaultIconPath);
+                var fileInfo = new FileInfo(DefaultRootHelper.Current.DefaultIconPath);
                 if (fileInfo.Length > 0)
                 {
-                    movieView.Image = new byte[fileInfo.Length];
+                    image = new byte[fileInfo.Length];
                     using (FileStream fs = fileInfo.OpenRead())
                     {
-                        fs.Read(movieView.Image, 0, movieView.Image.Length);
+                        fs.Read(image, 0, image.Length);
                     }
-
                 }
             }
-            await Task.CompletedTask;
+            return await Task.FromResult(image);
         }
-
+        private async Task<byte[]> readImage(IFormFile fromFile)
+        {
+            byte[] image = null;
+            if (fromFile != null)
+            {
+                if (fromFile.Length > 0)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        fromFile.CopyTo(ms);
+                        var fileBytes = ms.ToArray();
+                        image = fileBytes;
+                    }
+                }
+            }
+            return await Task.FromResult(image);
+        }
     }
 }

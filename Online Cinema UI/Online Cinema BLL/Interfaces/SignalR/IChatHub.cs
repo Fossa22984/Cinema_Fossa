@@ -8,6 +8,6 @@ namespace Online_Cinema_BLL.Interfaces.SignalR
         Task SendMessage(string user, string message, string room, bool join);
         Task JoinRoom(string roomName);
         Task LeaveRoom(string roomName);
-        Task SendSession(Session session, string room);
+        Task SendSession(int sessionId, string room);
     }
 }

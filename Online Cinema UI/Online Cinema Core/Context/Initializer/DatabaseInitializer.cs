@@ -38,7 +38,7 @@ namespace Online_Cinema_Core.Context.Initializer
             if (!_userManager.Users.Where(x => x.UserName == "Admin").Any())
             {
                 var admin = new User() { Email = "my.code.fossa@gmail.com", EmailConfirmed = true, UserName = "Admin" };
-                var fileInfo = new FileInfo(DefaultIconHelper.Current.DefaultIconPath);
+                var fileInfo = new FileInfo(DefaultRootHelper.Current.DefaultIconPath);
                 if (fileInfo.Length > 0)
                 {
                     admin.Photo = new byte[fileInfo.Length];

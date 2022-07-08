@@ -31,10 +31,10 @@ namespace Online_Cinema_BLL.SignalR
             return Groups.RemoveFromGroupAsync(Context.ConnectionId, roomName);
         }
 
-        public async Task SendSession(Session session, string room)
+        public async Task SendSession(int sessionId, string room)
         {
             if (Clients != null)
-                await Clients.Group(room).SendAsync("GetSession", session.Id).ConfigureAwait(true);
+                await Clients.Group(room).SendAsync("GetSession", sessionId).ConfigureAwait(true);
         }
     }
 }

@@ -46,7 +46,7 @@ namespace Online_Cinema_BLL.Observers
             foreach (var room in _roomCacheManager.GetAll())
             {
                 var session = await _adminService.GetSessionAsync(room.Id);
-                if (session != null) await _chatHub.SendSession(session, room.Id.ToString());
+                if (session != null) await _chatHub.SendSession(session.Id, room.Id.ToString());
             }
         }
     }

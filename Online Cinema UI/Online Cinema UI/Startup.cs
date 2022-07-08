@@ -9,6 +9,7 @@ using Online_Cinema_BLL.Infrastructure.Provider;
 using Online_Cinema_BLL.SignalR;
 using Online_Cinema_Config.AppStart;
 using Online_Cinema_UI.Filters;
+using OnlineCinema_Core.Helpers;
 using System;
 
 namespace Online_Cinema_UI
@@ -25,17 +26,14 @@ namespace Online_Cinema_UI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            BllConfiguration.Configuration(services, Configuration.GetConnectionString("MyCon"));
-            //var res = Configuration["InstrumentationKey"];
-            //BllConfiguration.Configuration(services, Configuration["ConnectionString"]);
-
+            //BllConfiguration.Configuration(services, Configuration.GetConnectionString("MyCon"));
 
             var option = new SendGridOptions()/* { SendGridKey = Configuration["SendGridKey"], UserSender = Configuration["UserSender"] }*/;
 
             Configuration.GetSection("SendGridOptions").Bind(option);
             services.AddTransient<SendGridOptions>(x => option);
 
-            DIRegistration.RegisterConfigs(ref services);
+            DIRegistration.RegisterConfigs(ref services, Configuration.GetConnectionString("MyCon"));
 
             services.AddApplicationInsightsTelemetry(Configuration["InstrumentationKey"]);
 
@@ -46,14 +44,15 @@ namespace Online_Cinema_UI
             services.AddControllersWithViews();
             services.AddSignalR();
 
+
             services.Configure<IISServerOptions>(options =>
             {
-                options.MaxRequestBodySize = 2147483648;
+                options.MaxRequestBodySize = SettingsHelper.Current.MaxRequestLenghts;
             });
 
             services.Configure<FormOptions>(options =>
             {
-                options.MultipartBodyLengthLimit = 2147483648;
+                options.MultipartBodyLengthLimit = SettingsHelper.Current.MaxRequestLenghts;
             });
         }
 

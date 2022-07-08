@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace OnlineCinema_Core.Helpers
 {
-    public class DefaultIconHelper
+    public class DefaultRootHelper
     {
-        private static readonly DefaultIconHelper _instance = new DefaultIconHelper();
-        public static DefaultIconHelper Current => _instance;
+        private static readonly DefaultRootHelper _instance = new DefaultRootHelper();
+        public static DefaultRootHelper Current => _instance;
 
         public string DefaultIconPath { get; private set; } = @".\wwwroot\Images\background-fon.jpg";
     }

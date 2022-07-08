@@ -25,7 +25,7 @@ namespace Online_Cinema_Models.View
         [Required, Display(Name = "Date Of Release")]
         public DateTime? DateOfRelease { get; set; }//Дата выпуска 
 
-        //public double Duration { get; set; }//Продолжительность 
+        public TimeSpan? Duration { get; set; }//Продолжительность 
         public string Author { get; set; }
         public string Actors { get; set; }
         public string Country { get; set; }

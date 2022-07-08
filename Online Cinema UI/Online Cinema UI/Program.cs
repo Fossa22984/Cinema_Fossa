@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Online_Cinema_BLL.Interfaces.Observers;
 using Online_Cinema_Core.Interface;
+using OnlineCinema_Core.Helpers;
 
 namespace Online_Cinema_UI
 {
@@ -34,7 +35,8 @@ namespace Online_Cinema_UI
                     webBuilder.UseStartup<Startup>()
                     .ConfigureKestrel(serverOptions =>
                                 {
-                                    serverOptions.Limits.MaxRequestBodySize = 2147483648;
+                                    serverOptions.Limits.MaxRequestBodySize = SettingsHelper.Current.MaxRequestLenghts;
+
                                 });
 
                 });

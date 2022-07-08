@@ -19,32 +19,27 @@ namespace Online_Cinema_UI.Controllers
     {
         private readonly IAdminService _adminService;
         private readonly UserManager<User> _userManager;
-
-        private readonly IMapper _mapper;
-        public AdminController(IAdminService adminService, IMapper mapper, UserManager<User> userManager)
+        public AdminController(IAdminService adminService, UserManager<User> userManager)
         {
             _adminService = adminService;
-            _mapper = mapper;
             _userManager = userManager;
         }
 
         public async Task<IActionResult> Index() => await Task.Run(() => { return View(); });
-        public async Task<JsonResult> GetListGenre() => Json(await _adminService.GetListStringGenreAsync());
-        public async Task<JsonResult> GetListMovies() => Json((await _adminService.GetDictionaryMoviesAsync()).OrderBy(x => x.Value).ToArray());
-        public async Task<JsonResult> GetListCinemaRooms() => Json((await _adminService.GetDictionaryCinemaRoomsAsync()).OrderBy(x => x.Value).ToArray());
-        public async Task<JsonResult> GetListSessions() => Json((await _adminService.GetDictionarySessionsAsync()).OrderBy(x => x.Value).ToArray());
-        public async Task<JsonResult> GetMovieDuration(int? movieId, DateTime? start)
-        {
-            if (movieId != null && start != null)
-                return Json(start.Value.Add((await _adminService.GetMovieAsync(movieId.Value)).Duration.Value).ToString("yyyy-MM-ddTHH:mm:ss"));
-
-            return Json("");
-        }
-
-
-
 
         #region Movie Settings
+        [DisableRequestSizeLimit]
+        public async Task AddMovie(MovieViewModel movie, string genre)
+        {
+            var id = (await _userManager.GetUserAsync(User)).UserName;
+            await _adminService.AddFilmAsync(movie, genre, movie.VideoFile, id);
+        }
+
+        public async Task ChangeMovie(MovieViewModel movie, string genre)
+        {
+            await _adminService.ChangeFilmAsync(movie, genre);
+        }
+
         [HttpGet] public async Task<IActionResult> _MovieSettings() => await Task.Run(() => { return PartialView("Movie Settings/_MovieSettings"); });
         [HttpGet] public async Task<IActionResult> _AddMovie() => await Task.Run(() => { return PartialView("Movie Settings/_AddMovie"); });
         [HttpGet]
@@ -52,18 +47,26 @@ namespace Online_Cinema_UI.Controllers
         {
             if (movie != null)
             {
-                var res = await _adminService.GetMovieAsync(movie.Value);
-                if (res != null)
-                {
-                    var ress = _mapper.Map<Movie, MovieViewModel>(res);
-                    return PartialView("Movie Settings/_ChangeMovie", ress);
-                }
+                var movieView = await _adminService.GetMovieAsync(movie.Value);
+                if (movieView != null)
+                    return PartialView("Movie Settings/_ChangeMovie", movieView);
             }
             return PartialView("Movie Settings/_ChangeMovie");
         }
         #endregion
 
         #region CinemaRoom Settings
+        public async Task AddCinemaRoom(CinemaRoomViewModel cinemaRoom)
+        {
+            await _adminService.AddCinemaRoomAsync(cinemaRoom);
+        }
+
+        public async Task ChangeCinemaRoom(CinemaRoomViewModel cinemaRoom)
+        {
+            await _adminService.ChangeCinemaRoomAsync(cinemaRoom);
+        }
+
+
         [HttpGet] public async Task<IActionResult> _CinemaRoomSettings() => await Task.Run(() => { return PartialView("CinemaRoom Settings/_CinemaRoomSettings"); });
         [HttpGet] public async Task<IActionResult> _AddCinemaRoom() => await Task.Run(() => { return PartialView("CinemaRoom Settings/_AddCinemaRoom"); });
         [HttpGet]
@@ -71,18 +74,25 @@ namespace Online_Cinema_UI.Controllers
         {
             if (cinemaRoom != null)
             {
-                var res = await _adminService.GetCinemaRoomAsync(cinemaRoom.Value);
-                if (res != null)
-                {
-                    var ress = _mapper.Map<CinemaRoom, CinemaRoomViewModel>(res);
-                    return PartialView("CinemaRoom Settings/_ChangeCinemaRoom", ress);
-                }
+                var cinemaRoomView = await _adminService.GetCinemaRoomAsync(cinemaRoom.Value);
+                if (cinemaRoomView != null)
+                    return PartialView("CinemaRoom Settings/_ChangeCinemaRoom", cinemaRoomView);
             }
             return PartialView("CinemaRoom Settings/_ChangeCinemaRoom");
         }
         #endregion
 
         #region Session Setting
+        public async Task AddSession(SessionViewModel session)
+        {
+            await _adminService.AddSessionAsync(session);
+        }
+
+        public async Task ChangeSession(SessionViewModel session)
+        {
+            await _adminService.ChangeSessionAsync(session);
+        }
+
         [HttpGet]
         public async Task<IActionResult> _AddSession()
         {
@@ -94,12 +104,10 @@ namespace Online_Cinema_UI.Controllers
         {
             if (session != null)
             {
-                var res = await _adminService.GetSessionByIdAsync(session.Value);
-                if (res != null)
-                {
-                    var ress = _mapper.Map<Session, SessionViewModel>(res);
-                    return PartialView("Session Setting/_ChangeSession", ress);
-                }
+                var sessionView = await _adminService.GetSessionByIdAsync(session.Value);
+                if (sessionView != null)
+                    return PartialView("Session Setting/_ChangeSession", sessionView);
+
             }
             return PartialView("Session Setting/_ChangeSession");
 
@@ -109,9 +117,9 @@ namespace Online_Cinema_UI.Controllers
         public async Task<IActionResult> _ListSessions(int? cinemaRoomId, DateTime? dateSession)
         {
             if (cinemaRoomId != null && dateSession != null)
-                return PartialView("Session Setting/_ListSessions", _mapper.Map<IList<Session>, IList<SessionViewModel>>(await _adminService.GetSessionsForACinemaRoomsAsync(cinemaRoomId.Value, dateSession.Value)));
+                return PartialView("Session Setting/_ListSessions", await _adminService.GetSessionsForACinemaRoomsAsync(cinemaRoomId.Value, dateSession.Value));
 
-            return PartialView("Session Setting/_ListSessions", _mapper.Map<IList<Session>, IList<SessionViewModel>>(await _adminService.GetSessionsForACinemaRoomsAsync(cinemaRoomId.Value)));
+            return PartialView("Session Setting/_ListSessions", await _adminService.GetSessionsForACinemaRoomsAsync(cinemaRoomId.Value));
         }
         [HttpGet]
         public async Task<IActionResult> _SessionSettings()
@@ -120,92 +128,19 @@ namespace Online_Cinema_UI.Controllers
         }
         #endregion
 
+        #region Json Response
 
-
-
-        [DisableRequestSizeLimit]
-        public async Task AddMovie(MovieViewModel movie, string genre)
+        public async Task<JsonResult> GetListGenre() => Json(await _adminService.GetListStringGenreAsync());
+        public async Task<JsonResult> GetListMovies() => Json((await _adminService.GetDictionaryMoviesAsync()).OrderBy(x => x.Value).ToArray());
+        public async Task<JsonResult> GetListCinemaRooms() => Json((await _adminService.GetDictionaryCinemaRoomsAsync()).OrderBy(x => x.Value).ToArray());
+        public async Task<JsonResult> GetListSessions() => Json((await _adminService.GetDictionarySessionsAsync()).OrderBy(x => x.Value).ToArray());
+        public async Task<JsonResult> GetMovieDuration(int? movieId, DateTime? start)
         {
-            var id = (await _userManager.GetUserAsync(User)).UserName;
-            await _adminService.AddFilmAsync(movie, genre, movie.VideoFile, id);
-        }
-        public async Task ChangeMovie(MovieViewModel movie, string genre)
-        {
-            if (movie.ImageFile != null)
-            {
-                if (movie.ImageFile.Length > 0)
-                {
-                    using (var ms = new MemoryStream())
-                    {
-                        movie.ImageFile.CopyTo(ms);
-                        var fileBytes = ms.ToArray();
-                        movie.Image = fileBytes;
-                    }
-                }
-            }
-            var res = _mapper.Map<MovieViewModel, Movie>(movie);
-            await _adminService.ChangeFilmAsync(res, genre);
-        }
+            if (movieId != null && start != null)
+                return Json(start.Value.Add((await _adminService.GetMovieAsync(movieId.Value)).Duration.Value).ToString("yyyy-MM-ddTHH:mm:ss"));
 
-        public async Task AddCinemaRoom(CinemaRoomViewModel cinemaRoom)
-        {
-            if (cinemaRoom.ImageFile != null)
-            {
-                if (cinemaRoom.ImageFile.Length > 0)
-                {
-                    using (var ms = new MemoryStream())
-                    {
-                        cinemaRoom.ImageFile.CopyTo(ms);
-                        var fileBytes = ms.ToArray();
-                        cinemaRoom.CinemaRoomImage = fileBytes;
-                    }
-                }
-            }
-            else
-            {
-                var fileInfo = new FileInfo(@".\wwwroot\Images\background-fon.jpg");
-                if (fileInfo.Length > 0)
-                {
-                    cinemaRoom.CinemaRoomImage = new byte[fileInfo.Length];
-                    using (FileStream fs = fileInfo.OpenRead())
-                    {
-                        fs.Read(cinemaRoom.CinemaRoomImage, 0, cinemaRoom.CinemaRoomImage.Length);
-                    }
-
-                }
-            }
-            var res = _mapper.Map<CinemaRoomViewModel, CinemaRoom>(cinemaRoom);
-            await _adminService.AddCinemaRoomAsync(res);
+            return Json("");
         }
-        public async Task ChangeCinemaRoom(CinemaRoomViewModel cinemaRoom)
-        {
-            if (cinemaRoom.ImageFile != null)
-            {
-                if (cinemaRoom.ImageFile.Length > 0)
-                {
-                    using (var ms = new MemoryStream())
-                    {
-                        cinemaRoom.ImageFile.CopyTo(ms);
-                        var fileBytes = ms.ToArray();
-                        cinemaRoom.CinemaRoomImage = fileBytes;
-                    }
-                }
-            }
-            var res = _mapper.Map<CinemaRoomViewModel, CinemaRoom>(cinemaRoom);
-
-            await _adminService.ChangeCinemaRoomAsync(res);
-        }
-
-
-        public async Task AddSession(SessionViewModel session)
-        {
-            var res = _mapper.Map<SessionViewModel, Session>(session);
-            await _adminService.AddSessionAsync(res);
-        }
-        public async Task ChangeSession(SessionViewModel session)
-        {
-            var res = _mapper.Map<SessionViewModel, Session>(session);
-            await _adminService.ChangeSessionAsync(res);
-        }
+        #endregion
     }
 }

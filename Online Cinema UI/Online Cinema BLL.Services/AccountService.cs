@@ -32,7 +32,7 @@ namespace Online_Cinema_BLL.Services
         {
             var user = _mapper.Map<RegisterViewModel, User>(model);
 
-            var fileInfo = new FileInfo(DefaultIconHelper.Current.DefaultIconPath);
+            var fileInfo = new FileInfo(DefaultRootHelper.Current.DefaultIconPath);
             if (fileInfo.Length > 0)
             {
                 user.Photo = new byte[fileInfo.Length];

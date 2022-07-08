@@ -15,18 +15,17 @@ namespace Online_Cinema_BLL.Interfaces.Services
         Task<IDictionary<int, string>> GetDictionaryCinemaRoomsAsync();
         Task<IDictionary<int, string>> GetDictionarySessionsAsync();
         Task<Session> GetSessionAsync(int cinemaRoom);
-        Task<Session> GetSessionByIdAsync(int sessionId);
-        Task<IList<Session>> GetSessionsForACinemaRoomsAsync(int cinemaRoom);
-        Task<IList<Session>> GetSessionsForACinemaRoomsAsync(int cinemaRoom, DateTime date);
-        Task AddSessionAsync(Session session);
-        Task ChangeSessionAsync(Session session);
-        Task<Movie> GetMovieAsync(int movieId);
+        Task<SessionViewModel> GetSessionByIdAsync(int sessionId);
+        Task<IList<SessionViewModel>> GetSessionsForACinemaRoomsAsync(int cinemaRoom);
+        Task<IList<SessionViewModel>> GetSessionsForACinemaRoomsAsync(int cinemaRoom, DateTime date);
+        Task AddSessionAsync(SessionViewModel session);
+        Task ChangeSessionAsync(SessionViewModel session);
+        Task<MovieViewModel> GetMovieAsync(int movieId);
         Task AddFilmAsync(MovieViewModel movie, string genre, IFormFile file, string idUser);
-        Task ChangeFilmAsync(Movie movie, string genre);
-        Task<CinemaRoom> GetCinemaRoomAsync(int CinemaRoomId);
-        Task AddCinemaRoomAsync(CinemaRoom cinemaRoom);
-        Task ChangeCinemaRoomAsync(CinemaRoom cinemaRoom);
-        Task ChangeProgress(string nameFilm, int progress, string idUser, string idFilm, NotificationTypeEnum notificationType = NotificationTypeEnum.None);
+        Task ChangeFilmAsync(MovieViewModel movie, string genre);
+        Task<CinemaRoomViewModel> GetCinemaRoomAsync(int CinemaRoomId);
+        Task AddCinemaRoomAsync(CinemaRoomViewModel cinemaRoom);
+        Task ChangeCinemaRoomAsync(CinemaRoomViewModel cinemaRoom);
 
     }
 }
