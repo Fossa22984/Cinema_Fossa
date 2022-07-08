@@ -20,17 +20,17 @@ namespace Online_Cinema_Core.Repository
 
         public async Task<IEnumerable<Room>> GetAllRoomAsync()
         {
-            return await FindAll().ToListAsync();
+            return await FindAll().Include(x => x.Owner).Include(x => x.Movie).ToListAsync();
         }
 
         public async Task<IEnumerable<Room>> GetRoomByConditionAsync(Expression<Func<Room, bool>> predicate)
         {
-            return await FindByCondition(predicate).ToListAsync();
+            return await FindByCondition(predicate).Include(x => x.Owner).Include(x => x.Movie).ToListAsync();
         }
 
         public async Task<Room> GetRoomByIdAsync(int Id)
         {
-            return await FindByCondition(x => x.Id == Id).FirstOrDefaultAsync();
+            return await FindByCondition(x => x.Id == Id).AsNoTracking().Include(x=>x.Owner).Include(x=>x.Movie).FirstOrDefaultAsync();
         }
 
         public async Task RemoveRoom(Room room)

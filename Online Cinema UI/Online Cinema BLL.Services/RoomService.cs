@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Online_Cinema_BLL.Interfaces.Services;
 using Online_Cinema_Core.UnitOfWork;
 using Online_Cinema_Domain.Models;
+using Online_Cinema_Domain.Models.IdentityModels;
 using Online_Cinema_Models.View;
 using System;
 using System.Collections.Generic;
@@ -15,13 +17,25 @@ namespace Online_Cinema_BLL.Services
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
-        public RoomService(IMapper mapper, IUnitOfWork unitOfWork)
+        private readonly UserManager<User> _userManager;
+
+        public RoomService(IMapper mapper, IUnitOfWork unitOfWork, UserManager<User> userManager)
         {
             _mapper = mapper;
             _unitOfWork = unitOfWork;
+            _userManager = userManager;
         }
-        public async Task<IList<RoomViewModel>> GetListRoomsAsync() =>
-            _mapper.Map<List<Room>, List<RoomViewModel>>((await _unitOfWork.Room.GetRoomByConditionAsync(x => x.IsRemoved != true)).ToList());
+        public async Task<IList<RoomViewModel>> GetListRoomsAsync()
+        {
+            var rooms = (await _unitOfWork.Room.GetRoomByConditionAsync(x => x.IsRemoved != true && x.IsOpen == true)).ToList();
+            rooms.ForEach(x => x.Owner = _userManager.Users.FirstOrDefault(u => u.Id == x.OwnerId));
+
+
+
+            //return _mapper.Map<List<Room>, List<RoomViewModel>>((await _unitOfWork.Room.GetRoomByConditionAsync(x => x.IsRemoved != true && x.IsOpen == true)).ToList());
+            return _mapper.Map<List<Room>, List<RoomViewModel>>(rooms);
+
+        }
         public async Task<RoomViewModel> GetRoomAsync(int roomId) =>
             _mapper.Map<Room, RoomViewModel>(await _unitOfWork.Room.GetRoomByIdAsync(roomId));
         public async Task<RoomViewModel> GetRoomAsync(Guid userId) =>
@@ -38,8 +52,21 @@ namespace Online_Cinema_BLL.Services
             return dictionary;
         }
 
-        public async Task<MovieViewModel> GetMovieAsync(int movieId) => 
+        public async Task<MovieViewModel> GetMovieAsync(int movieId) =>
             _mapper.Map<Movie, MovieViewModel>(await _unitOfWork.Movie.GetMovieByIdAsync(movieId));
+
+
+        public async Task ChangeRoomAsync(Room room)
+        {
+            if (room.RoomImage.Length == 0)
+                room.RoomImage = (await _unitOfWork.Room.GetRoomByIdAsync(room.Id)).RoomImage;
+
+            await _unitOfWork.Room.UpdateRoom(room);
+            await _unitOfWork.SaveAsync();
+
+            //_cinemaRoomCacheManager.Update(cinemaRoom);
+            //Log.Current.Debug($"Change room -> {cinemaRoom.CinemaRoomName} movie id-> {cinemaRoom.Id}");
+        }
 
     }
 }
