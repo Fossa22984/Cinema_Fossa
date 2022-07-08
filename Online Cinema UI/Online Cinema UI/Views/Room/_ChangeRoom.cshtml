@@ -11,85 +11,79 @@
                     <form id="changeFilmForm" asp-action="ChangeMovie" method="post" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <h3 class="mb-3 text-white">Редактирование</h3>
-                        <h4 class="mb-3 text-white">Обязательные поля</h4>
-                        <div class="form-row mb-4">
-                            <div class="form-group col-md-3 pr-2">
-                                @if (Model.RoomImage.Length != 0)
-                                {<img id="viewImage" src=@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(@Model.RoomImage)) /> }
-                                else
-                                { <img id="viewImage" src="~/Images/background-fon.jpg" />}
+                        <div class="form-row">
+                            <div class="col-md-3">
+                                <div class="form-row mb-4">
+                                    @if (Model.RoomImage.Length != 0)
+                                    {<img id="viewImage" src=@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(@Model.RoomImage)) /> }
+                                    else
+                                    { <img id="viewImage" src="~/Images/background-fon.jpg" />}
+                                </div>
+
+
+                                <div class="form-row align-items-start">
+                                    <label class="form-control p-0">
+                                        <input asp-for="ImageFile" type="file" accept="image/png,image/jpeg" class="form-control text-white" placeholder="Прикрепите файл">
+                                        <button type="button" class="btn btn-outline-secondary text-white w-100 clickOnButton" onclick=" $('#ImageFile').trigger('click'); ">Добавить обложку</button>
+                                    </label>
+                                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                                </div>
+
                             </div>
-                            <div class="form-group col-md-9">
+                            <div class="form-group col-md-9 pl-3">
                                 <input asp-for="Id" type="hidden" />
                                 <div class="form-row">
-                                    <div class="form-group col-md-10">
+                                    <div class="form-group col-lg-10 col-sm-8">
                                         <label asp-for="RoomName" class="control-label text-white"></label>
                                         <input asp-for="RoomName" class="form-control text-white" required />
                                         <span asp-validation-for="RoomName" class="text-danger"></span>
                                     </div>
-                                    <div class="form-group align-self-center col-md-1">
+                                    <div class="form-group align-self-center col-lg-1 col-sm-2">
                                         <label asp-for="IsOpen" class="control-label text-white"></label>
                                         <input asp-for="IsOpen" class="form-control text-white" />
                                         <span asp-validation-for="IsOpen" class="text-danger"></span>
                                     </div>
-                                    <div class="form-group align-self-center col-md-1">
+                                    <div class="form-group align-self-center col-lg-1 col-sm-2">
                                         <label asp-for="IsRemoved" class="control-label text-white"></label>
                                         <input asp-for="IsRemoved" class="form-control text-white" />
                                         <span asp-validation-for="IsRemoved" class="text-danger"></span>
                                     </div>
-
                                 </div>
 
-                                @*<div class="form-group">
-                            <label asp-for="MoviePath" class="control-label text-white"></label>
-                            <textarea asp-for="MoviePath" class="form-control text-white" readonly></textarea>
-                            <span asp-validation-for="MoviePath" class="text-danger"></span>
-                        </div>*@
 
                                 <div class="form-row">
-                                    <div class="form-group col-md-4">
-                                        <label asp-for="ImageFile" class="control-label text-white"></label>
-                                        <label class="form-control m-0 p-0">
-                                            <input asp-for="ImageFile" type="file" accept="image/png,image/jpeg" class="form-control text-white" placeholder="Прикрепите файл">
-                                            <button type="button" class="btn btn-outline-secondary text-white w-100 clickOnButton" onclick=" $('#ImageFile').trigger('click'); ">Добавить обложку</button>
-                                        </label>
-                                        <span asp-validation-for="ImageFile" class="text-danger"></span>
+                                    <div class="form-group col-md">
+                                        <div class="form-group">
+                                            <label asp-for="Description" class="control-label text-white"></label>
+                                            <textarea asp-for="Description" class="form-control text-white"></textarea>
+                                            <span asp-validation-for="Description" class="text-danger"></span>
+                                        </div>
                                     </div>
-                                    @*<div class="form-group col-md-4">
-                                <label asp-for="DateOfRelease" class="control-label text-white"></label>
-                                <input asp-for="DateOfRelease" type="date" max="@DateTime.Now.ToString(" yyyy-MM-dd")" class="form-control text-white" required />
-                                <span asp-validation-for="DateOfRelease" class="text-danger"></span>
-                            </div>*@
                                 </div>
+                                <div class="form-row m-0 p-0">
+                                    <div class="form-group col-lg-11 col-sm-10 m-0 p-0">
+                                        <div class="form-group">
+                                            <div class="search">
+                                                <input class="btn clickOnButton text-white w-100" type="text" id="ajax" list="json-datalist" placeholder="Поиск фильмов">
+                                                <datalist class="text-white" id="json-datalist"></datalist>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-1 col-sm-2 m-0 p-0">
+                                        <div class="form-group">
+                                            <button type="button" class="btn clickOnButton text-white w-100" onclick="SelectFilm()">Поиск</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="film">
+
+                                </div>
+
+
                             </div>
                         </div>
 
-                        @*<h4 class="mb-3 text-white">Дополнительные поля</h4>
-                <div class="form-group">
-                    <label asp-for="Author" class="control-label text-white"></label>
-                    <textarea asp-for="Author" class="form-control text-white"></textarea>
-                    <span asp-validation-for="Author" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Actors" class="control-label text-white"></label>
-                    <textarea asp-for="Actors" class="form-control text-white"></textarea>
-                    <span asp-validation-for="Actors" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Country" class="control-label text-white"></label>
-                    <input asp-for="Country" class="form-control text-white" />
-                    <span asp-validation-for="Country" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Description" class="control-label text-white"></label>
-                    <textarea asp-for="Description" class="form-control text-white"></textarea>
-                    <span asp-validation-for="Description" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                    <label asp-for="MovieBudget" class="control-label text-white"></label>
-                    <input asp-for="MovieBudget" class="form-control text-white" />
-                    <span asp-validation-for="MovieBudget" class="text-danger"></span>
-                </div>*@
                         <div class="form-row">
                             <div class="form-group col-md-11">
                                 <input type="submit" class="btn btn-dark mt-4 w-100" value="Редактировать" />
@@ -103,7 +97,77 @@
                     </form>
                 </div>
             </div>
-            </div>
+        </div>
     </div>
-    <script src="~/js/admin/movie-settings/change.js"></script>
+    @section Scripts{
+
+
+        <script>
+
+            $(function () {
+                // Get the <datalist> and <input> elements.
+                var dataList = document.getElementById('json-datalist');
+                var input = document.getElementById('ajax');
+
+                $.ajax({
+                    type: 'GET',
+                    url: "/Room/GetListMovies",
+                    success: function (result) {
+                        result.forEach(function (item) {
+
+                            // Create a new <option> element.
+                            var option = document.createElement('option');
+
+                            // Set the value using the item in the JSON array.
+                            option["data-value"] = item["key"];
+                            option.value = item["value"];
+
+                            // Add the <option> element to the <datalist>.
+                            dataList.appendChild(option);
+                        });
+
+
+                        input.placeholder = "Редактировать существующий";
+                    },
+                    error: function (e) {
+                        input.placeholder = "Couldn't load datalist options :(";
+                    }
+                });
+
+                // Update the placeholder text.
+                input.placeholder = "Loading options...";
+            });
+
+            function SelectFilm(e) {
+                $.ajax({
+                    type: 'GET',
+                    data: { "movie": $('option[value="' + $("#ajax").val() + '"]').first().prop("data-value") },
+                    url: "/Room/_FilmCard",
+                    success: function (result) {
+                        if (result != "") $("#film").html(result);
+                        else $("#film").html("");
+                    }
+                });
+            }
+
+            $("#ImageFile").change(function (event) {
+                let files = event.target.files;
+                $("#viewImage").attr("src", window.URL.createObjectURL(files[0]));
+            });
+
+            $("textarea").each(function () {
+                this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
+            }).on("input", function () {
+                this.style.height = "auto";
+                this.style.height = (this.scrollHeight) + "px";
+            });
+
+            function Clear() {
+                $("#viewImage").attr("src", "../Images/background-fon.jpg");
+                $("#film").html("");
+                $("#json - datalist").val("");
+                
+            }
+        </script>
+    }
 }

@@ -37,7 +37,7 @@ namespace Online_Cinema_UI.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> _ListSessions(int? cinemaRoomId, DateTime? dateSession, string returnUrl = "")
+        public async Task<IActionResult> _ListSessions(int? cinemaRoomId, DateTime? dateSession)
         {
             if (cinemaRoomId != null && dateSession != null)
                 return PartialView(await _cinemaRoomService.GetSessionsForACinemaRoomsAsync(cinemaRoomId.Value, dateSession.Value));
@@ -45,20 +45,9 @@ namespace Online_Cinema_UI.Controllers
             return PartialView(await _cinemaRoomService.GetSessionsForACinemaRoomsAsync(cinemaRoomId.Value));
         }
 
-        public async Task<JsonResult> GetSession(int? sessionId, string returnUrl = "")
+        public async Task<JsonResult> GetSession(int? sessionId)
         {
             var sessionView = await _cinemaRoomService.GetSessionByIdAsync(sessionId.Value);
-            //Session session = new Session()
-            //{
-            //    Id = sessionView.Id,
-            //    Start = sessionView.Start,
-            //    End = sessionView.End,
-            //    Movie = new Movie()
-            //    {
-            //        MovieTitle = sessionView.Movie.MovieTitle,
-            //        MoviePath = sessionView.Movie.MoviePath
-            //    }
-            //};
             return Json(sessionView);
         }
     }

@@ -12,5 +12,8 @@ namespace Online_Cinema_BLL.Interfaces.Services
         Task<IList<RoomViewModel>> GetListRoomsAsync();
         Task<RoomViewModel> GetRoomAsync(int roomId);
         Task<RoomViewModel> GetRoomAsync(Guid userId);
+        Task<IDictionary<int, string>> GetDictionaryMoviesAsync();
+
+        Task<MovieViewModel> GetMovieAsync(int movieId);
     }
 }

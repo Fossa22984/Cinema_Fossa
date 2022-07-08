@@ -27,7 +27,7 @@ namespace Online_Cinema_UI.Controllers
         }
 
         public async Task<IActionResult> Index() => await Task.Run(() => { return View(); });
-
+        public async Task<JsonResult> GetListMovies() => Json((await _roomService.GetDictionaryMoviesAsync()).OrderBy(x => x.Value).ToArray());
         public async Task<IActionResult> _RoomCard()
         {
             return PartialView(await _roomService.GetListRoomsAsync());
@@ -50,6 +50,20 @@ namespace Online_Cinema_UI.Controllers
                 return View(room);
             }
             return View("/Room/Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> _FilmCard(int? movie)
+        {
+            if (movie != null)
+            {
+                var film = await _roomService.GetMovieAsync(movie.Value);
+                if (film != null)
+                {
+                    return PartialView("_FilmCard", film);
+                }
+            }
+            return PartialView("_FilmCard");
         }
     }
 }

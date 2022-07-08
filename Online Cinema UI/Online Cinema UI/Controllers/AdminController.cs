@@ -45,10 +45,10 @@ namespace Online_Cinema_UI.Controllers
 
 
         #region Movie Settings
-        [HttpGet] public async Task<IActionResult> _MovieSettings(string returnUrl = "") => await Task.Run(() => { return PartialView("Movie Settings/_MovieSettings"); });
-        [HttpGet] public async Task<IActionResult> _AddMovie(string returnUrl = "") => await Task.Run(() => { return PartialView("Movie Settings/_AddMovie"); });
+        [HttpGet] public async Task<IActionResult> _MovieSettings() => await Task.Run(() => { return PartialView("Movie Settings/_MovieSettings"); });
+        [HttpGet] public async Task<IActionResult> _AddMovie() => await Task.Run(() => { return PartialView("Movie Settings/_AddMovie"); });
         [HttpGet]
-        public async Task<IActionResult> _ChangeMovie(int? movie, string returnUrl = "")
+        public async Task<IActionResult> _ChangeMovie(int? movie)
         {
             if (movie != null)
             {
@@ -64,10 +64,10 @@ namespace Online_Cinema_UI.Controllers
         #endregion
 
         #region CinemaRoom Settings
-        [HttpGet] public async Task<IActionResult> _CinemaRoomSettings(string returnUrl = "") => await Task.Run(() => { return PartialView("CinemaRoom Settings/_CinemaRoomSettings"); });
-        [HttpGet] public async Task<IActionResult> _AddCinemaRoom(string returnUrl = "") => await Task.Run(() => { return PartialView("CinemaRoom Settings/_AddCinemaRoom"); });
+        [HttpGet] public async Task<IActionResult> _CinemaRoomSettings() => await Task.Run(() => { return PartialView("CinemaRoom Settings/_CinemaRoomSettings"); });
+        [HttpGet] public async Task<IActionResult> _AddCinemaRoom() => await Task.Run(() => { return PartialView("CinemaRoom Settings/_AddCinemaRoom"); });
         [HttpGet]
-        public async Task<IActionResult> _ChangeCinemaRoom(int? cinemaRoom, string returnUrl = "")
+        public async Task<IActionResult> _ChangeCinemaRoom(int? cinemaRoom)
         {
             if (cinemaRoom != null)
             {
@@ -106,7 +106,7 @@ namespace Online_Cinema_UI.Controllers
 
         }
         [HttpGet]
-        public async Task<IActionResult> _ListSessions(int? cinemaRoomId, DateTime? dateSession, string returnUrl = "")
+        public async Task<IActionResult> _ListSessions(int? cinemaRoomId, DateTime? dateSession)
         {
             if (cinemaRoomId != null && dateSession != null)
                 return PartialView("Session Setting/_ListSessions", _mapper.Map<IList<Session>, IList<SessionViewModel>>(await _adminService.GetSessionsForACinemaRoomsAsync(cinemaRoomId.Value, dateSession.Value)));

@@ -26,5 +26,20 @@ namespace Online_Cinema_BLL.Services
             _mapper.Map<Room, RoomViewModel>(await _unitOfWork.Room.GetRoomByIdAsync(roomId));
         public async Task<RoomViewModel> GetRoomAsync(Guid userId) =>
             _mapper.Map<Room, RoomViewModel>((await _unitOfWork.Room.GetRoomByConditionAsync(x => x.OwnerId == userId)).FirstOrDefault());
+
+
+        public async Task<IDictionary<int, string>> GetDictionaryMoviesAsync()
+        {
+            var listMovies = await _unitOfWork.Movie.GetAllMovieAsync();
+            var dictionary = new Dictionary<int, string>();
+            foreach (var item in listMovies)
+                dictionary.Add(item.Id, $"{item.MovieTitle} (#{item.Id})");
+
+            return dictionary;
+        }
+
+        public async Task<MovieViewModel> GetMovieAsync(int movieId) => 
+            _mapper.Map<Movie, MovieViewModel>(await _unitOfWork.Movie.GetMovieByIdAsync(movieId));
+
     }
 }

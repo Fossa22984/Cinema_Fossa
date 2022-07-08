@@ -1,0 +1,66 @@
+﻿@model Online_Cinema_Models.View.MovieViewModel
+@if (Model != null)
+{
+
+    <div class="form-row p-0 m-0">
+        <div class="form-group col-md-5 pr-2">
+            <img id="viewImage" src=@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(@Model.Image)) style="height:auto" />
+        </div>
+        <div class="form-group col-md-7">
+            <input asp-for="Id" type="hidden" />
+            <div class="form-row">
+                <div class="form-group col-md-12">
+                    <label asp-for="MovieTitle" class="control-label text-white"></label>
+                    <input asp-for="MovieTitle" class="form-control text-white" readonly disabled />
+                    <span asp-validation-for="MovieTitle" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label text-white"></label>
+                <textarea asp-for="Description" class="form-control text-white" readonly disabled></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group col-lg-6 col-sm-5">
+                    <label asp-for="DateOfRelease" class="control-label text-white"></label>
+                    <input asp-for="DateOfRelease" type="date" max="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control text-white" readonly disabled />
+                    <span asp-validation-for="DateOfRelease" class="text-danger"></span>
+                </div>
+                <div class="form-group col-lg-5 col-sm-4">
+                    <label asp-for="AgeLimit" class="control-label text-white"></label>
+                    <select asp-for="AgeLimit" class="form-select form-control text-white" readonly disabled>
+                        <option class="elgg-input-dropdown" selected value="0">0+</option>
+                        <option class="elgg-input-dropdown" value="6">6+</option>
+                        <option class="elgg-input-dropdown" value="12">12+</option>
+                        <option class="elgg-input-dropdown" value="16">16+</option>
+                        <option class="elgg-input-dropdown" value="18">18+</option>
+                    </select>
+                    <span asp-validation-for="AgeLimit" class="text-danger"></span>
+                </div>
+                <div class="form-group align-self-center col-lg-1 col-sm-3">
+                    <label asp-for="IsCartoon" class="control-label text-white"></label>
+                    <input asp-for="IsCartoon" class="form-control text-white" readonly disabled/>
+                    <span asp-validation-for="IsCartoon" class="text-danger"></span>
+                </div>
+
+            </div>
+
+            <div class="d-flex flex-row bd-highlight flex-wrap mt-2" id="fluxGenre">
+                @foreach (var item in Model.Genres)
+                {
+                    <label class="btn clickOnButton text-white mr-3">@item.GenreName</label>
+                }
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $("textarea").each(function () {
+            this.setAttribute("style", "height:" + (this.scrollHeight) + "px;overflow-y:hidden;");
+        }).on("input", function () {
+            this.style.height = "auto";
+            this.style.height = (this.scrollHeight) + "px";
+        });
+    </script>
+}

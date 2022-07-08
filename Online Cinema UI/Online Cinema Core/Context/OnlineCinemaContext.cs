@@ -12,7 +12,7 @@ namespace Online_Cinema_Core.Context
         public OnlineCinemaContext(DbContextOptions<OnlineCinemaContext> options) : base(options)
         {
             // Database.EnsureCreated();
-            // DatabaseInitializer.Initializer(this);
+           // ModelInitializer.Initializer(this);
         }
 
         public DbSet<Genre> Genres { get; set; }
@@ -39,7 +39,7 @@ namespace Online_Cinema_Core.Context
             builder.Entity<User>()
                 .HasMany<Comment>(x => x.Comments)
                 .WithOne(x => x.User)
-                .HasForeignKey(x => x.UserId);
+                .HasForeignKey(x=>x.UserId);
 
             builder.Entity<CinemaRoom>()
                 .HasMany<Session>(x => x.Sessions)
