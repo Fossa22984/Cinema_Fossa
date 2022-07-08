@@ -30,6 +30,7 @@ namespace Online_Cinema_UI.Controllers
         public async Task<JsonResult> GetListMovies() => Json((await _roomService.GetDictionaryMoviesAsync()).OrderBy(x => x.Value).ToArray());
         public async Task<IActionResult> _RoomCard()
         {
+            var res = await _roomService.GetListRoomsAsync();
             return PartialView(await _roomService.GetListRoomsAsync());
         }
 
@@ -64,6 +65,28 @@ namespace Online_Cinema_UI.Controllers
                 }
             }
             return PartialView("_FilmCard");
+        }
+
+        [HttpPost]
+        [AutoValidateAntiforgeryToken]
+        public async Task<IActionResult> ChangeRoom(RoomViewModel room)
+        {
+            if (room.ImageFile != null)
+            {
+                if (room.ImageFile.Length > 0)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        room.ImageFile.CopyTo(ms);
+                        var fileBytes = ms.ToArray();
+                        room.RoomImage = fileBytes;
+                    }
+                }
+            }
+            var res = _mapper.Map<RoomViewModel, Room>(room);
+            await _roomService.ChangeRoomAsync(res);
+
+            return RedirectToAction("Room", "Room", new { id = room.Id });
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Online_Cinema_Models.View;
+﻿using Online_Cinema_Domain.Models;
+using Online_Cinema_Models.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,5 +16,6 @@ namespace Online_Cinema_BLL.Interfaces.Services
         Task<IDictionary<int, string>> GetDictionaryMoviesAsync();
 
         Task<MovieViewModel> GetMovieAsync(int movieId);
+        Task ChangeRoomAsync(Room room);
     }
 }

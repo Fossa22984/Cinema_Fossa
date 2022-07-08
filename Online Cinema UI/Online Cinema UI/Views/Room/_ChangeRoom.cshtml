@@ -2,13 +2,18 @@
 
 @if (Model != null)
 {
+
     <link href="~/css/admin-panel.css" rel="stylesheet" />
 
     <div class="col mycontent pt-3">
         <div class="pt-4 pl-2 pr-2 vh-100">
             <div id="mainDiv" class="vh-100">
                 <div class="mb-5" style="padding:30px; z-index:1; min-width:300px; background-color: #18181b;">
-                    <form id="changeFilmForm" asp-action="ChangeMovie" method="post" enctype="multipart/form-data">
+                    <form id="changeRoommForm" onsubmit="" asp-action="ChangeRoom" method="post" enctype="multipart/form-data">
+                        <input asp-for="Id" type="hidden" />
+                        <input asp-for="OwnerId" type="hidden" />
+                        <input asp-for="MovieId" type="hidden" />
+
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <h3 class="mb-3 text-white">Редактирование</h3>
                         <div class="form-row">
@@ -45,7 +50,7 @@
                                     </div>
                                     <div class="form-group align-self-center col-lg-1 col-sm-2">
                                         <label asp-for="IsRemoved" class="control-label text-white"></label>
-                                        <input asp-for="IsRemoved" class="form-control text-white" />
+                                        <input asp-for="IsRemoved" class="form-control text-white" readonly disabled />
                                         <span asp-validation-for="IsRemoved" class="text-danger"></span>
                                     </div>
                                 </div>
@@ -86,7 +91,7 @@
 
                         <div class="form-row">
                             <div class="form-group col-md-11">
-                                <input type="submit" class="btn btn-dark mt-4 w-100" value="Редактировать" />
+                                <input id="EditGo" type="submit" class="btn btn-dark mt-4 w-100" value="Редактировать и перейти в комнату" />
                             </div>
                             <div class="form-group col-md-1">
                                 <button type="reset" class="btn btn-dark mt-4 w-100" onclick="Clear()">
@@ -105,6 +110,10 @@
         <script>
 
             $(function () {
+                $("#IsRemoved").removeAttr("checked");
+                $("#IsRemoved").attr("value", "false");
+                $("#IsRemoved").attr("data-val", "false");
+                
                 // Get the <datalist> and <input> elements.
                 var dataList = document.getElementById('json-datalist');
                 var input = document.getElementById('ajax');
@@ -144,8 +153,18 @@
                     data: { "movie": $('option[value="' + $("#ajax").val() + '"]').first().prop("data-value") },
                     url: "/Room/_FilmCard",
                     success: function (result) {
-                        if (result != "") $("#film").html(result);
-                        else $("#film").html("");
+                        debugger;
+
+                        if (result != "") {
+                            $("#film").html(result);
+                            var res = $('option[value="' + $("#ajax").val() + '"]').first().prop("data-value");
+
+                            $("#MovieId").val($('option[value="' + $("#ajax").val() + '"]').first().prop("data-value"));
+                        }
+                        else {
+                            $("#film").html("");
+                            $("#MovieId").val("");
+                        } 
                     }
                 });
             }
