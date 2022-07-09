@@ -183,6 +183,7 @@
             IsEnded = true;
 
             var myplayer = videojs('video');
+            var room = $("#OwnerId").val();
 
             if($("#isOwner").val()=="false")
                 myplayer.controlBar.progressControl.hide();
@@ -194,6 +195,7 @@
             var connection = new signalR.HubConnectionBuilder().withUrl("/chat").build();
 
             connection.on("Send", function (user, message) {
+                debugger;
                 var msg = "<p class='text-white m-0' style='overflow-wrap: break-word;' ><span style='color:#3eaaaf'>" + user + "</span>: " + message + "</p >";
                 $("#ChatRoom").append(msg)
                 getMessages();
@@ -206,7 +208,6 @@
 
 
             connection.start().then(function () {
-                var room = $("#OwnerId").val();
                 var user = '@user.UserName';
                 connection.invoke("SendMessage", user, "", room, true).catch(function (err) {
                     return console.error(err.toString());
@@ -244,6 +245,8 @@
 
 
             this.player.on("pause", function () {
+
+                if ($("#isOwner").val() == "true")
                 connection.invoke("SendPause", room).catch(function (err) {
                     return console.error(err.toString());
                 });             
@@ -253,6 +256,7 @@
             });
 
             this.player.on("play", function () {
+                if ($("#isOwner").val() == "true")
                 connection.invoke("SendPlay", room).catch(function (err) {
                     return console.error(err.toString());
                 });
