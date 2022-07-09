@@ -30,5 +30,6 @@ namespace Online_Cinema_Models.View
 
         [Display(Name = "Is Removed?")]
         public bool IsRemoved { get; set; }
+        public MovieViewModel Movie { get; set; }
     }
 }

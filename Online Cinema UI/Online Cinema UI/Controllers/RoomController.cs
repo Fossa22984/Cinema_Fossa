@@ -37,7 +37,7 @@ namespace Online_Cinema_UI.Controllers
         [HttpGet]
         public async Task<IActionResult> Room(int id)
         {
-            return View(await _roomService.GetRoomAsync(id));
+            return View("Room", await _roomService.GetRoomAsync(id));
         }
 
         [HttpGet]

@@ -37,7 +37,7 @@ namespace Online_Cinema_BLL.SignalR
                 await Clients.Group(room).SendAsync("GetSession", sessionId).ConfigureAwait(true);
         }
 
-        public async Task SendTimeCode (string room, int timeCode)
+        public async Task SendTimeCode (string room, double timeCode)
         {
             if (Clients != null)
                 await Clients.Group(room).SendAsync("GetTimeCode", timeCode).ConfigureAwait(true);

@@ -25,11 +25,6 @@ namespace Online_Cinema_Config.AppStart
     {
         public static void RegisterConfigs(ref IServiceCollection services, string dbConnection)
         {
-            services.AddDbContext<OnlineCinemaContext>(x => x.UseSqlServer(dbConnection));
-            services.AddIdentity<User, Role>()
-                .AddEntityFrameworkStores<OnlineCinemaContext>().AddDefaultTokenProviders()/*.AddTokenProvider<EmailConfirmationTokenProvider<User>>("emailconfirmation")*/;
-
-
             //Mapper
             services.AddSingleton(AutoMapperProfile.GetMapper());
 
@@ -62,6 +57,9 @@ namespace Online_Cinema_Config.AppStart
             // Domain
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IDatabaseInitializer, DatabaseInitializer>();
+            services.AddDbContext<OnlineCinemaContext>(x => x.UseSqlServer(dbConnection));
+            services.AddIdentity<User, Role>()
+                .AddEntityFrameworkStores<OnlineCinemaContext>().AddDefaultTokenProviders();
         }
     }
 }
