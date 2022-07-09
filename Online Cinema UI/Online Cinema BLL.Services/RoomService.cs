@@ -5,8 +5,10 @@ using Online_Cinema_Core.UnitOfWork;
 using Online_Cinema_Domain.Models;
 using Online_Cinema_Domain.Models.IdentityModels;
 using Online_Cinema_Models.View;
+using OnlineCinema_Core.Config;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,16 +58,28 @@ namespace Online_Cinema_BLL.Services
             _mapper.Map<Movie, MovieViewModel>(await _unitOfWork.Movie.GetMovieByIdAsync(movieId));
 
 
-        public async Task ChangeRoomAsync(Room room)
+        public async Task ChangeRoomAsync(RoomViewModel roomView)
         {
+            if (roomView.ImageFile != null)
+            {
+                if (roomView.ImageFile.Length > 0)
+                {
+                    using (var ms = new MemoryStream())
+                    {
+                        roomView.ImageFile.CopyTo(ms);
+                        var fileBytes = ms.ToArray();
+                        roomView.RoomImage = fileBytes;
+                    }
+                }
+            }
+            var room = _mapper.Map<RoomViewModel, Room>(roomView);
+
             if (room.RoomImage.Length == 0)
                 room.RoomImage = (await _unitOfWork.Room.GetRoomByIdAsync(room.Id)).RoomImage;
 
             await _unitOfWork.Room.UpdateRoom(room);
             await _unitOfWork.SaveAsync();
-
-            //_cinemaRoomCacheManager.Update(cinemaRoom);
-            //Log.Current.Debug($"Change room -> {cinemaRoom.CinemaRoomName} movie id-> {cinemaRoom.Id}");
+            Log.Current.Debug($"Change room -> {room.RoomName} room id-> {room.Id}");
         }
 
     }

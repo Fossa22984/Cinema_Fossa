@@ -43,7 +43,7 @@ namespace Online_Cinema_Config.AppStart
 
             //SignalR
             services.AddSingleton<NotificationHub>();
-            services.AddSingleton<ChatHub>();
+            services.AddSingleton<RoomHub>();
 
             //Observers
             services.AddSingleton<IObserversPoolManager, ObserversPoolManager>();

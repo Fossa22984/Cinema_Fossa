@@ -5,15 +5,13 @@ using System.Threading.Tasks;
 
 namespace Online_Cinema_BLL.SignalR
 {
-    public class ChatHub : Hub, IChatHub
+    public class RoomHub : Hub, IChatHub
     {
         public async Task SendMessage(string user, string message, string room, bool join)
         {
             if (join)
             {
                 await JoinRoom(room).ConfigureAwait(false);
-                //await Clients.Group(room).SendAsync("Send", user, " joined to " + room).ConfigureAwait(true);
-
             }
             else
             {

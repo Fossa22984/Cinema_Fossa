@@ -45,7 +45,7 @@
             <img src=@String.Format("data:image/jpg;base64,{0}", Convert.ToBase64String(Model.RoomImage)) class="clickOnButton" style=" width: 50px; height: 50px; object-fit: cover; border-radius: 50%; border:solid 2px  #3eaaaf; float:left; margin-right:10px; ">
             <h2 class="text-white">@Model.RoomName</h2>
             <div class="d-flex flex-row bd-highlight mb-3">
-                <h4 class="text-white">В данный момент идёт: &nbsp; </h4>
+                <h4 class="text-white">В данный момент идёт: &nbsp; @Model.Movie.MovieTitle </h4>
                 <h4 class="text-white" id="movieTitle"></h4>
             </div>
         </div>
@@ -219,7 +219,7 @@
 
 
         $("#sendMessageButton").on("click", function () {
-            var room = $("#ChatId").val();
+            var room = $("#OwnerId").val();
             var user = '@user.UserName';
             var message = $("#MessageTextarea").val();
             connection.invoke("SendMessage", user, message, room, false).catch(function (err) {
@@ -255,22 +255,15 @@
                 });
                 return;
             }
-            //if(puseAdmin) {
-            //    puseAdmin = false
-            //}
-            //else{
-            //     playAdmin = true;
-            //     self.player.play();
-            //}
         });
         connection.on("GetPause", function (user, message) {
             self.player.pause();
             puseAdmin = true;
         });
 
-        var isFirst = true;
+        var isUser = true;
 
-        $("#isOwner").val() == "true" ? isFirst = false: isFirst = true;
+        $("#isOwner").val() == "true" ? isUser = false: isUser = true;
 
         this.player.on("play", function () {
              debugger;
@@ -279,7 +272,7 @@
                  return;
              }
 
-            if(isFirst) {
+            if(isUser) {
                         connection.invoke("GetTimeCodeAdmin", room).catch(function (err) {
                                 return console.error(err.toString());
                             });
@@ -316,9 +309,6 @@
 
         connection.on("GetTimeCode", function (timeCode) {
             self.player.currentTime(timeCode);
-
-            //puseAdmin = false;
-            //playAdmin = false;
         });
 
 

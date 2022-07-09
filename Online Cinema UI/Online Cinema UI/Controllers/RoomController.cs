@@ -71,21 +71,7 @@ namespace Online_Cinema_UI.Controllers
         [AutoValidateAntiforgeryToken]
         public async Task<IActionResult> ChangeRoom(RoomViewModel room)
         {
-            if (room.ImageFile != null)
-            {
-                if (room.ImageFile.Length > 0)
-                {
-                    using (var ms = new MemoryStream())
-                    {
-                        room.ImageFile.CopyTo(ms);
-                        var fileBytes = ms.ToArray();
-                        room.RoomImage = fileBytes;
-                    }
-                }
-            }
-            var res = _mapper.Map<RoomViewModel, Room>(room);
-            await _roomService.ChangeRoomAsync(res);
-
+            await _roomService.ChangeRoomAsync(room);
             return RedirectToAction("Room", "Room", new { id = room.Id });
         }
     }

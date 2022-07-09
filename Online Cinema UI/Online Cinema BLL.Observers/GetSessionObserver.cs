@@ -15,7 +15,7 @@ namespace Online_Cinema_BLL.Observers
         private readonly ICinemaRoomCacheManager _roomCacheManager;
         private readonly ISessionCacheManager _sessionCacheManager;
         private readonly IAdminService _adminService;
-        private readonly ChatHub _chatHub;
+        private readonly RoomHub _chatHub;
         private readonly IUnitOfWork _unitOfWork;
         private bool initializeCache = false;
         public GetSessionObserver(IServiceProvider serviceProvider, ICinemaRoomCacheManager roomCacheManager,
@@ -24,7 +24,7 @@ namespace Online_Cinema_BLL.Observers
             _roomCacheManager = roomCacheManager;
             _sessionCacheManager = sessionCacheManager;
             _adminService = CreateService<IAdminService>();
-            _chatHub = CreateService<ChatHub>();
+            _chatHub = CreateService<RoomHub>();
             _unitOfWork = CreateService<IUnitOfWork>();
         }
 

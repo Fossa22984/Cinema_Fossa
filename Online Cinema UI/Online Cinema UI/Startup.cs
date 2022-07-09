@@ -77,7 +77,7 @@ namespace Online_Cinema_UI
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<ChatHub>("/chat");
+                endpoints.MapHub<RoomHub>("/chat");
                 endpoints.MapHub<NotificationHub>("/notification");
 
                 endpoints.MapControllerRoute(
