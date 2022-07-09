@@ -217,15 +217,6 @@
 
 
 
-        connection.start().then(function () {
-            var user = '@user.UserName';
-            connection.invoke("SendMessage", user, "", room, true).catch(function (err) {
-                return console.error(err.toString());
-            });
-            event.preventDefault();
-        }).catch(function (err) {
-            return console.error(err.toString());
-        });
 
         $("#sendMessageButton").on("click", function () {
             var room = $("#ChatId").val();
@@ -264,20 +255,45 @@
                 });
                 return;
             }
-            if(puseAdmin) {
-                puseAdmin = false
-            }
-            else{
-                 playAdmin = true;
-                 self.player.play();
-            }
+            //if(puseAdmin) {
+            //    puseAdmin = false
+            //}
+            //else{
+            //     playAdmin = true;
+            //     self.player.play();
+            //}
         });
         connection.on("GetPause", function (user, message) {
-            puseAdmin = true;
             self.player.pause();
+            puseAdmin = true;
         });
 
+        var isFirst = true;
+
+        $("#isOwner").val() == "true" ? isFirst = false: isFirst = true;
+
         this.player.on("play", function () {
+             debugger;
+             if(puseAdmin && $("#isOwner").val() != "true") {
+                 self.player.pause();
+                 return;
+             }
+
+            if(isFirst) {
+                        connection.invoke("GetTimeCodeAdmin", room).catch(function (err) {
+                                return console.error(err.toString());
+                            });
+                        connection.on("GetTimeCodeAdmin", function (timeCode) {
+                            debugger;
+                            playAdmin  = true;
+                            self.player.play();
+                             self.player.currentTime(timeCode);
+                        });
+
+                        return;
+            }
+
+
             if ($("#isOwner").val() == "true"){
                 connection.invoke("SendPlay", room).catch(function (err) {
                     return console.error(err.toString());
@@ -289,18 +305,23 @@
             }
             else{
                 puseAdmin = true;
-                self.player.pause();
+                self.player.pause(true);
             }
         });
 
         connection.on("GetPlay", function (user, message) {
-            playAdmin  = true;
+            puseAdmin  = false;
             self.player.play();
         });
 
         connection.on("GetTimeCode", function (timeCode) {
             self.player.currentTime(timeCode);
+
+            //puseAdmin = false;
+            //playAdmin = false;
         });
+
+
 
         this.player.on("timeupdate", function () {
              if ($("#isOwner").val() == "true"){
@@ -315,6 +336,25 @@
             currentTime = self.player.currentTime();
         });
 
+
+
+        connection.start().then(function () {
+            var user = '@user.UserName';
+            connection.invoke("SendMessage", user, "", room, true).catch(function (err) {
+                return console.error(err.toString());
+            });
+            event.preventDefault();
+             if ($("#isOwner").val() == "true"){
+                connection.on("SendTimeCodeAdmin", function () {
+                     connection.invoke("SendTimeCodeAdmin", room, self.player.currentTime()).catch(function (err) {
+                        return console.error(err.toString());
+                    });;
+                });
+             }
+
+        }).catch(function (err) {
+            return console.error(err.toString());
+        });
 
     })
 </script>

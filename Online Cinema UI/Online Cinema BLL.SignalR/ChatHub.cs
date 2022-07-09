@@ -55,5 +55,16 @@ namespace Online_Cinema_BLL.SignalR
                 await Clients.Group(room).SendAsync("GetPause").ConfigureAwait(true);
         }
 
+        public async Task GetTimeCodeAdmin(string room)
+        {
+            if (Clients != null)
+                await Clients.Group(room).SendAsync("SendTimeCodeAdmin").ConfigureAwait(true);
+        }
+
+        public async Task SendTimeCodeAdmin(string room, double timeCode)
+        {
+            if (Clients != null)
+                await Clients.Group(room).SendAsync("GetTimeCodeAdmin", timeCode).ConfigureAwait(true);
+        }
     }
 }
