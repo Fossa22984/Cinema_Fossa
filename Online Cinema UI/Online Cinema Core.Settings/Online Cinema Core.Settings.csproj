@@ -11,7 +11,7 @@
 
   <ItemGroup>
     <None Update="Configuration\AzureSettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

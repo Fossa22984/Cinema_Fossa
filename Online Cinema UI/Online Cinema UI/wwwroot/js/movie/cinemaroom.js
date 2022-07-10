@@ -177,8 +177,8 @@ $(function () {
 
 
     connection.start().then(function () {
-        var room = $("#ChatId").val();
-        var user = '@user.UserName';
+        var room = $("#ChatId").val();  
+        var user = $("#UserName").val();
         connection.invoke("SendMessage", user, "", room, true).catch(function (err) {
             return console.error(err.toString());
         });
@@ -189,7 +189,7 @@ $(function () {
 
     $("#sendMessageButton").on("click", function () {
         var room = $("#ChatId").val();
-        var user = '@user.UserName';
+        var user = $("#UserName").val();
         var message = $("#MessageTextarea").val();
         connection.invoke("SendMessage", user, message, room, false).catch(function (err) {
             return console.error(err.toString());

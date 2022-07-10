@@ -1,12 +1,12 @@
 {
-  "AadClientId": "867e9708-de9f-4a36-b559-207ff4dfd29e",
+  "AadClientId": "49c3abd5-0990-4207-8d93-b116b0cdca0e",
   "AadEndpoint": "https://login.microsoftonline.com/",
-  "AadSecret": "Rsx8Q~TYtLH6vW2jtRYae0XntECqqGPsgOL7Cc.3",
-  "AadTenantId": "05b8588a-27a8-4346-9d4b-ac49c7ebd2f7",
-  "AccountName": "fossamultimedia1",
+  "AadSecret": "~Wp8Q~SpFQnjUU-.qns432DZSFU5LtLLzKW4MaNP",
+  "AadTenantId": "005dbb89-65d3-4373-87eb-6465f8464bb0",
+  "AccountName": "fossamultimedia2",
   "ArmAadAudience": "https://management.core.windows.net/",
   "ArmEndpoint": "https://management.azure.com/",
   // "Location": "West US 2",
   "ResourceGroup": "fossa_group",
-  "SubscriptionId": "1130fdfe-5a8d-48ca-81be-3b8bb570ab77"
+  "SubscriptionId": "84fea87b-9b0e-4b4f-b598-f96beed75d0f"
 }
