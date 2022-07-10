@@ -20,7 +20,7 @@
 
         <div class="form-group col-md-3">
             <label asp-for="Start" class="control-label text-white"></label>
-            <input asp-for="Start" onchange="ChangeStart(this)" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm:ss")"  class="form-control btn text-white" required />
+            <input asp-for="Start" onchange="ChangeStart(this)" value="@DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss")"  class="form-control btn text-white" required />
             <span asp-validation-for="Start" class="text-danger"></span>
         </div>
 

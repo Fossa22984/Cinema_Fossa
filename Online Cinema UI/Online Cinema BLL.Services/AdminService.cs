@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
@@ -137,32 +138,45 @@ namespace Online_Cinema_BLL.Services
             _mapper.Map<Movie, MovieViewModel>(await _unitOfWork.Movie.GetMovieByIdAsync(movieId));
         public async Task AddFilmAsync(MovieViewModel movieView, string genre, IFormFile file, string idUser)
         {
-            movieView.Image = await readImageOrFillDefault(movieView.ImageFile);
-
-            var movie = _mapper.Map<MovieViewModel, Movie>(movieView);
-
-            var idFilm = Guid.NewGuid().ToString();
-            _notificationCache.Set(new Notification(idUser, idFilm, movie.MovieTitle, notificationType: NotificationTypeEnum.StartLoad));
-            await ChangeProgress(movie.MovieTitle, 0, idUser, idFilm, NotificationTypeEnum.StartLoad);
-
-            _fileManager.UploadProgress += ChangeProgress;
-            var tempFilePath = await _fileManager.CreateTempFile(file, idFilm, idUser, movie.MovieTitle);
-            movie.Duration = await _fileManager.ReadDurationFromMovie(tempFilePath);
-
-            _uploadFileAzureManager.UploadProgress += ChangeProgress;
-            var config = _azureSettingsManager.Get();
-            var moviePath = await _uploadFileAzureManager.RunAsync(config, tempFilePath, movie.MovieTitle, idUser, idFilm);
-            await _fileManager.DeleteFile(tempFilePath);
-
-            movie.MoviePath = moviePath;
-            if (genre != null)
+            string tempFilePath = string.Empty;
+            try
             {
-                var res = (await _unitOfWork.Genre.GetAllGenreAsync()).AsEnumerable().Where(x => genre.Contains(x.GenreName, StringComparison.Ordinal)).ToList();
-                movie.Genres = res;
+                movieView.Image = await readImageOrFillDefault(movieView.ImageFile);
+
+                var movie = _mapper.Map<MovieViewModel, Movie>(movieView);
+
+                var idFilm = Guid.NewGuid().ToString();
+                _notificationCache.Set(new Notification(idUser, idFilm, movie.MovieTitle, notificationType: NotificationTypeEnum.StartLoad));
+                await ChangeProgress(movie.MovieTitle, 0, idUser, idFilm, NotificationTypeEnum.StartLoad);
+
+                _fileManager.UploadProgress += ChangeProgress;
+                tempFilePath = await _fileManager.CreateTempFile(file, idFilm, idUser, movie.MovieTitle);
+                movie.Duration = await _fileManager.ReadDurationFromMovie(tempFilePath);
+
+                _uploadFileAzureManager.UploadProgress += ChangeProgress;
+                var config = _azureSettingsManager.Get();
+                var moviePath = await _uploadFileAzureManager.RunAsync(config, tempFilePath, movie.MovieTitle, idUser, idFilm);
+
+
+                movie.MoviePath = moviePath;
+                if (genre != null)
+                {
+                    var res = (await _unitOfWork.Genre.GetAllGenreAsync()).AsEnumerable().Where(x => genre.Contains(x.GenreName, StringComparison.Ordinal)).ToList();
+                    movie.Genres = res;
+                }
+                await _unitOfWork.Movie.CreateMovie(movie);
+                await _unitOfWork.SaveAsync();
+                Log.Current.Debug($"Add movie MovieTitle -> {movie.MovieTitle} movie id-> {movie.Id}");
             }
-            await _unitOfWork.Movie.CreateMovie(movie);
-            await _unitOfWork.SaveAsync();
-            Log.Current.Debug($"Add movie MovieTitle -> {movie.MovieTitle} movie id-> {movie.Id}");
+            catch (Exception e)
+            {
+                throw;
+            }
+            finally
+            {
+                await _fileManager.DeleteFile(tempFilePath);
+            }
+
         }
 
         public async Task ChangeFilmAsync(MovieViewModel movieView, string genre)

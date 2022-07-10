@@ -37,12 +37,47 @@ function ChangeCinemaRoom(e) {
 
 }
 
+function prepareDateForInput(date) {
+    var dd = date.getDate();
+    var mm = date.getMonth() + 1; // Месяца идут с 0, так что добавляем 1.
+    var yyyy = date.getFullYear();
+    var minutes = date.getMinutes();
+    var hour = date.getHours();
+    var seconds = date.getSeconds();
+    if (dd < 10) {
+        dd = '0' + dd
+    }
+    if (mm < 10) {
+        mm = '0' + mm
+    }
+    if (hour < 10) {
+        hour = '0' + hour
+    }
+    if (minutes < 10) {
+        minutes = '0' + minutes
+    }
+    if (seconds < 10) {
+        seconds = '0' + seconds
+    }
+
+    date = yyyy + '-' + mm + '-' + dd + 'T' + hour + ':' + minutes + ':' + seconds;
+    return date;
+}
+
 
 
 $(function () {
     // Get the <datalist> and <input> elements.
     var dataListCinemaRoom = document.getElementById('json-datalistCinemaRoom');
     var inputCinemaRoom = document.getElementById('ajaxCinemaRoom');
+
+    debugger;
+    var inputStart = document.getElementById('Start');
+    var val = inputStart.getAttribute('value');
+    var localDate = convertUTCDateToLocalDate(new Date(val));
+    var dateForInput = prepareDateForInput(localDate);
+
+    inputStart.setAttribute('value', dateForInput);
 
     $.ajax({
         type: 'GET',

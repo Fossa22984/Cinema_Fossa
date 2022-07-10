@@ -1,5 +1,6 @@
 ﻿using MediaToolkit;
 using MediaToolkit.Model;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Online_Cinema_BLL.Interfaces.Cache;
 using Online_Cinema_BLL.Interfaces.Managers;
@@ -15,13 +16,28 @@ namespace Online_Cinema_BLL.Services.Managers
 
         public delegate Task ProgressChange(string nameFilm, int progress, string idUser, string idFilm);
         public event IFileManager.ProgressChange UploadProgress;
-        public FileManager(INotificationCacheManager notificationCache)
+
+        private IHostingEnvironment _environment;
+        public FileManager(INotificationCacheManager notificationCache, IHostingEnvironment environment)
         {
             _notificationCache = notificationCache;
+
+            _environment = environment;
         }
         public async Task<string> CreateTempFile(IFormFile file, string idFilm, string idUser, string nameFilm)
         {
-            var tempFilePath = Path.GetTempFileName();
+            //var tempFilePath = Path.GetTempFileName();
+
+
+            var filename = Guid.NewGuid().ToString();
+            var root = AppDomain.CurrentDomain.RelativeSearchPath ?? AppDomain.CurrentDomain.BaseDirectory;
+
+            var tempFilePath = Path.Combine(root, "Temp", filename);
+            if (!Directory.Exists(Path.Combine(root, "Temp")))
+            {
+                Directory.CreateDirectory(Path.Combine(root, "Temp"));
+            }
+
 
             byte[] buffer = new byte[1024 * 1024]; // 1MB buffer
             bool cancelFlag = false;
@@ -66,8 +82,10 @@ namespace Online_Cinema_BLL.Services.Managers
         public async Task<TimeSpan> ReadDurationFromMovie(string path)
         {
             var inputFile = new MediaFile(path);
-            using (var engine = new Engine())
+            string pathEngine = Path.Combine(_environment.WebRootPath, "~/wwwroot/ffmpeg.exe");
+            using (var engine = new Engine(pathEngine))
             {
+
                 engine.GetMetadata(inputFile);
                 var duration = inputFile.Metadata.Duration;
                 return await Task.FromResult(duration);
