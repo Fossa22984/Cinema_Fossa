@@ -30,7 +30,7 @@ namespace Online_Cinema_Core.Repository
 
         public async Task<Room> GetRoomByIdAsync(int Id)
         {
-            return await FindByCondition(x => x.Id == Id).AsNoTracking().Include(x=>x.Owner).Include(x=>x.Movie).FirstOrDefaultAsync();
+            return await FindByCondition(x => x.Id == Id).AsNoTracking().Include(x => x.Owner).Include(x => x.Movie).FirstOrDefaultAsync();
         }
 
         public async Task RemoveRoom(Room room)

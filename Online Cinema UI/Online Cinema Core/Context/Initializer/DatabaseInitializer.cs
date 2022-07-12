@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Online_Cinema_Core.Interface;
 using Online_Cinema_Domain.Models;
 using Online_Cinema_Domain.Models.IdentityModels;

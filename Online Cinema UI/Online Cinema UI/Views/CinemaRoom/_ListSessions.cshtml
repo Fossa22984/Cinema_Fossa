@@ -15,8 +15,8 @@
                 {
                     <tr class="text-center">
                         <td>@item.Movie.MovieTitle</td>
-                        <td>@item.Start.ToString("dd.MM.yyyy HH:mm") (UTC)</td>
-                        <td>@item.End.ToString("dd.MM.yyyy HH:mm") (UTC)</td>
+                        <td class="StartTd">@item.Start.ToString("dd.MM.yyyy HH:mm")</td>
+                        <td class="EndTd">@item.End.ToString("dd.MM.yyyy HH:mm")</td>
                     </tr>
                 }
             </tbody>
@@ -24,4 +24,4 @@
     </div>
 }
 
-    <script src="~/js/movie/session-list.js"></script>
+<script src="~/js/movie/session-list.js"></script>

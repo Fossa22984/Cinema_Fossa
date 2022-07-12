@@ -15,7 +15,7 @@ namespace Online_Cinema_Core.Repository
 
         public async Task CreateGenre(Genre genre)
         {
-           await Create(genre);
+            await Create(genre);
         }
 
         public async Task<IEnumerable<Genre>> GetAllGenreAsync()
@@ -35,12 +35,12 @@ namespace Online_Cinema_Core.Repository
 
         public async Task RemoveGenre(Genre genre)
         {
-           await Delete(genre);
+            await Delete(genre);
         }
 
         public async Task UpdateGenre(Genre genre)
         {
-           await Update(genre);
+            await Update(genre);
         }
     }
 }

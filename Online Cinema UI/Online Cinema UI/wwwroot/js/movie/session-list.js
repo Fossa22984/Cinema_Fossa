@@ -26,24 +26,37 @@ function prepareDateForInput(date) {
     return date;
 }
 
+function convertUTCDateToLocalDate(date) {
+    var newDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+
+    var offset = date.getTimezoneOffset() / 60;
+    var hours = date.getHours();
+
+    newDate.setHours(hours - offset);
+
+    return newDate;
+}
+
 $(function () {
 
     debugger;
-    var inputStart = document.getElementsByClassName('StartTd');
+
+
+    var inputStart = $(".StartTd");
     for (var i = 0; i < inputStart.length; i++) {
-        var val = inputStart[i].getAttribute('value');
+        var val = $(inputStart[i]).text();
         var localDate = convertUTCDateToLocalDate(new Date(val));
         var dateForInput = prepareDateForInput(localDate);
 
-        inputStart[i].setAttribute('text', dateForInput);
+        $(inputStart[i]).text(dateForInput);
     }
 
-    var inputEnd = document.getElementsByClassName('EndTd');
+    var inputEnd = $(".EndTd");
     for (var i = 0; i < inputEnd.length; i++) {
-        var val = inputEnd[i].getAttribute('value');
+        var val = $(inputEnd[i]).text();
         var localDate = convertUTCDateToLocalDate(new Date(val));
         var dateForInput = prepareDateForInput(localDate);
 
-        inputEnd[i].setAttribute('text', dateForInput);
+        $(inputEnd[i]).text(dateForInput);
     }
 })

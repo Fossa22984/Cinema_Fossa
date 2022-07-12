@@ -17,7 +17,6 @@ namespace Online_Cinema_UI
 
             var services = scope.ServiceProvider;
 
-
             var observerPool = services.GetRequiredService<IObserversPoolManager>();
             observerPool.Start();
 
@@ -28,17 +27,12 @@ namespace Online_Cinema_UI
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args).ConfigureAppConfiguration((context, config) =>
+            Host.CreateDefaultBuilder(args).ConfigureAppConfiguration((context, config) => { }).ConfigureWebHostDefaults(webBuilder =>
             {
-            }).ConfigureWebHostDefaults(webBuilder =>
+                webBuilder.UseStartup<Startup>().ConfigureKestrel(serverOptions =>
                 {
-                    webBuilder.UseStartup<Startup>()
-                    .ConfigureKestrel(serverOptions =>
-                                {
-                                    serverOptions.Limits.MaxRequestBodySize = SettingsHelper.Current.MaxRequestLenghts;
-
-                                });
-
+                    serverOptions.Limits.MaxRequestBodySize = SettingsHelper.Current.MaxRequestLenghts;
                 });
+            });
     }
 }

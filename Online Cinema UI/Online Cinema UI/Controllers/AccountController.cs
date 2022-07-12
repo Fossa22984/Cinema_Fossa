@@ -3,9 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Online_Cinema_BLL.Interfaces.Services;
 using Online_Cinema_Domain.Models.IdentityModels;
 using Online_Cinema_Models.View;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 
 

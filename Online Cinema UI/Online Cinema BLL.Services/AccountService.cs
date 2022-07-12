@@ -4,11 +4,7 @@ using Online_Cinema_BLL.Interfaces.Services;
 using Online_Cinema_Domain.Models.IdentityModels;
 using Online_Cinema_Models.View;
 using OnlineCinema_Core.Helpers;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Online_Cinema_BLL.Services

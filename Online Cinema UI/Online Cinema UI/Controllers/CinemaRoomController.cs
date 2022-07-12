@@ -1,12 +1,7 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using Online_Cinema_BLL.Interfaces.Services;
-using Online_Cinema_Domain.Models;
-using Online_Cinema_Models.View;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Online_Cinema_UI.Controllers

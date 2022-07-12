@@ -1,6 +1,4 @@
-﻿using Online_Cinema_Domain.Models.IdentityModels;
-using System;
-using System.Collections.Generic;
+﻿using System;
 
 namespace Online_Cinema_Domain.Models
 {

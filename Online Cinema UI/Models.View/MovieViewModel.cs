@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Online_Cinema_Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

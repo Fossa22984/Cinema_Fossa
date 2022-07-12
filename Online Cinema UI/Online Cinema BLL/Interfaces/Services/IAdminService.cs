@@ -4,7 +4,6 @@ using Online_Cinema_Models.View;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using static Online_Cinema_BLL.Models.Notification;
 
 namespace Online_Cinema_BLL.Interfaces.Services
 {

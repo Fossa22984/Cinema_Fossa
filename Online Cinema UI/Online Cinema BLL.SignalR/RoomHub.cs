@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using Online_Cinema_BLL.Interfaces.SignalR;
-using Online_Cinema_Domain.Models;
 using System.Threading.Tasks;
 
 namespace Online_Cinema_BLL.SignalR
@@ -35,7 +34,7 @@ namespace Online_Cinema_BLL.SignalR
                 await Clients.Group(room).SendAsync("GetSession", sessionId).ConfigureAwait(true);
         }
 
-        public async Task SendTimeCode (string room, double timeCode)
+        public async Task SendTimeCode(string room, double timeCode)
         {
             if (Clients != null)
                 await Clients.Group(room).SendAsync("GetTimeCode", timeCode).ConfigureAwait(true);

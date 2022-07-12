@@ -1,15 +1,11 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
 using Online_Cinema_BLL.Interfaces.Services;
-using Online_Cinema_Domain.Models;
 using Online_Cinema_Domain.Models.IdentityModels;
 using Online_Cinema_Models.View;
-using System.IO;
-using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Online_Cinema_UI.Controllers
 {

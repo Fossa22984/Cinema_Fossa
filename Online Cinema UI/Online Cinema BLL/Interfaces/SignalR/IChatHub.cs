@@ -1,5 +1,4 @@
-﻿using Online_Cinema_Domain.Models;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Online_Cinema_BLL.Interfaces.SignalR
 {

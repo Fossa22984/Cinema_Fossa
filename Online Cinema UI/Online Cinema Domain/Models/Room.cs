@@ -1,6 +1,5 @@
 ﻿using Online_Cinema_Domain.Models.IdentityModels;
 using System;
-using System.Collections.Generic;
 
 namespace Online_Cinema_Domain.Models
 {
@@ -22,7 +21,8 @@ namespace Online_Cinema_Domain.Models
 
         public bool IsRemoved { get; set; }
 
-        public Room() {
+        public Room()
+        {
             IsRemoved = true;
         }
     }

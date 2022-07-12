@@ -1,11 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Online_Cinema_Core.Settings.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Online_Cinema_Core.Settings.Managers.Base
 {

@@ -25,7 +25,7 @@ namespace Online_Cinema_Config.AppStart
             CreateMap<Genre, GenreViewModel>();
 
             CreateMap<RoomViewModel, Room>();
-            CreateMap<Room, RoomViewModel>().ForMember(x=>x.Owner, c=>c.MapFrom(xc=>xc.Owner.UserName));
+            CreateMap<Room, RoomViewModel>().ForMember(x => x.Owner, c => c.MapFrom(xc => xc.Owner.UserName));
         }
 
 

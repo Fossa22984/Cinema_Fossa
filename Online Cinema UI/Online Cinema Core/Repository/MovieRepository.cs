@@ -40,7 +40,7 @@ namespace Online_Cinema_Core.Repository
 
         public async Task UpdateMovie(Movie movie)
         {
-           await Update(movie);
+            await Update(movie);
         }
     }
 }

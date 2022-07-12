@@ -7,7 +7,7 @@
                 <tr class="text-center">
                     <th scope="col">#</th>
                     <th scope="col">Movie Title (#Id)</th>
-                    <th  scope="col">Start</th>
+                    <th scope="col">Start</th>
                     <th scope="col">End</th>
                     <th scope="col">Is Removed</th>
                 </tr>
@@ -18,8 +18,8 @@
                     <tr class="text-center">
                         <td>@item.Id</td>
                         <td>@item.Movie.MovieTitle (#@item.Movie.Id)</td>
-                        <td class="StartTd" >@item.Start.ToString("dd.MM.yyyy HH:mm") (UTC)</td>
-                        <td class="EndTd" >@item.End.ToString("dd.MM.yyyy HH:mm") (UTC)</td>
+                        <td class="StartTd">@item.Start.ToString("dd.MM.yyyy HH:mm") (UTC)</td>
+                        <td class="EndTd">@item.End.ToString("dd.MM.yyyy HH:mm") (UTC)</td>
                         <td>@item.IsRemoved</td>
                     </tr>
                 }
@@ -28,4 +28,6 @@
     </div>
 }
 
+@section Scripts{
     <script src="~/js/movie/session-list.js"></script>
+}

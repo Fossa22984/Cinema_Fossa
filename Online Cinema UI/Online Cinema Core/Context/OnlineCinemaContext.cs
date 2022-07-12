@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Online_Cinema_Core.Context.Initializer;
 using Online_Cinema_Domain.Models;
 using Online_Cinema_Domain.Models.IdentityModels;
 using System;
@@ -9,11 +8,7 @@ namespace Online_Cinema_Core.Context
 {
     public class OnlineCinemaContext : IdentityDbContext<User, Role, Guid>
     {
-        public OnlineCinemaContext(DbContextOptions<OnlineCinemaContext> options) : base(options)
-        {
-            // Database.EnsureCreated();
-           // ModelInitializer.Initializer(this);
-        }
+        public OnlineCinemaContext(DbContextOptions<OnlineCinemaContext> options) : base(options) { }
 
         public DbSet<Genre> Genres { get; set; }
         public DbSet<Movie> Movies { get; set; }
@@ -39,7 +34,7 @@ namespace Online_Cinema_Core.Context
             builder.Entity<User>()
                 .HasMany<Comment>(x => x.Comments)
                 .WithOne(x => x.User)
-                .HasForeignKey(x=>x.UserId);
+                .HasForeignKey(x => x.UserId);
 
             builder.Entity<CinemaRoom>()
                 .HasMany<Session>(x => x.Sessions)
@@ -64,7 +59,6 @@ namespace Online_Cinema_Core.Context
                 .HasMany<Room>(x => x.Rooms)
                 .WithOne(x => x.Movie)
                 .HasForeignKey(x => x.MovieId);
-
         }
     }
 }
