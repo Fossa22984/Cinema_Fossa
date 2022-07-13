@@ -13,9 +13,9 @@ namespace Online_Cinema_Core.Repository
     {
         public SubscriptionRepository(OnlineCinemaContext context) : base(context) { }
 
-        public async Task CreateSubscription(Subscription subscription)
+        public async Task CreateSubscriptionAsync(Subscription subscription)
         {
-            await Create(subscription);
+            await CreateAsync(subscription);
         }
 
         public async Task<IEnumerable<Subscription>> GetAllSubscriptionAsync()
@@ -33,14 +33,14 @@ namespace Online_Cinema_Core.Repository
             return await FindByCondition(x => x.Id == Id).FirstOrDefaultAsync();
         }
 
-        public async Task RemoveSubscription(Subscription subscription)
+        public async Task RemoveSubscriptionAsync(Subscription subscription)
         {
-            await Delete(subscription);
+            await DeleteAsync(subscription);
         }
 
-        public async Task UpdateSubscription(Subscription subscription)
+        public async Task UpdateSubscriptionAsync(Subscription subscription)
         {
-            await Update(subscription);
+            await UpdateAsync(subscription);
         }
     }
 }

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Online_Cinema_BLL.Interfaces.Services;
 using Online_Cinema_Domain.Models.IdentityModels;
@@ -12,13 +11,11 @@ namespace Online_Cinema_UI.Controllers
     public class RoomController : Controller
     {
         private readonly IRoomService _roomService;
-        private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
 
-        public RoomController(IRoomService roomService, IMapper mapper, UserManager<User> userManager)
+        public RoomController(IRoomService roomService,UserManager<User> userManager)
         {
             _roomService = roomService;
-            _mapper = mapper;
             _userManager = userManager;
         }
 

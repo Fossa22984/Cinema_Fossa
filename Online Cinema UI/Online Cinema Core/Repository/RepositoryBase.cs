@@ -12,15 +12,15 @@ namespace Online_Cinema_Core.Repository
         protected OnlineCinemaContext context { get; set; }
         public RepositoryBase(OnlineCinemaContext context) { this.context = context; }
 
-        public async Task Create(T entity)
+        public async Task CreateAsync(T entity)
         {
             await context.Set<T>().AddAsync(entity);
         }
 
-        public Task Delete(T entity)
+        public async Task DeleteAsync(T entity)
         {
             context.Set<T>().Remove(entity);
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
 
         public IQueryable<T> FindAll()
@@ -34,10 +34,10 @@ namespace Online_Cinema_Core.Repository
                 .Where(predicate);
         }
 
-        public Task Update(T entity)
+        public async Task UpdateAsync(T entity)
         {
             context.Set<T>().Update(entity);
-            return Task.CompletedTask;
+            await Task.CompletedTask;
         }
     }
 }

@@ -15,7 +15,7 @@ namespace Online_Cinema_Core.Repository
 
         public async Task CreateCinemaRoom(CinemaRoom cinemaRoom)
         {
-            await Create(cinemaRoom);
+            await CreateAsync(cinemaRoom);
         }
 
         public async Task<IEnumerable<CinemaRoom>> GetAllCinemaRoomAsync()
@@ -33,14 +33,14 @@ namespace Online_Cinema_Core.Repository
             return await FindByCondition(x => x.Id == Id).AsNoTracking().Include(x => x.Sessions).ThenInclude(x => x.Movie).FirstOrDefaultAsync();
         }
 
-        public async Task RemoveCinemaRoom(CinemaRoom cinemaRoom)
+        public async Task RemoveCinemaRoomAsync(CinemaRoom cinemaRoom)
         {
-            await Delete(cinemaRoom);
+            await DeleteAsync(cinemaRoom);
         }
 
-        public async Task UpdateCinemaRoom(CinemaRoom cinemaRoom)
+        public async Task UpdateCinemaRoomAsync(CinemaRoom cinemaRoom)
         {
-            await Update(cinemaRoom);
+            await UpdateAsync(cinemaRoom);
         }
     }
 }

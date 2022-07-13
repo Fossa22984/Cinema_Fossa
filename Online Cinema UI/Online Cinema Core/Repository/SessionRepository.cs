@@ -14,9 +14,9 @@ namespace Online_Cinema_Core.Repository
     {
         public SessionRepository(OnlineCinemaContext context) : base(context) { }
 
-        public async Task CreateSession(Session session)
+        public async Task CreateSessionAsync(Session session)
         {
-            await Create(session);
+            await CreateAsync(session);
         }
 
         public async Task<IEnumerable<Session>> GetAllSessionAsync()
@@ -34,14 +34,14 @@ namespace Online_Cinema_Core.Repository
             return await FindByCondition(x => x.Id == Id).Include(x => x.Movie).FirstOrDefaultAsync();
         }
 
-        public async Task RemoveSession(Session session)
+        public async Task RemoveSessionAsync(Session session)
         {
-            await Delete(session);
+            await DeleteAsync(session);
         }
 
-        public async Task UpdateSession(Session session)
+        public async Task UpdateSessionAsync(Session session)
         {
-            await Update(session);
+            await UpdateAsync(session);
         }
     }
 }

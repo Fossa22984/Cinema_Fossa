@@ -31,11 +31,7 @@ namespace Online_Cinema_BLL.Services
             var rooms = (await _unitOfWork.Room.GetRoomByConditionAsync(x => x.IsRemoved != true && x.IsOpen == true)).ToList();
             rooms.ForEach(x => x.Owner = _userManager.Users.FirstOrDefault(u => u.Id == x.OwnerId));
 
-
-
-            //return _mapper.Map<List<Room>, List<RoomViewModel>>((await _unitOfWork.Room.GetRoomByConditionAsync(x => x.IsRemoved != true && x.IsOpen == true)).ToList());
             return _mapper.Map<List<Room>, List<RoomViewModel>>(rooms);
-
         }
         public async Task<RoomViewModel> GetRoomAsync(int roomId) =>
             _mapper.Map<Room, RoomViewModel>(await _unitOfWork.Room.GetRoomByIdAsync(roomId));
@@ -76,7 +72,7 @@ namespace Online_Cinema_BLL.Services
             if (room.RoomImage.Length == 0)
                 room.RoomImage = (await _unitOfWork.Room.GetRoomByIdAsync(room.Id)).RoomImage;
 
-            await _unitOfWork.Room.UpdateRoom(room);
+            await _unitOfWork.Room.UpdateRoomAsync(room);
             await _unitOfWork.SaveAsync();
             Log.Current.Debug($"Change room -> {room.RoomName} room id-> {room.Id}");
         }

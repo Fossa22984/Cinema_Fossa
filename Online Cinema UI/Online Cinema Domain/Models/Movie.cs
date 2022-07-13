@@ -14,7 +14,6 @@ namespace Online_Cinema_Domain.Models
         [Column(TypeName = "Date")]
         public DateTime? DateOfRelease { get; set; }//Дата выпуска 
 
-        //[Column(TypeName = "Time")]
         public TimeSpan? Duration { get; set; }//Продолжительность 
         public string Author { get; set; }
         public string Actors { get; set; }

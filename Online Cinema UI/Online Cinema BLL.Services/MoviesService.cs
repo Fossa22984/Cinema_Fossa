@@ -35,7 +35,7 @@ namespace Online_Cinema_BLL.Services
                     var res = (await _unit.Genre.GetAllGenreAsync()).Where(x => genre.Contains(x.GenreName, StringComparison.OrdinalIgnoreCase)).ToList();
                     movie.Genres = res;
                 }
-                await _unit.Movie.Create(movie);
+                await _unit.Movie.CreateAsync(movie);
                 await _unit.SaveAsync();
             }
             catch (Exception)
@@ -51,34 +51,12 @@ namespace Online_Cinema_BLL.Services
                     var res = (await _unit.Genre.GetAllGenreAsync()).Where(x => genre.Contains(x.GenreName, StringComparison.OrdinalIgnoreCase));
                     movie.Genres = res.ToList();
                 }
-                await _unit.Movie.Update(movie);
+                await _unit.Movie.UpdateAsync(movie);
                 await _unit.SaveAsync();
             }
             catch (Exception)
             {
             }
         }
-
-        //private readonly OnlineCinemaContext _context;
-
-        //public MoviesService(OnlineCinemaContext context)
-        //{
-        //    this._context = context;
-        //}
-
-        //public IList<Movie> GetMovies() => _context.Movies.Include(x => x.Genre).ToList();
-        //public IList<Movie> GetMovies(int pageNumber)
-        //{
-        //    return _context.Movies.Include(x => x.Genre).Where(x => x.Id >= (pageNumber * 12 - 11) && x.Id <= (pageNumber * 12)).ToList();
-        //}
-
-        //public IList<Movie> GetMovies(int pageNumber, string search)
-        //{
-        //    var listFilms = _context.Movies.Include(x => x.Genre).AsEnumerable().Where(x => x.MovieTitle.Contains(search, StringComparison.OrdinalIgnoreCase)).ToList();
-        //    if (listFilms.Count > 12)
-        //        return listFilms.GetRange(pageNumber * 12 - 11, 12);
-
-        //    return listFilms;
-        //}
     }
 }

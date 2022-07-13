@@ -49,7 +49,7 @@ namespace Online_Cinema_UI.Controllers
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!TryValidateModel(model)) return View("Index");
-            return await _accountService.Register(model) ? Redirect("/CinemaRoom/Index") : View("Index");
+            return await _accountService.RegisterAsync(model) ? Redirect("/CinemaRoom/Index") : View("Index");
         }
 
         [HttpGet]

@@ -26,9 +26,7 @@ namespace Online_Cinema_UI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //BllConfiguration.Configuration(services, Configuration.GetConnectionString("MyCon"));
-
-            var option = new SendGridOptions()/* { SendGridKey = Configuration["SendGridKey"], UserSender = Configuration["UserSender"] }*/;
+            var option = new SendGridOptions();
 
             Configuration.GetSection("SendGridOptions").Bind(option);
             services.AddTransient<SendGridOptions>(x => option);

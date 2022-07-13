@@ -32,8 +32,6 @@ namespace Online_Cinema_BLL.Services.Managers
                 SubscriptionId = config.SubscriptionId,
             };
         }
-        // </CreateMediaServicesClientAsync>
-
         /// <summary>
         /// Create the ServiceClientCredentials object based on the credentials
         /// supplied in local configuration file.
@@ -44,7 +42,6 @@ namespace Online_Cinema_BLL.Services.Managers
         private static async Task<ServiceClientCredentials> GetCredentialsAsync(AzureSettingsModel config)
         {
             // Use ConfidentialClientApplicationBuilder.AcquireTokenForClient to get a token using a service principal with symmetric key
-
             var scopes = new[] { config.ArmAadAudience + "/.default" };
 
             var app = ConfidentialClientApplicationBuilder.Create(config.AadClientId)
@@ -104,6 +101,5 @@ namespace Online_Cinema_BLL.Services.Managers
 
             return new TokenCredentials(result.AccessToken, TokenType);
         }
-        // </GetCredentialsInteractiveAuthAsync>
     }
 }

@@ -15,16 +15,14 @@ namespace Online_Cinema_BLL.Services
         UserManager<User> _userManager;
         SignInManager<User> _signInManager;
         RoleManager<Role> _roleManager;
-        IEmailSender _emailSender;
-        public AccountService(IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager, IEmailSender emailSender)
+        public AccountService(IMapper mapper, UserManager<User> userManager, SignInManager<User> signInManager, RoleManager<Role> roleManager)
         {
             _mapper = mapper;
             _userManager = userManager;
             _signInManager = signInManager;
             _roleManager = roleManager;
-            _emailSender = emailSender;
         }
-        public async Task<bool> Register(RegisterViewModel model)
+        public async Task<bool> RegisterAsync(RegisterViewModel model)
         {
             var user = _mapper.Map<RegisterViewModel, User>(model);
 

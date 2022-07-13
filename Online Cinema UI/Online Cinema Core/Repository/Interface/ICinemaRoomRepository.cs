@@ -12,7 +12,7 @@ namespace Online_Cinema_Core.Repository.Interface
         Task<CinemaRoom> GetCinemaRoomByIdAsync(int Id);
         Task<IEnumerable<CinemaRoom>> GetCinemaRoomByConditionAsync(Expression<Func<CinemaRoom, bool>> predicate);
         Task CreateCinemaRoom(CinemaRoom cinemaRoom);
-        Task UpdateCinemaRoom(CinemaRoom cinemaRoom);
-        Task RemoveCinemaRoom(CinemaRoom cinemaRoom);
+        Task UpdateCinemaRoomAsync(CinemaRoom cinemaRoom);
+        Task RemoveCinemaRoomAsync(CinemaRoom cinemaRoom);
     }
 }

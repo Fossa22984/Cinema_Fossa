@@ -13,9 +13,9 @@ namespace Online_Cinema_Core.Repository
     {
         public GenreRepository(OnlineCinemaContext context) : base(context) { }
 
-        public async Task CreateGenre(Genre genre)
+        public async Task CreateGenreAsync(Genre genre)
         {
-            await Create(genre);
+            await CreateAsync(genre);
         }
 
         public async Task<IEnumerable<Genre>> GetAllGenreAsync()
@@ -33,14 +33,14 @@ namespace Online_Cinema_Core.Repository
             return await FindByCondition(x => x.Id == Id).Include(x => x.Movies).FirstOrDefaultAsync();
         }
 
-        public async Task RemoveGenre(Genre genre)
+        public async Task RemoveGenreAsync(Genre genre)
         {
-            await Delete(genre);
+            await DeleteAsync(genre);
         }
 
-        public async Task UpdateGenre(Genre genre)
+        public async Task UpdateGenreAsync(Genre genre)
         {
-            await Update(genre);
+            await UpdateAsync(genre);
         }
     }
 }

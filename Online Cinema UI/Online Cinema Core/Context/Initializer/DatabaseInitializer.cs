@@ -23,7 +23,6 @@ namespace Online_Cinema_Core.Context.Initializer
         {
             _onlineCinemaContext.Database.EnsureCreated();
 
-
             #region Add Role (Admin)
             if (!_onlineCinemaContext.Roles.Any())
             {
@@ -80,97 +79,6 @@ namespace Online_Cinema_Core.Context.Initializer
                 _onlineCinemaContext.SaveChanges();
             }
             #endregion
-
-            #region Add Movies
-            //for (int i = 0; i < 10; i++)
-            //{
-
-
-
-            //    onlineCinemaContext.Movies.Add(new Movie()
-            //    {
-            //        Image = "https://media.kg-portal.ru/movies/s/sawlegacy/posters/sawlegacy_35.jpg",
-            //        FilmName = "Пила 8 (Jigsaw)",
-            //        Genre = new List<Genre>(){ onlineCinemaContext.Genres.First(x => x.GenreName == "Ужасы"),
-            //        onlineCinemaContext.Genres.First(x => x.GenreName == "Триллер"),
-            //    onlineCinemaContext.Genres.First(x => x.GenreName == "Криминал")}
-            //    });
-
-
-            //    onlineCinemaContext.Movies.Add(new Movie()
-            //    {
-            //        Image = "https://media.kg-portal.ru/movies/s/sawlegacy/posters/sawlegacy_35.jpg",
-            //        FilmName = "Пила (Jigsaw)",
-            //        Genre = new List<Genre>(){ onlineCinemaContext.Genres.First(x => x.GenreName == "Ужасы"),
-            //        onlineCinemaContext.Genres.First(x => x.GenreName == "Триллер"),
-            //    onlineCinemaContext.Genres.First(x => x.GenreName == "Криминал")}
-            //    });
-
-            //    onlineCinemaContext.Movies.Add(new Movie()
-            //    {
-            //        Image = "https://i.ytimg.com/vi/aDybRqxRWc0/movieposter.jpg",
-            //        FilmName = "Пила 2 (Jigsaw)",
-            //        Genre = new List<Genre>(){ onlineCinemaContext.Genres.First(x => x.GenreName == "Ужасы"),
-            //        onlineCinemaContext.Genres.First(x => x.GenreName == "Триллер"),
-            //    onlineCinemaContext.Genres.First(x => x.GenreName == "Криминал")}
-            //    });
-
-            //    onlineCinemaContext.Movies.Add(new Movie()
-            //    {
-            //        Image = "https://media.kg-portal.ru/movies/s/sawlegacy/posters/sawlegacy_35.jpg",
-            //        FilmName = "Пила 3 (Jigsaw)",
-            //        Genre = new List<Genre>(){ onlineCinemaContext.Genres.First(x => x.GenreName == "Ужасы"),
-            //        onlineCinemaContext.Genres.First(x => x.GenreName == "Триллер"),
-            //    onlineCinemaContext.Genres.First(x => x.GenreName == "Криминал")}
-            //    });
-            //    onlineCinemaContext.Movies.Add(new Movie()
-            //    {
-            //        Image = "https://media.kg-portal.ru/movies/s/sawlegacy/posters/sawlegacy_35.jpg",
-            //        FilmName = "Пила 4 (Jigsaw)",
-            //        Genre = new List<Genre>(){ onlineCinemaContext.Genres.First(x => x.GenreName == "Ужасы"),
-            //        onlineCinemaContext.Genres.First(x => x.GenreName == "Триллер"),
-            //    onlineCinemaContext.Genres.First(x => x.GenreName == "Криминал")}
-            //    });
-
-            //    onlineCinemaContext.Movies.Add(new Movie()
-            //    {
-            //        Image = "https://media.kg-portal.ru/movies/s/sawlegacy/posters/sawlegacy_35.jpg",
-            //        FilmName = "Пила 5 (Jigsaw)",
-            //        Genre = new List<Genre>(){ onlineCinemaContext.Genres.First(x => x.GenreName == "Ужасы"),
-            //        onlineCinemaContext.Genres.First(x => x.GenreName == "Триллер"),
-            //    onlineCinemaContext.Genres.First(x => x.GenreName == "Криминал")}
-            //    });
-
-            //    onlineCinemaContext.Movies.Add(new Movie()
-            //    {
-            //        Image = "https://media.kg-portal.ru/movies/s/sawlegacy/posters/sawlegacy_35.jpg",
-            //        FilmName = "Пила 6 (Jigsaw)",
-            //        Genre = new List<Genre>(){ onlineCinemaContext.Genres.First(x => x.GenreName == "Ужасы"),
-            //        onlineCinemaContext.Genres.First(x => x.GenreName == "Триллер"),
-            //    onlineCinemaContext.Genres.First(x => x.GenreName == "Криминал")}
-            //    });
-
-            //    onlineCinemaContext.Movies.Add(new Movie()
-            //    {
-            //        Image = "https://media.kg-portal.ru/movies/s/sawlegacy/posters/sawlegacy_35.jpg",
-            //        FilmName = "Пила 7 (Jigsaw)",
-            //        Genre = new List<Genre>(){ onlineCinemaContext.Genres.First(x => x.GenreName == "Ужасы"),
-            //        onlineCinemaContext.Genres.First(x => x.GenreName == "Триллер"),
-            //    onlineCinemaContext.Genres.First(x => x.GenreName == "Криминал")}
-            //    });
-
-            //    onlineCinemaContext.Movies.Add(new Movie()
-            //    {
-            //        Image = "https://kinogo.zone/uploads/posts/2020-04/1588032215-1304738478-pila-nachalo.jpg",
-            //        FilmName = "Пила Начало",
-            //        Genre = new List<Genre>(){ onlineCinemaContext.Genres.First(x => x.GenreName == "Ужасы"),
-            //        onlineCinemaContext.Genres.First(x => x.GenreName == "Триллер"),
-            //    onlineCinemaContext.Genres.First(x => x.GenreName == "Криминал")}
-            //    });
-            //}
-            //onlineCinemaContext.SaveChanges();
-            #endregion
-
         }
     }
 }

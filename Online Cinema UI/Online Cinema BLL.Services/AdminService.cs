@@ -36,7 +36,6 @@ namespace Online_Cinema_BLL.Services
         private ICinemaRoomCacheManager _cinemaRoomCacheManager;
         private IAzureSettingsManager _azureSettingsManager;
         private IMapper _mapper;
-        UserManager<User> _userManager;
         public AdminService(IUnitOfWork unitOfWork,
             IUploadFileAzureManager uploadFileAzureManager,
             IFileManager fileManager,
@@ -45,8 +44,7 @@ namespace Online_Cinema_BLL.Services
             ISessionCacheManager sessionCacheManager,
             ICinemaRoomCacheManager cinemaRoomCacheManager,
             IAzureSettingsManager azureSettingsManager,
-            IMapper mapper,
-            UserManager<User> userManager)
+            IMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _uploadFileAzureManager = uploadFileAzureManager;
@@ -57,7 +55,6 @@ namespace Online_Cinema_BLL.Services
             _cinemaRoomCacheManager = cinemaRoomCacheManager;
             _azureSettingsManager = azureSettingsManager;
             _mapper = mapper;
-            _userManager = userManager;
         }
 
         public async Task<IList<string>> GetListStringGenreAsync()
@@ -117,7 +114,7 @@ namespace Online_Cinema_BLL.Services
         public async Task AddSessionAsync(SessionViewModel sessionView)
         {
             var session = _mapper.Map<SessionViewModel, Session>(sessionView);
-            await _unitOfWork.Session.CreateSession(session);
+            await _unitOfWork.Session.CreateSessionAsync(session);
             await _unitOfWork.SaveAsync();
 
             _sessionCacheManager.Set(session);
@@ -126,7 +123,7 @@ namespace Online_Cinema_BLL.Services
         public async Task ChangeSessionAsync(SessionViewModel sessionView)
         {
             var session = _mapper.Map<SessionViewModel, Session>(sessionView);
-            await _unitOfWork.Session.UpdateSession(session);
+            await _unitOfWork.Session.UpdateSessionAsync(session);
             await _unitOfWork.SaveAsync();
 
             _sessionCacheManager.Update(session);
@@ -140,19 +137,19 @@ namespace Online_Cinema_BLL.Services
             string tempFilePath = string.Empty;
             try
             {
-                movieView.Image = await readImageOrFillDefault(movieView.ImageFile);
+                movieView.Image = await readImageOrFillDefaultAsync(movieView.ImageFile);
 
                 var movie = _mapper.Map<MovieViewModel, Movie>(movieView);
 
                 var idFilm = Guid.NewGuid().ToString();
                 _notificationCache.Set(new Notification(idUser, idFilm, movie.MovieTitle, notificationType: NotificationTypeEnum.StartLoad));
-                await ChangeProgress(movie.MovieTitle, 0, idUser, idFilm, NotificationTypeEnum.StartLoad);
+                await ChangeProgressAsync(movie.MovieTitle, 0, idUser, idFilm, NotificationTypeEnum.StartLoad);
 
-                _fileManager.UploadProgress += ChangeProgress;
+                _fileManager.UploadProgress += ChangeProgressAsync;
                 tempFilePath = await _fileManager.CreateTempFile(file, idFilm, idUser, movie.MovieTitle);
                 movie.Duration = await _fileManager.ReadDurationFromMovie(tempFilePath);
 
-                _uploadFileAzureManager.UploadProgress += ChangeProgress;
+                _uploadFileAzureManager.UploadProgress += ChangeProgressAsync;
                 var config = _azureSettingsManager.Get();
                 var moviePath = await _uploadFileAzureManager.RunAsync(config, tempFilePath, movie.MovieTitle, idUser, idFilm);
 
@@ -163,7 +160,7 @@ namespace Online_Cinema_BLL.Services
                     var res = (await _unitOfWork.Genre.GetAllGenreAsync()).AsEnumerable().Where(x => genre.Contains(x.GenreName, StringComparison.Ordinal)).ToList();
                     movie.Genres = res;
                 }
-                await _unitOfWork.Movie.CreateMovie(movie);
+                await _unitOfWork.Movie.CreateMovieAsync(movie);
                 await _unitOfWork.SaveAsync();
                 Log.Current.Debug($"Add movie MovieTitle -> {movie.MovieTitle} movie id-> {movie.Id}");
             }
@@ -180,7 +177,7 @@ namespace Online_Cinema_BLL.Services
 
         public async Task ChangeFilmAsync(MovieViewModel movieView, string genre)
         {
-            movieView.Image = await readImage(movieView.ImageFile);
+            movieView.Image = await readImageAsync(movieView.ImageFile);
             var movie = _mapper.Map<MovieViewModel, Movie>(movieView);
 
             var newMovie = await _unitOfWork.Movie.GetMovieByIdAsync(movie.Id);
@@ -194,7 +191,7 @@ namespace Online_Cinema_BLL.Services
             if (movie.Image.Length != 0) newMovie.Image = movie.Image;
             newMovie.Copy(movie);
 
-            await _unitOfWork.Movie.Update(newMovie);
+            await _unitOfWork.Movie.UpdateAsync(newMovie);
             await _unitOfWork.SaveAsync();
             Log.Current.Debug($"Change movie MovieTitle -> {movie.MovieTitle} movie id-> {movie.Id}");
         }
@@ -205,7 +202,7 @@ namespace Online_Cinema_BLL.Services
         }
         public async Task AddCinemaRoomAsync(CinemaRoomViewModel cinemaRoomView)
         {
-            cinemaRoomView.CinemaRoomImage = await readImageOrFillDefault(cinemaRoomView.ImageFile);
+            cinemaRoomView.CinemaRoomImage = await readImageOrFillDefaultAsync(cinemaRoomView.ImageFile);
             var cinemaRoom = _mapper.Map<CinemaRoomViewModel, CinemaRoom>(cinemaRoomView);
 
             await _unitOfWork.CinemaRoom.CreateCinemaRoom(cinemaRoom);
@@ -216,27 +213,27 @@ namespace Online_Cinema_BLL.Services
         }
         public async Task ChangeCinemaRoomAsync(CinemaRoomViewModel cinemaRoomView)
         {
-            cinemaRoomView.CinemaRoomImage = await readImage(cinemaRoomView.ImageFile);
+            cinemaRoomView.CinemaRoomImage = await readImageAsync(cinemaRoomView.ImageFile);
             var cinemaRoom = _mapper.Map<CinemaRoomViewModel, CinemaRoom>(cinemaRoomView);
 
             if (cinemaRoom.CinemaRoomImage.Length == 0)
                 cinemaRoom.CinemaRoomImage = (await _unitOfWork.CinemaRoom.GetCinemaRoomByIdAsync(cinemaRoom.Id)).CinemaRoomImage;
 
-            await _unitOfWork.CinemaRoom.UpdateCinemaRoom(cinemaRoom);
+            await _unitOfWork.CinemaRoom.UpdateCinemaRoomAsync(cinemaRoom);
             await _unitOfWork.SaveAsync();
 
             _cinemaRoomCacheManager.Update(cinemaRoom);
             Log.Current.Debug($"Change room -> {cinemaRoom.CinemaRoomName} movie id-> {cinemaRoom.Id}");
         }
 
-        private async Task ChangeProgress(string nameFilm, int progress, string idUser, string idFilm, NotificationTypeEnum notificationType = NotificationTypeEnum.None)
+        private async Task ChangeProgressAsync(string nameFilm, int progress, string idUser, string idFilm, NotificationTypeEnum notificationType = NotificationTypeEnum.None)
         {
             _notificationCache.UpdateProgress(idFilm, progress);
             await _notificationHub.PushNotificationProgress(nameFilm, progress, idUser, idFilm, notificationType);
         }
 
 
-        private async Task<byte[]> readImageOrFillDefault(IFormFile fromFile)
+        private async Task<byte[]> readImageOrFillDefaultAsync(IFormFile fromFile)
         {
             byte[] image = null;
             if (fromFile != null)
@@ -265,7 +262,7 @@ namespace Online_Cinema_BLL.Services
             }
             return await Task.FromResult(image);
         }
-        private async Task<byte[]> readImage(IFormFile fromFile)
+        private async Task<byte[]> readImageAsync(IFormFile fromFile)
         {
             byte[] image = null;
             if (fromFile != null)
